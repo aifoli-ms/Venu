@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Serva - Discover Restaurants</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="hero">
+      <nav>
+        <div class="logo">VENU</div>
+        <ul>
+          <li><a href="#">Restaurants</a></li>
+          <li><a href="#">About Us</a></li>
+        </ul>
+        <a
+          href="src/login/login.html"
+          class="btn btn-secondary"
+        >
+          Sign In
+        </a>
+      </nav>
+
+      <div class="hero-content">
+        <h1>Discover Restaurants to Love in Ghana</h1>
+        <p>
+          Effortlessly manage your reservations, reduce no-shows, and increase
+          earnings - all while making bookings seamless for your guests.
+        </p>
+
+        <form class="booking-form">
+          <div class="form-group">
+            <label for="date">Date</label>
+            <input
+              type="text"
+              id="date"
+              value="13/11/2025"
+              onfocus="(this.type='date')"
+            />
+          </div>
+          <div class="form-group">
+            <label for="time">Time</label>
+            <input
+              type="text"
+              id="time"
+              value="7:00 PM"
+              onfocus="(this.type='time')"
+            />
+          </div>
+          <div class="form-group">
+            <label for="people">People</label>
+            <input
+              type="text"
+              id="people"
+              value="2 people"
+              onfocus="(this.type='number')"
+            />
+          </div>
+          <a class="btn btn-primary" href="src/login/login.html">Find a table</a>
+        </form>
+      </div>
+    </header>
+
+    <main>
+      <section class="features">
+        <div class="feature-item">
+          <h3>5,000+</h3>
+          <p>Diners Waitlisted</p>
+        </div>
+        <div class="feature-item">
+          <h3>50+</h3>
+          <p>Restaurant Partners</p>
+        </div>
+        <div class="feature-item">
+          <h3>24/7+</h3>
+          <p>Instant Booking</p>
+        </div>
+      </section>
+
+      <section class="listings">
+        <h2>Experience Ghana</h2>
+        <p>Check out people's favorite restaurants in Ghana</p>
+
+        <div class="card-container">
+          <div class="card">
+            <div class="card-image">
+              <img src="/Users/aifoli/Individual/Venu/img/Sol-Lounge-Bar-exterior.jpg" alt="SOL" />
+            </div>
+            <div class="card-header">
+              <h3>SOL</h3>
+              <span class="rating">⭐ 4.3</span>
+              <span class="price">4 GHS</span>
+            </div>
+            <div class="card-body">
+              <p class="location">
+                Lake Sedrick - South Margaret - Pearlmouth +5 more
+              </p>
+              <p class="description">
+                Eum earum in et deserunt at non et. Magnam non dolorem illum
+                vitae.
+              </p>
+            </div>
+            <button class="btn btn-primary">
+              <a href="src/login/login.html">Reserve a table</a>
+            </button>
+          </div>
+
+          <div class="card">
+            <div class="card-image">
+              <img src="/Users/aifoli/Individual/Venu/img/quattro-image.jpg" alt="Quattro img" />
+            </div>
+            <div class="card-header">
+              <h3>Quattro</h3>
+              <span class="rating">⭐ 0</span>
+              <span class="price">3 GHS</span>
+            </div>
+            <div class="card-body">
+              <p class="location">East Legon</p>
+              <p class="description">Test restaurants</p>
+            </div>
+            <button class="btn btn-primary">
+              <a href="src/login/login.html">Reserve a table</a>
+            </button>
+          </div>
+
+          <div class="card">
+            <div class="card-image">
+              <img src="/Users/aifoli/Individual/Venu/img/shogun-interior.jpg" alt="Shogun" />
+            </div>
+            <div class="card-header">
+              <h3>Shogun</h3>
+              <span class="rating">⭐ 0</span>
+              <span class="price">1 GHS</span>
+            </div>
+            <div class="card-body">
+              <p class="location">Cantonments</p>
+              <p class="description">
+                Join us for an inspiring afternoon of conversation, culture, and
+                connection, hosted by Serva X Taro. Expect.
+              </p>
+            </div>
+            <button class="btn btn-primary">
+              <a href="/Users/aifoli/Individual/Venu/src/login/login.html">Reserve a table</a>
+            </button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>

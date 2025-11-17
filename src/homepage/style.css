@@ -1,0 +1,320 @@
+/*
+:root variables allow you to define colors and spacing in one place.
+*/
+:root {
+    --primary-color: #F97316; /* Main orange theme color */
+    --dark-grey: #1F2937;
+    --medium-grey: #6B7280;
+    --light-grey: #F3F4F6;
+    --border-color: #E5E7EB;
+    --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    --border-radius: 12px;
+}
+
+/* =====================
+  GLOBAL & BASIC STYLES
+  =====================
+*/
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: var(--dark-grey);
+    line-height: 1.6;
+}
+
+a {
+    text-decoration: none;
+    color: var(--primary-color);
+}
+
+img {
+    max-width: 100%;
+    display: block;
+}
+
+/* =====================
+  BUTTONS
+  =====================
+*/
+.btn {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    text-align: center;
+    border: none;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: #fff;
+}
+.btn-primary a {
+    color: #fff; /* Ensure link text inside button is white */
+}
+
+.btn-primary:hover {
+    background-color: #EA580C; /* Darker orange */
+    transform: translateY(-2px);
+}
+
+.btn-secondary {
+    background-color: transparent;
+    border: 1px solid #fff;
+    color: #fff;
+}
+
+.btn-secondary:hover {
+    background-color: #fff;
+    color: var(--dark-grey);
+}
+
+
+/* =====================
+  HERO & NAVIGATION
+  =====================
+*/
+.hero {
+    /* Using a placeholder image from Unsplash */
+    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://images.unsplash.com/photo-1517248135820-ee3a424376be?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1200');
+    background-size: cover;
+    background-position: center;
+    color: #fff;
+    padding-bottom: 4rem;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 3rem;
+    max-width: 1300px;
+    margin: 0 auto;
+}
+
+.logo {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 2rem;
+}
+
+nav ul a {
+    color: #fff;
+    font-weight: 500;
+    font-size: 1rem;
+}
+
+.hero-content {
+    text-align: center;
+    max-width: 700px;
+    margin: 4rem auto 0;
+    padding: 0 2rem;
+}
+
+.hero-content h1 {
+    font-size: 2.5rem; /* Responsive font size */
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.hero-content p {
+    font-size: 1.1rem;
+    margin-bottom: 2.5rem;
+    color: #eee;
+}
+
+/* =====================
+  BOOKING FORM
+  =====================
+*/
+.booking-form {
+    background-color: #fff;
+    border-radius: var(--border-radius);
+    padding: 1rem;
+    display: flex;
+    flex-wrap: wrap; /* Allow wrapping on small screens */
+    gap: 1rem;
+    align-items: flex-end; /* Aligns labels and inputs nicely */
+    max-width: 800px;
+    margin: 0 auto;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+    flex-grow: 1; /* Each group tries to take equal space */
+    display: flex;
+    flex-direction: column;
+    min-width: 150px; /* Prevents items from getting too small */
+}
+
+.form-group label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--medium-grey);
+    margin-bottom: 0.25rem;
+}
+
+.form-group input {
+    border: none;
+    border-bottom: 1px solid var(--border-color);
+    padding: 0.5rem 0.25rem;
+    font-size: 1rem;
+    color: var(--dark-grey);
+}
+/* Removes the ugly calendar/time icon in Webkit */
+.form-group input::-webkit-calendar-picker-indicator {
+    display: none;
+}
+
+/* Make the button take up space in the flex container */
+.booking-form .btn {
+    flex-grow: 1;
+}
+
+/* =====================
+  FEATURES SECTION
+  =====================
+*/
+.features {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 2rem;
+    padding: 4rem 2rem;
+    background-color: var(--light-grey);
+    text-align: center;
+}
+
+.feature-item {
+    min-width: 200px;
+}
+
+.feature-item h3 {
+    font-size: 2.5rem;
+    color: var(--primary-color);
+    font-weight: 700;
+}
+
+.feature-item p {
+    color: var(--medium-grey);
+    font-size: 1rem;
+}
+
+/* =====================
+  LISTINGS SECTION
+  =====================
+*/
+.listings {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 4rem 2rem;
+}
+
+.listings h2 {
+    font-size: 2.25rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 0.5rem;
+}
+
+.listings > p { /* Target the main <p> tag */
+    font-size: 1.1rem;
+    color: var(--medium-grey);
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.card-container {
+    display: grid;
+    /* Responsive grid: creates columns of at least 300px */
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+/* =====================
+  CARD STYLES
+  =====================
+*/
+.card {
+    background-color: #fff;
+    border-radius: var(--border-radius);
+    box-shadow: var(--card-shadow);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column; /* Ensures button stays at bottom */
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.07);
+}
+
+.card-image img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.25rem 0.5rem;
+    gap: 1rem;
+}
+
+.card-header h3 {
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+.card-header .rating {
+    font-size: 0.95rem;
+    font-weight: 500;
+    white-space: nowrap; /* Prevents wrap */
+}
+
+.card-header .price {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--primary-color);
+    white-space: nowrap;
+}
+
+.card-body {
+    padding: 0 1.25rem 1rem;
+}
+
+.card-body .location {
+    font-size: 0.9rem;
+    color: var(--medium-grey);
+    margin-bottom: 0.75rem;
+}
+
+.card-body .description {
+    font-size: 0.9rem;
+    color: var(--dark-grey);
+    line-height: 1.5;
+}
+
+/* Button inside the card */
+.card .btn {
+    width: calc(100% - 2.5rem); /* Full width minus padding */
+    margin: 0 1.25rem 1.25rem;
+    margin-top: auto; /* Pushes button to the bottom */
+}

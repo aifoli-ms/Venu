@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up Page</title>
+    <link rel="stylesheet" href="style.css"> 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+
+    <div class="login-container"> 
+        <div class="login-form"> 
+            <h1 class="logo">VENU</h1>
+            <h2>Create Your Account</h2>
+
+            <button class="google-btn">
+                <i class="fab fa-google"></i>
+                Sign Up with Google
+            </button>
+
+            <div class="separator">
+                <span>or</span>
+            </div>
+
+            <form id="signup-form">
+                <div class="input-group">
+                    <label for="name">Name</label>
+                    <i class="fas fa-user icon"></i>
+                    <input type="text" id="name" placeholder="Your Name" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="email">Email</label>
+                    <i class="fas fa-envelope icon"></i>
+                    <input type="email" id="email" placeholder="your.email@example.com" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <i class="fas fa-lock icon"></i>
+                    <input type="password" id="password" placeholder="Create your password" required>
+                    <i class="fas fa-eye-slash toggle-password" id="togglePassword"></i>
+                </div>
+
+                <div class="input-group">
+                    <label for="confirm-password">Confirm Password</label>
+                    <i class="fas fa-lock icon"></i>
+                    <input type="password" id="confirm-password" placeholder="Confirm your password" required>
+                    <i class="fas fa-eye-slash toggle-password" id="toggleConfirmPassword"></i>
+                </div>
+
+                <div class="options policy-agreement">
+                    <input type="checkbox" id="agree-terms" required>
+                    <label for="agree-terms">I agree to the <a href="#">Terms</a> and <a href="#">Privacy Policy</a></label>
+                </div>
+
+                <button type="submit" class="signin-btn">Sign Up</button> 
+            </form>
+
+            <p class="signup-link"> 
+                Already have an account? <a href="index.html">Sign In</a> </p>
+        </div>
+
+        <a href="index.html" class="back-home"> <i class="fas fa-arrow-left"></i>
+            Back to Sign In
+        </a>
+    </div>
+
+    <script src="signup.js"></script>
+</body>
+</html>

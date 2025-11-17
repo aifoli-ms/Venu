@@ -1,0 +1,256 @@
+/* Basic reset and font settings */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: #FFF7ED; /* Light orange background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+/* Main container for centering */
+.login-container {
+    width: 100%;
+    max-width: 420px;
+    text-align: center;
+}
+
+/* The white card */
+.login-form {
+    background-color: #ffffff;
+    padding: 2.5rem;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+    width: 100%;
+}
+
+.logo {
+    color: #F97316; /* Orange color */
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+h2 {
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 1.5rem;
+}
+
+/* Google Button */
+.google-btn {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #E5E7EB; /* Light grey border */
+    border-radius: 8px;
+    background-color: #fff;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #374151; /* Dark grey text */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.google-btn:hover {
+    background-color: #F9FAFB; /* Slight grey on hover */
+}
+
+.google-btn .fa-google {
+    font-size: 1.2rem;
+    color: #DB4437; /* Google red */
+}
+
+/* "or" separator */
+.separator {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    color: #9CA3AF; /* Medium grey */
+    margin: 1.5rem 0;
+    font-size: 0.875rem;
+}
+
+.separator::before,
+.separator::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid #E5E7EB; /* Light grey line */
+}
+
+.separator span {
+    padding: 0 1rem;
+}
+
+/* Form inputs */
+.input-group {
+    position: relative;
+    margin-bottom: 1.25rem;
+}
+
+.input-group label {
+    display: none; /* Visually hidden, but good for accessibility */
+}
+
+.input-group .icon {
+    position: absolute;
+    left: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #9CA3AF; /* Icon color */
+}
+
+.input-group input {
+    width: 100%;
+    padding: 0.75rem 0.75rem 0.75rem 2.5rem; /* Left padding for icon */
+    border: 1px solid #D1D5DB; /* Grey border */
+    border-radius: 8px;
+    background-color: #F9FAFB; /* Light grey input field */
+    font-size: 0.95rem;
+    color: #111827;
+}
+
+.input-group input::placeholder {
+    color: #9CA3AF;
+}
+
+.input-group .toggle-password {
+    position: absolute;
+    right: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #9CA3AF;
+    cursor: pointer;
+}
+
+/* Remember me & Forgot password */
+.options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    font-size: 0.875rem;
+}
+
+.remember-me {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    color: #374151;
+}
+
+.remember-me input[type="checkbox"] {
+    width: 14px;
+    height: 14px;
+}
+
+a {
+    color: #F97316; /* Orange */
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Sign In Button */
+.signin-btn {
+    width: 100%;
+    padding: 0.75rem;
+    border: none;
+    border-radius: 8px;
+    background-color: #F97316; /* Orange */
+    color: white;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.signin-btn:hover {
+    background-color: #EA580C; /* Darker orange */
+}
+
+/* Sign Up Link */
+.signup-link {
+    font-size: 0.875rem;
+    color: #374151;
+    margin-top: 1.5rem;
+}
+
+/* Back to Home Link */
+.back-home {
+    display: inline-block;
+    margin-top: 1.5rem;
+    font-size: 0.9rem;
+    color: #6B7280; /* Darker grey */
+}
+
+.back-home i {
+    margin-right: 0.25rem;
+}
+
+/* Add this to your existing style.css file, or ensure it's there */
+/* This will ensure the policy agreement checkbox and text align correctly */
+.policy-agreement {
+    display: flex; /* Changed from space-between to flex */
+    justify-content: flex-start; /* Align to start */
+    gap: 8px; /* Space between checkbox and text */
+    margin-bottom: 1.5rem;
+    font-size: 0.875rem;
+    color: #374151;
+    text-align: left; /* Align text within the container */
+}
+
+.policy-agreement input[type="checkbox"] {
+    flex-shrink: 0; /* Prevent checkbox from shrinking */
+    width: 16px;
+    height: 16px;
+    margin-top: 2px; /* Adjust if needed to align with text baseline */
+}
+
+.policy-agreement label {
+    display: block; /* Allow text to wrap */
+}
+/*
+=================================
+Message Styles for Login Feedback
+=================================
+*/
+#message {
+    /* Styles for the <p id="message"> tag */
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    padding: 0.75rem;
+    border-radius: 8px;
+    display: none; /* Hide it by default */
+}
+
+#message.success {
+    /* This class is added by JS on success */
+    display: block;
+    color: #155724; /* Dark green text */
+    background-color: #d4edda; /* Light green background */
+    border: 1px solid #c3e6cb;
+}
+
+#message.error {
+    /* This class is added by JS on error */
+    display: block;
+    color: #721c24; /* Dark red text */
+    background-color: #f8d7da; /* Light red background */
+    border: 1px solid #f5c6cb;
+}
