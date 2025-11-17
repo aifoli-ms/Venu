@@ -1,0 +1,335 @@
+/*
+:root variables allow you to define colors and spacing in one place.
+Changing --primary-color here will change it everywhere.
+*/
+:root {
+    --primary-color: #F97316;
+    --primary-color-light: #FFEDD5;
+    --disabled-color: #FDBA74;
+    --dark-grey: #1F2937;
+    --medium-grey: #6B7280;
+    --light-grey: #F3F4F6;
+    --border-color: #E5E7EB;
+    --body-bg: #FCFCFC;
+    --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    --border-radius: 12px;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--body-bg);
+    color: var(--dark-grey);
+}
+
+.container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 1.5rem;
+}
+
+/* =====================
+  HEADER / NAVIGATION
+  =====================
+*/
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+    background-color: #fff;
+}
+
+.nav-left, .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.logo {
+    color: var(--primary-color);
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.navbar nav ul {
+    list-style: none;
+    display: flex;
+    gap: 1.5rem;
+}
+
+.navbar nav a {
+    text-decoration: none;
+    color: var(--medium-grey);
+    font-weight: 500;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0;
+    border-bottom: 2px solid transparent;
+}
+
+.navbar nav a.active,
+.navbar nav a:hover {
+    color: var(--primary-color);
+    border-bottom: 2px solid var(--primary-color);
+}
+
+.search-bar {
+    position: relative;
+    width: 250px;
+}
+
+.search-bar i {
+    position: absolute;
+    left: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--medium-grey);
+}
+
+.search-bar input {
+    width: 100%;
+    padding: 0.65rem 0.75rem 0.65rem 2.25rem; /* Left padding for icon */
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    background-color: var(--light-grey);
+    font-size: 0.9rem;
+}
+
+.icon-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.25rem;
+    color: var(--medium-grey);
+}
+
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: var(--primary-color-light);
+    color: var(--primary-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+/* =====================
+  DISCOVER & FILTERS
+  =====================
+*/
+.discover-header {
+    margin-bottom: 2rem;
+}
+
+.discover-title h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+}
+
+.discover-title p {
+    font-size: 1rem;
+    color: var(--medium-grey);
+    margin-bottom: 1.5rem;
+}
+
+.filter-controls {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.filter-btn {
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background-color: #fff;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.filter-pills {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.pill {
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    background-color: #fff;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.pill:hover {
+    background-color: var(--light-grey);
+}
+
+.pill.active {
+    background-color: var(--dark-grey);
+    color: #fff;
+    border-color: var(--dark-grey);
+}
+
+/* =====================
+  RESTAURANT GRID
+  =====================
+*/
+.restaurant-grid {
+    display: grid;
+    /* This creates a responsive grid. It will fit as many 320px cards
+       as it can, and then stretch them to fill the space. */
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1.5rem;
+}
+
+.restaurant-card {
+    background-color: #fff;
+    border-radius: var(--border-radius);
+    box-shadow: var(--card-shadow);
+    overflow: hidden; /* Ensures image corners are rounded */
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.restaurant-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.07);
+}
+
+.card-image {
+    position: relative;
+    width: 100%;
+    height: 200px;
+}
+
+.card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Prevents image stretching */
+}
+
+.status-tag {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 0.35rem 0.75rem;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    backdrop-filter: blur(5px);
+}
+
+.favorite-btn {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background-color: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(5px);
+    color: var(--dark-grey);
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Style for the "favorited" heart */
+.favorite-btn.active .fa-heart {
+    color: red;
+    font-weight: 900; /* Makes it solid */
+}
+
+.card-content {
+    padding: 1.25rem;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.75rem;
+}
+
+.card-header h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.rating {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.rating .fa-star {
+    color: var(--primary-color);
+}
+
+.card-details {
+    display: flex;
+    flex-wrap: wrap; /* Allows details to wrap on small cards */
+    gap: 0.5rem 1rem;
+    font-size: 0.9rem;
+    color: var(--medium-grey);
+    margin-bottom: 1.25rem;
+}
+
+.card-details span {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+/* =====================
+  BUTTONS
+  =====================
+*/
+.btn {
+    width: 100%;
+    padding: 0.75rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #EA580C; /* Darker orange */
+}
+
+.btn-disabled {
+    background-color: var(--primary-color-light);
+    color: var(--disabled-color);
+    cursor: not-allowed;
+}
