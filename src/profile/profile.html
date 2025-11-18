@@ -26,8 +26,7 @@
         
         <aside class="sidebar">
             <div class="sidebar-user">
-                <h3>Shaun Ato Aifoli</h3>
-                <h3>Esua - Mensah</h3>
+                <h3 id="sidebar-user-name">Loading...</h3>
             </div>
 
             <nav class="sidebar-nav">
@@ -126,15 +125,15 @@
                         </div>
                     </div>
 
-                    <form class="settings-form">
+                    <form class="settings-form" id="settings-form">
                         <div class="form-row">
                             <div class="form-group">
                                 <label>Full Name</label>
-                                <input type="text" value="Shaun Ato Aifoli Esua - Mensah">
+                                <input type="text" id="setting-name" value="">
                             </div>
                             <div class="form-group">
                                 <label>Email</label>
-                                <input type="email" value="shaunemensah@gmail.com">
+                                <input type="email" id="setting-email" value="" readonly>
                             </div>
                         </div>
 
@@ -142,7 +141,7 @@
                             <div class="form-group">
                                 <label>Password</label>
                                 <div class="input-wrapper">
-                                    <input type="password" value="123456">
+                                    <input type="password" id="setting-password" value="********"> 
                                     <i class="fa-regular fa-eye toggle-pw"></i>
                                 </div>
                             </div>
@@ -150,7 +149,7 @@
                                 <label>Phone Number (With country code)</label>
                                 <div class="input-wrapper">
                                     <span class="flag-icon">🇬🇭</span>
-                                    <input type="text" value="+233 557 936 363" style="padding-left: 3rem;">
+                                    <input type="text" id="setting-phone" value="" style="padding-left: 3rem;">
                                 </div>
                             </div>
                         </div>

@@ -67,7 +67,7 @@ app.post('/users', async (req, res) => {
     }
 })
 
-// --- LOGIN ROUTE ---
+// --- LOGIN ROUTE (Updated) ---
 app.post('/users/login', async (req, res) => {
     try {
         const { email, password } = req.body
@@ -77,23 +77,80 @@ app.post('/users/login', async (req, res) => {
             .from('users')
             .select('*')
             .eq('email', email)
-            .single() // We expect only one user
+            .single() 
 
         if (error || !user) {
+            // Sends status 400 for user not found
             return res.status(400).send("Cannot find user")
         }
 
         // 2. Compare Passwords
-        // Note: user.password_hash matches the column in your SQL table
         if (await bcrypt.compare(password, user.password_hash)) {
-            res.send("Success") // Matches what frontend expects
+            // FIX: Send a JSON response containing user ID and details for session storage
+            res.status(200).json({
+                message: "Success",
+                user: {
+                    id: user.id,
+                    email: user.email,
+                    name: user.name 
+                }
+            });
         } else {
-            res.send("Not Allowed")
+            // FIX: Send a proper status code (401 Unauthorized)
+            res.status(401).send("Not Allowed")
         }
 
     } catch (err) {
         console.error(err)
         res.status(500).send("Server Error")
+    }
+})
+
+
+// --- NEW: Authentication Middleware ---
+// Reads the userId from the header 'X-User-Id'
+function checkAuth(req, res, next) {
+    // The frontend will pass the userId in a custom header
+    const userId = req.headers['x-user-id']; 
+    if (!userId) {
+        return res.status(403).json({ message: "Access forbidden. User not authenticated." });
+    }
+    // Attach userId to the request object for use in protected routes
+    req.userId = userId;
+    next();
+}
+
+// Example of how to use middleware for a protected route (e.g., getting user profile)
+app.get('/profile', checkAuth, async (req, res) => {
+    // req.userId is now available and verified
+    const { data, error } = await supabase
+        .from('users')
+        .select('name, email, phone_number')
+        .eq('id', req.userId)
+        .single();
+    
+    if (error || !data) {
+        return res.status(404).json({ message: "User data not found." });
+    }
+    res.status(200).json(data);
+});
+
+app.get('/restaurants', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('restaurants')
+            .select('*') 
+
+        if (error) {
+            console.error('Supabase fetch error:', error);
+            return res.status(500).json({ message: "Failed to fetch restaurants" });
+        }
+
+        res.status(200).json(data);
+
+    } catch (err) {
+        console.error('Server error:', err);
+        res.status(500).json({ message: "Internal server error" });
     }
 })
 
