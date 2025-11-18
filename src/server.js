@@ -1,8 +1,10 @@
+// src/server.js
+const path = require('path')
+require('dotenv').config({ path: path.join(__dirname, '..', '.env') })
 const express = require('express')
 const bcrypt = require('bcrypt')
 const cors = require('cors')
-const fs = require('fs')
-const path = require('path')
+const supabase = require('./supabaseClient') // Import the connection
 
 const app = express()
 const PORT = process.env.PORT || 3000
@@ -10,91 +12,91 @@ const PORT = process.env.PORT || 3000
 app.use(cors())
 app.use(express.json())
 
-const USERS_DB_PATH = path.join(__dirname, 'users.json')
-
-const ensureUsersFile = () => {
-    try {
-        if (!fs.existsSync(USERS_DB_PATH)) {
-            fs.writeFileSync(USERS_DB_PATH, JSON.stringify([], null, 2))
-        }
-    } catch (err) {
-        console.error('Failed to initialize users store:', err)
-    }
-}
-
-const loadUsers = () => {
-    try {
-        ensureUsersFile()
-        const raw = fs.readFileSync(USERS_DB_PATH, 'utf8')
-        return JSON.parse(raw)
-    } catch (err) {
-        console.error('Failed to load users:', err)
-        return []
-    }
-}
-
-const saveUsers = (data) => {
-    try {
-        fs.writeFileSync(USERS_DB_PATH, JSON.stringify(data, null, 2))
-    } catch (err) {
-        console.error('Failed to save users:', err)
-    }
-}
-
-let users = loadUsers()
-
-app.get('/users', (req, res) => {
-    res.json(users)
+// --- GET ALL USERS (Optional / Debugging) ---
+app.get('/users', async (req, res) => {
+    const { data, error } = await supabase.from('users').select('*')
+    if (error) return res.status(500).json({ error: error.message })
+    res.json(data)
 })
 
-// --- SIGNUP ROUTE (Includes Phone) ---
+// --- SIGNUP ROUTE ---
 app.post('/users', async (req, res) => {
     try {
-        // Accept phone here
-        const { name, email, phone, password } = req.body 
+        const { name, email, phone, password } = req.body
 
         if (!name || !email || !phone || !password) {
             return res.status(400).json({ message: "All fields are required" })
         }
 
-        // check if user exists
-        if (users.find(user => user.email === email)) {
-             return res.status(400).json({ message: "User already exists" })
+        // 1. Check if user exists (by email)
+        const { data: existingUser } = await supabase
+            .from('users')
+            .select('email')
+            .eq('email', email)
+            .single()
+
+        if (existingUser) {
+            return res.status(400).json({ message: "User with this email already exists" })
         }
 
+        // 2. Hash password
         const hashedPassword = await bcrypt.hash(password, 10)
 
-        // Store phone in the database
-        const user = { name, email, phone, password: hashedPassword }
-        users.push(user)
-        saveUsers(users)
+        // 3. Insert into Supabase
+        const { error } = await supabase
+            .from('users')
+            .insert([
+                { 
+                    name: name, 
+                    email: email, 
+                    phone_number: phone, // Matches the column name in SQL schema
+                    password_hash: hashedPassword // Matches the column name in SQL schema
+                }
+            ])
 
-        res.status(201).json({ message: "User created" })
+        if (error) {
+            console.error('Supabase Insert Error:', error)
+            return res.status(500).json({ message: "Error creating user" })
+        }
+
+        res.status(201).json({ message: "User created successfully" })
+
     } catch (err) {
         console.error(err)
         res.status(500).json({ message: "Internal server error" })
     }
 })
 
-// --- LOGIN ROUTE (No Phone needed) ---
-app.post('/users/login', async (req,res) => {
-    // Find user by EMAIL
-    const user = users.find(user => user.email === req.body.email)
-    
-    if (user == null) {
-        return res.status(400).send("Cannot find user")
-    }
+// --- LOGIN ROUTE ---
+app.post('/users/login', async (req, res) => {
     try {
-       if(await bcrypt.compare(req.body.password, user.password)){
-        res.send("Success")
-       } else {
-        res.send("Not Allowed")
-       }
-    } catch {
-        res.status(500).send("Invalid Password")
+        const { email, password } = req.body
+
+        // 1. Fetch user from Supabase
+        const { data: user, error } = await supabase
+            .from('users')
+            .select('*')
+            .eq('email', email)
+            .single() // We expect only one user
+
+        if (error || !user) {
+            return res.status(400).send("Cannot find user")
+        }
+
+        // 2. Compare Passwords
+        // Note: user.password_hash matches the column in your SQL table
+        if (await bcrypt.compare(password, user.password_hash)) {
+            res.send("Success") // Matches what frontend expects
+        } else {
+            res.send("Not Allowed")
+        }
+
+    } catch (err) {
+        console.error(err)
+        res.status(500).send("Server Error")
     }
 })
 
 app.listen(PORT, () => {
-    console.log(`Server listening on port ${PORT}`)
+    console.log(`Server running on port ${PORT}`)
 })

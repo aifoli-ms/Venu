@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile - VENU</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="nav-left">
+            <a href="../dashboard/dashboard.html" class="logo">VENU</a>
+        </div>
+        <div class="nav-right">
+            <a href="../dashboard/dashboard.html" class="nav-link">For Restaurants</a>
+            <a href="#" class="nav-link">About Us</a>
+            <div class="user-pill">
+                <i class="fa-regular fa-user"></i> Sign In
+            </div>
+        </div>
+    </header>
+
+    <div class="profile-container">
+        
+        <aside class="sidebar">
+            <div class="sidebar-user">
+                <h3>Shaun Ato Aifoli</h3>
+                <h3>Esua - Mensah</h3>
+            </div>
+
+            <nav class="sidebar-nav">
+                <ul>
+                    <li>
+                        <a href="#" class="sidebar-link active" data-target="reservations">
+                            <i class="fa-regular fa-calendar"></i> My Reservations
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="sidebar-link" data-target="points">
+                            <i class="fa-solid fa-gift"></i> Tracking Points
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="sidebar-link" data-target="settings">
+                            <i class="fa-solid fa-wrench"></i> Settings
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="content-area">
+            
+            <section id="reservations" class="view-section">
+                <h2 class="section-title">My Reservations</h2>
+                
+                <div class="reservation-card">
+                    <div class="res-image">
+                        <span>Grimes-Harvey</span>
+                    </div>
+                    <div class="res-info">
+                        <div class="res-header">
+                            <h3>Rowe PLC</h3>
+                            <span class="res-status cancelled">Cancelled</span>
+                        </div>
+                        <p class="res-sub">N/A</p>
+                        <p class="res-address">Jones Ltd Branch branch (70075 Ila Knolls Shannaview, NJ 44771)</p>
+                        
+                        <div class="res-footer">
+                            <span class="res-date"><i class="fa-regular fa-calendar"></i> Thu, Nov 20 at 12:33 PM</span>
+                            <span class="res-people"><i class="fa-solid fa-user-group"></i> 2 people</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pagination">
+                    <button class="page-btn" disabled>&lt; Previous</button>
+                    <button class="page-btn active">1</button>
+                    <button class="page-btn">Next &gt;</button>
+                </div>
+            </section>
+
+            <section id="points" class="view-section" style="display: none;">
+                <h2 class="section-title">Tracking Points</h2>
+
+                <div class="points-card gradient-bg">
+                    <div class="points-header">
+                        <h3><i class="fa-solid fa-gift"></i> Your Points</h3>
+                        <p>Earn points by referring friends and restaurants to our platform</p>
+                    </div>
+
+                    <div class="points-body">
+                        <div class="points-display">
+                            <span class="big-number">0</span> points
+                        </div>
+                        <div class="referral-area">
+                            <p>Share your referral link with restaurants to earn points for each successful referral.</p>
+                            <p class="highlight-text">Your referral link:</p>
+                            <div class="copy-box">
+                                <input type="text" value="https://www.theserva.com/for-restaurants?code=undefined" readonly>
+                                <button class="copy-btn"><i class="fa-regular fa-copy"></i> Copy</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="history-section">
+                    <h3><i class="fa-solid fa-clock-rotate-left"></i> Points History</h3>
+                    <div class="empty-state">
+                        <p>No points history yet.</p>
+                        <p class="sub">Start referring restaurants to earn points!</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="settings" class="view-section" style="display: none;">
+                <h2 class="section-title">Settings</h2>
+
+                <div class="settings-card">
+                    <div class="avatar-section">
+                        <div class="avatar-circle">
+                            <i class="fa-regular fa-image"></i>
+                            <button class="edit-avatar-btn"><i class="fa-solid fa-cloud-arrow-up"></i></button>
+                        </div>
+                    </div>
+
+                    <form class="settings-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Full Name</label>
+                                <input type="text" value="Shaun Ato Aifoli Esua - Mensah">
+                            </div>
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input type="email" value="shaunemensah@gmail.com">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Password</label>
+                                <div class="input-wrapper">
+                                    <input type="password" value="123456">
+                                    <i class="fa-regular fa-eye toggle-pw"></i>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Phone Number (With country code)</label>
+                                <div class="input-wrapper">
+                                    <span class="flag-icon">🇬🇭</span>
+                                    <input type="text" value="+233 557 936 363" style="padding-left: 3rem;">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" class="btn-delete">Delete Account</button>
+                            <button type="submit" class="btn-save">Save Changes</button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
