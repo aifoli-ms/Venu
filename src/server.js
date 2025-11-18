@@ -16,17 +16,29 @@ app.get('/users', (req, res) => {
 
 app.post('/users', async (req, res) => {
     try {
-        const { name, password } = req.body
-        if (!name || !password) {
-            return res.status(400).json({ message: "Name and password required" })
+        // 1. Accept 'phone' from the request body
+        const { name, email, phone, password } = req.body 
+
+        // 2. Validate that phone is present
+        if (!name || !email || !phone || !password) {
+            return res.status(400).json({ message: "All fields (name, email, phone, password) are required" })
         }
+
+        // (Optional) Check if email already exists...
 
         const hashedPassword = await bcrypt.hash(password, 10)
 
-        const user = { name, password: hashedPassword }
+        // 3. Store the phone number in the user object
+        const user = { 
+            name, 
+            email, 
+            phone, // Saved here
+            password: hashedPassword 
+        }
+        
         users.push(user)
 
-        res.status(201).json({ name })
+        res.status(201).json({ message: "User created successfully" })
     } catch (err) {
         console.error(err)
         res.status(500).json({ message: "Internal server error" })

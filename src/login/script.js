@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     const loginForm = document.getElementById('signin-form');
     const emailInput = document.getElementById('email');
+    const phoneInput = document.getElementById('phone');
     const passwordInput = document.getElementById('password');
     const togglePassword = document.getElementById('togglePassword');
     const messageEl = document.getElementById('message'); // The <p id="message"> tag
@@ -29,6 +30,8 @@ document.addEventListener('DOMContentLoaded', () => {
             // Get form values
             const name = emailInput.value; // Sending email value as "name"
             const password = passwordInput.value;
+            const phone = phoneInput.value;
+            const email = emailInput.value;
 
             // Send data to your backend
             try {
@@ -37,7 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ name: name, password: password }) 
+                    body: JSON.stringify({ name: name, password: password, phone: phone, email: email }) 
                 });
 
                 const resultText = await response.text();
