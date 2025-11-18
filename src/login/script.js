@@ -43,9 +43,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 const resultText = await response.text();
 
                 // Display the server's response
-                if (response.ok) { // e.g., Status 200 "Success"
-                    messageEl.textContent = resultText;
-                    messageEl.className = 'message success';
+                if (response.ok && resultText === "Success") { // e.g., Status 200 "Success"
+                    // Redirect to dashboard on successful login
+                    window.location.href = '../dashboard/dashboard.html';
                 } else { // e.g., Status 401 "Not Allowed"
                     messageEl.textContent = resultText;
                     messageEl.className = 'message error';
