@@ -4,7 +4,11 @@ require('dotenv').config({ path: path.join(__dirname, '..', '.env') })
 const express = require('express')
 const bcrypt = require('bcrypt')
 const cors = require('cors')
+const { GoogleGenerativeAI } = require('@google/generative-ai')
 const supabase = require('./supabaseClient') // Import the connection
+
+// Initialize Google Generative AI
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY)
 
 const app = express()
 const PORT = process.env.PORT || 3000
@@ -398,6 +402,79 @@ app.post('/reservations', checkAuth, async (req, res) => {
     }
 });
 
+// ==========================================================
+// --- ALFRED AI ROUTE (POWERED BY GEMINI FREE) ---
+// ==========================================================
+app.post('/alfred/ask', async (req, res) => {
+    const { user_input } = req.body;
+    
+    if (!user_input) {
+        return res.status(400).json({ message: "Input required" });
+    }
+
+    try {
+        // 1. Fetch restaurant data for context
+        const { data: restaurants, error } = await supabase
+            .from('restaurants')
+            .select('name, cuisine_type, location, price_range, average_rating');
+
+        if (error) throw error;
+
+        // 2. Create the context string
+        const restaurantContext = restaurants.map(r => 
+            `- ${r.name} (${r.cuisine_type}): ${r.location}, ${r.price_range}, ${r.average_rating} stars`
+        ).join('\n');
+
+        const systemInstruction = `
+            You are Alfred, a sophisticated concierge for 'VENU', a restaurant reservation platform in Ghana.
+            
+            Here is the list of available restaurants:
+            ${restaurantContext}
+
+            Rules:
+            1. Recommend only from this list.
+            2. If the user asks for something not listed, suggest the closest alternative from the list.
+            3. Keep answers short, friendly, and helpful.
+        `;
+
+
+        const model = genAI.getGenerativeModel({ 
+            model: "gemini-3-pro-preview", // Use a known valid model name
+            systemInstruction: systemInstruction
+        });
+
+        // 4. Generate Response
+        const result = await model.generateContent(user_input);
+        const response = await result.response;
+        const reply = response.text();
+
+        res.status(200).json({ reply: reply });
+
+    } catch (err) {
+        console.error('Alfred Error:', err);
+        res.status(500).json({ message: "Alfred is having trouble thinking right now." });
+    }
+});
+
+// --- GET SINGLE RESTAURANT DETAILS (GET /restaurants/:id) ---
+app.get('/restaurants/:id', async (req, res) => {
+    const { id } = req.params;
+    try {
+        const { data, error } = await supabase
+            .from('restaurants')
+            .select('*')
+            .eq('id', id)
+            .single();
+
+        if (error) throw error;
+        if (!data) return res.status(404).json({ message: "Restaurant not found" });
+
+        res.status(200).json(data);
+    } catch (err) {
+        console.error('Error fetching restaurant details:', err);
+        res.status(500).json({ message: "Server error" });
+    }
+});
 
 // ==========================================================
 // --- START SERVER ---

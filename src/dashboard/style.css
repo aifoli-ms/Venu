@@ -333,3 +333,184 @@ body {
     color: var(--disabled-color);
     cursor: not-allowed;
 }
+
+/* --- Filter Dropdown Styles --- */
+.filter-dropdown {
+    position: absolute;
+    top: 110%; /* Position below the button */
+    left: 0;
+    width: 250px;
+    background-color: #fff;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    padding: 1.5rem;
+    z-index: 100; /* Ensure it sits on top of restaurant cards */
+    display: none; /* Hidden by default */
+}
+
+.filter-dropdown.show {
+    display: block;
+    animation: fadeIn 0.2s ease-out;
+}
+
+.filter-group {
+    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.filter-group label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--dark-grey);
+}
+
+.filter-group input, 
+.filter-group select {
+    padding: 0.5rem;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 0.9rem;
+    width: 100%;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ALFRED WIDGET STYLES */
+#alfred-widget {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    z-index: 1000;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+#alfred-toggle-btn {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    font-weight: 600;
+    font-size: 1.5rem;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(249, 115, 22, 0.4);
+    transition: transform 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+}
+
+#alfred-toggle-btn:hover {
+    transform: scale(1.05);
+}
+
+#alfred-chat-window {
+    position: absolute;
+    bottom: 80px;
+    right: 0;
+    width: 350px;
+    height: 500px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.2s, transform 0.2s;
+}
+
+#alfred-chat-window.hidden {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(20px);
+}
+
+.alfred-header {
+    background: var(--primary-color);
+    color: white;
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.alfred-header h3 {
+    margin: 0;
+    font-size: 1.1rem;
+}
+
+#alfred-close-btn {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-size: 1.1rem;
+}
+
+#alfred-messages {
+    flex: 1;
+    padding: 1rem;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    background: #F9FAFB;
+}
+
+.message {
+    max-width: 85%;
+    padding: 0.8rem 1rem;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+.message.alfred {
+    background: white;
+    border: 1px solid #E5E7EB;
+    align-self: flex-start;
+    border-bottom-left-radius: 2px;
+}
+
+.message.user {
+    background: var(--primary-color);
+    color: white;
+    align-self: flex-end;
+    border-bottom-right-radius: 2px;
+}
+
+#alfred-input-form {
+    padding: 0.8rem;
+    background: white;
+    border-top: 1px solid #E5E7EB;
+    display: flex;
+    gap: 0.5rem;
+}
+
+#alfred-input {
+    flex: 1;
+    border: 1px solid #E5E7EB;
+    border-radius: 20px;
+    padding: 0.6rem 1rem;
+    outline: none;
+}
+
+#alfred-input-form button {
+    background: none;
+    border: none;
+    color: var(--primary-color);
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 0 0.5rem;
+}

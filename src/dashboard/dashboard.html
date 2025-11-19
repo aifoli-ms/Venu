@@ -24,7 +24,7 @@
         <div class="nav-right">
             <div class="search-bar">
                 <i class="fas fa-search"></i>
-                <input type="text" placeholder="Search restaurants...">
+                <input type="text" id="search-input" placeholder="Search restaurants...">
             </div>
             <button class="icon-btn">
                 <i class="fa-regular fa-bell"></i>
@@ -39,14 +39,46 @@
                 <h2>Discover Restaurants</h2>
                 <p>Explore the best dining experiences in Ghana</p>
             </div>
-            <div class="filter-controls">
-                <button class="filter-btn"><i class="fas fa-filter"></i> Filters</button>
+            <div class="filter-controls" style="position: relative;"> <button class="filter-btn" id="filter-toggle-btn"><i class="fas fa-filter"></i> Filters</button>
+    
+                <div class="filter-dropdown" id="filter-dropdown">
+                    <div class="filter-group">
+                        <label for="filter-location">Location</label>
+                        <input type="text" id="filter-location" placeholder="e.g. East Legon">
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="filter-price">Price</label>
+                        <select id="filter-price">
+                            <option value="">Any Price</option>
+                            <option value="$">$ (Cheap)</option>
+                            <option value="$$">$$ (Moderate)</option>
+                            <option value="$$$">$$$ (Expensive)</option>
+                            <option value="$$$$">$$$$ (Classy)</option>
+                        </select>
+                    </div>
+            
+                    <div class="filter-group">
+                        <label for="filter-rating">Rating</label>
+                        <select id="filter-rating">
+                            <option value="0">Any Rating</option>
+                            <option value="4">4+ Stars</option>
+                            <option value="4.5">4.5+ Stars</option>
+                        </select>
+                    </div>
+            
+                    <div style="display: flex; gap: 0.5rem; margin-top: 10px;">
+                        <button id="apply-filters-btn" class="btn btn-primary" style="flex: 1; font-size: 0.9rem;">Apply Filters</button>
+                        <button id="clear-filters-btn" class="btn" style="flex: 1; font-size: 0.9rem; background-color: var(--light-grey); color: var(--dark-grey); border: 1px solid var(--border-color);">Clear</button>
+                    </div>
+                </div>
+            
                 <div class="filter-pills">
-                    <button class="pill active">All</button>
-                    <button class="pill">Italian</button>
-                    <button class="pill">Japanese</button>
-                    <button class="pill">African</button>
-                    <button class="pill">Fine Dining</button>
+                    <button class="pill active" data-cuisine="All">All</button>
+                    <button class="pill" data-cuisine="Italian">Italian</button>
+                    <button class="pill" data-cuisine="Japanese">Japanese</button>
+                    <button class="pill" data-cuisine="African">African</button>
+                    <button class="pill" data-cuisine="Fine Dining">Fine Dining</button>
                 </div>
             </div>
         </section>
@@ -56,6 +88,28 @@
         </section>
     </main>
 
+    <div id="alfred-widget">
+        <button id="alfred-toggle-btn" title="Ask Alfred">
+            <i class="fa-solid fa-robot"></i>
+        </button>
+        
+        <div id="alfred-chat-window" class="hidden">
+            <div class="alfred-header">
+                <h3>Alfred</h3>
+                <button id="alfred-close-btn"><i class="fas fa-times"></i></button>
+            </div>
+            <div id="alfred-messages">
+                <div class="message alfred">
+                    Hello! I'm Alfred. I can help you find the perfect dining spot. What are you in the mood for?
+                </div>
+            </div>
+            <form id="alfred-input-form">
+                <input type="text" id="alfred-input" placeholder="Type your message..." autocomplete="off">
+                <button type="submit"><i class="fas fa-paper-plane"></i></button>
+            </form>
+        </div>
+    </div>
+    
     <script src="script.js"></script>
 </body>
 </html>

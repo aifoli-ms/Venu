@@ -10,6 +10,20 @@ document.addEventListener('DOMContentLoaded', function() {
     const favoritesLink = document.getElementById('favorites-link');
     const userAvatarEl = document.querySelector('.user-avatar');
 
+    // --- New Filter Elements ---
+    const filterToggleBtn = document.getElementById('filter-toggle-btn');
+    const filterDropdown = document.getElementById('filter-dropdown');
+    const applyFiltersBtn = document.getElementById('apply-filters-btn');
+    const clearFiltersBtn = document.getElementById('clear-filters-btn');
+    const filterLocationInput = document.getElementById('filter-location');
+    const filterPriceInput = document.getElementById('filter-price');
+    const filterRatingInput = document.getElementById('filter-rating');
+    const searchInput = document.getElementById('search-input');
+
+    // --- State Management ---
+    let allRestaurantsData = []; // Store fetched data here to filter locally
+    let currentCuisine = 'All';
+    let currentSearchTerm = '';
 
     // ----------------------------------------------------
     // --- 1. UTILITY FUNCTIONS: AVATAR AND TOGGLES ---
@@ -100,6 +114,23 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    // Reserve Button Navigation Function
+    function setupReserveButtons() {
+        document.querySelectorAll('.reserve-btn').forEach(button => {
+            button.addEventListener('click', function(e) {
+                // Don't navigate if button is disabled (Fully Booked)
+                if (this.disabled || this.classList.contains('btn-disabled')) {
+                    return;
+                }
+                
+                const restaurantId = this.getAttribute('data-restaurant-id');
+                if (restaurantId) {
+                    window.location.href = `../restaurant/restaurant.html?id=${restaurantId}`;
+                }
+            });
+        });
+    }
+
     // ----------------------------------------------------
     // --- 2. RENDERING FUNCTIONS ---
     // ----------------------------------------------------
@@ -156,7 +187,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <span style="padding: 0 0.2rem;"> • </span>
                         <span>${restaurant.total_reviews || 0} reviews</span>
                     </div>
-                    <button class="${btnClass}" ${btnDisabled}>${btnText}</button>
+                    <button class="${btnClass} reserve-btn" ${btnDisabled} data-restaurant-id="${restaurant.id}">${btnText}</button>
                 </div>
             </article>
         `;
@@ -165,20 +196,153 @@ document.addEventListener('DOMContentLoaded', function() {
     function renderRestaurants(restaurants) {
         restaurantGrid.innerHTML = '';
         if (restaurants.length === 0) {
-            restaurantGrid.innerHTML = '<p style="text-align: center; grid-column: 1 / -1; color: var(--text-grey);">No restaurants found in this category.</p>';
+            restaurantGrid.innerHTML = '<p style="text-align: center; grid-column: 1 / -1; color: var(--text-grey);">No restaurants found matching these filters.</p>';
             return;
         }
 
         const restaurantHTML = restaurants.map(createRestaurantCard).join('');
         restaurantGrid.innerHTML = restaurantHTML;
         setupFavoriteToggles();
+        setupReserveButtons();
     }
 
     // ----------------------------------------------------
-    // --- 3. DATA FETCHING AND UI LOGIC ---
+    // --- 3. FILTER LOGIC ---
     // ----------------------------------------------------
 
-    // Function to handle the tab switching effect
+    // Toggle Filter Dropdown
+    if (filterToggleBtn && filterDropdown) {
+        filterToggleBtn.addEventListener('click', (e) => {
+            e.stopPropagation(); 
+            filterDropdown.classList.toggle('show');
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!filterDropdown.contains(e.target) && e.target !== filterToggleBtn) {
+                filterDropdown.classList.remove('show');
+            }
+        });
+        
+        // Prevent clicks inside dropdown from closing it
+        filterDropdown.addEventListener('click', (e) => e.stopPropagation());
+    }
+
+    // Apply Filters Logic
+    function applyFilters() {
+        let filtered = allRestaurantsData;
+
+        // A. Filter by Search Term (Name, Location, Cuisine)
+        if (currentSearchTerm) {
+            const searchLower = currentSearchTerm.toLowerCase().trim();
+            filtered = filtered.filter(r => {
+                const nameMatch = r.name && r.name.toLowerCase().includes(searchLower);
+                const locationMatch = r.location && r.location.toLowerCase().includes(searchLower);
+                const cuisineMatch = r.cuisine_type && r.cuisine_type.toLowerCase().includes(searchLower);
+                return nameMatch || locationMatch || cuisineMatch;
+            });
+        }
+
+        // B. Filter by Cuisine (Pills)
+        if (currentCuisine !== 'All') {
+            filtered = filtered.filter(r => 
+                r.cuisine_type && r.cuisine_type.toLowerCase().includes(currentCuisine.toLowerCase())
+            );
+        }
+
+        // C. Filter by Location (Input)
+        const locValue = filterLocationInput ? filterLocationInput.value.toLowerCase().trim() : '';
+        if (locValue) {
+            filtered = filtered.filter(r => 
+                r.location && r.location.toLowerCase().includes(locValue)
+            );
+        }
+
+        // D. Filter by Price (Select)
+        const priceValue = filterPriceInput ? filterPriceInput.value : '';
+        if (priceValue) {
+            filtered = filtered.filter(r => r.price_range === priceValue);
+        }
+
+        // E. Filter by Rating (Select)
+        const ratingValue = filterRatingInput ? parseFloat(filterRatingInput.value) : 0;
+        if (ratingValue > 0) {
+            filtered = filtered.filter(r => (r.average_rating || 0) >= ratingValue);
+        }
+
+        renderRestaurants(filtered);
+    }
+
+    // Clear Filters Function
+    function clearFilters() {
+        // Reset all filter inputs
+        if (filterLocationInput) filterLocationInput.value = '';
+        if (filterPriceInput) filterPriceInput.value = '';
+        if (filterRatingInput) filterRatingInput.value = '0';
+        if (searchInput) searchInput.value = '';
+        
+        // Reset search term
+        currentSearchTerm = '';
+        
+        // Reset cuisine to "All"
+        currentCuisine = 'All';
+        filterPills.forEach(pill => {
+            pill.classList.remove('active');
+            if (pill.getAttribute('data-cuisine') === 'All' || pill.textContent.trim() === 'All') {
+                pill.classList.add('active');
+            }
+        });
+        
+        // Reapply filters (which will show all restaurants now)
+        applyFilters();
+        filterDropdown.classList.remove('show'); // Close menu
+    }
+
+    // "Apply Filters" Button Listener
+    if (applyFiltersBtn) {
+        applyFiltersBtn.addEventListener('click', () => {
+            applyFilters();
+            filterDropdown.classList.remove('show'); // Close menu
+        });
+    }
+
+    // "Clear Filters" Button Listener
+    if (clearFiltersBtn) {
+        clearFiltersBtn.addEventListener('click', () => {
+            clearFilters();
+        });
+    }
+
+    // Search Input Listener
+    if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+            currentSearchTerm = e.target.value;
+            applyFilters();
+        });
+    }
+
+    // Filter Pills Listener
+    filterPills.forEach(pill => {
+        pill.addEventListener('click', function() {
+            // Update UI
+            filterPills.forEach(p => p.classList.remove('active'));
+            this.classList.add('active');
+            
+            // Update Logic
+            currentCuisine = this.textContent.trim();
+            if (this.getAttribute('data-cuisine')) {
+                 currentCuisine = this.getAttribute('data-cuisine');
+            }
+            
+            applyFilters();
+        });
+    });
+
+
+    // ----------------------------------------------------
+    // --- 4. DATA FETCHING AND UI LOGIC ---
+    // ----------------------------------------------------
+
     function setActiveNavLink(linkId) {
         navLinks.forEach(link => link.classList.remove('active'));
         const activeLink = document.getElementById(linkId);
@@ -199,12 +363,11 @@ document.addEventListener('DOMContentLoaded', function() {
             const response = await fetch(url, {
                 method: 'GET',
                 headers: {
-                    'X-User-Id': userId || '' // Send userId for potential favorited status checks
+                    'X-User-Id': userId || '' 
                 }
             });
             
             if (!response.ok) {
-                // Handle 403 error specifically for viewing favorites while logged out
                 if (response.status === 403 && filter === 'favorites') {
                      restaurantGrid.innerHTML = '<p style="text-align: center; grid-column: 1 / -1; color: var(--primary-color);">Please log in to view your favorite restaurants.</p>';
                      return;
@@ -213,13 +376,17 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             const restaurants = await response.json();
             
-            // TEMP: Inject demo status if not provided by server
-            const finalRestaurants = restaurants.map((r, index) => ({
+            // Normalize data and Store Globally
+            allRestaurantsData = restaurants.map((r, index) => ({
                 ...r,
+                // Demo status logic (keep existing logic or replace with real data)
                 status: r.status || (index === 2 || index === 6 ? 'Fully Booked' : 'Available'),
+                price_range: r.price_range || '$$',
+                average_rating: r.average_rating || 0
             }));
 
-            renderRestaurants(finalRestaurants);
+            // Render with current filters applied
+            applyFilters();
 
         } catch (error) {
             console.error('Error fetching restaurants:', error);
@@ -229,7 +396,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
     // ----------------------------------------------------
-    // --- 4. EVENT LISTENERS AND INITIAL LOAD ---
+    // --- 5. EVENT LISTENERS AND INITIAL LOAD ---
     // ----------------------------------------------------
     
     // Navigation Tab Event Listeners
@@ -237,7 +404,9 @@ document.addEventListener('DOMContentLoaded', function() {
         exploreLink.addEventListener('click', (e) => {
             e.preventDefault();
             setActiveNavLink('explore-link');
-            fetchRestaurants(); // Fetch all restaurants
+            // Reset filters when going back to explore? Optional.
+            // currentCuisine = 'All'; 
+            fetchRestaurants(); 
         });
     }
 
@@ -245,21 +414,85 @@ document.addEventListener('DOMContentLoaded', function() {
         favoritesLink.addEventListener('click', (e) => {
             e.preventDefault();
             setActiveNavLink('favorites-link');
-            fetchRestaurants('favorites'); // Fetch only favorited restaurants
+            fetchRestaurants('favorites'); 
         });
     }
     
-    // Filter Pill Toggle (Existing logic retained)
-    filterPills.forEach(pill => {
-        pill.addEventListener('click', function() {
-            filterPills.forEach(p => p.classList.remove('active'));
-            this.classList.add('active');
-            console.log('Filtering by:', this.textContent);
-        });
-    });
-
-
     // Initial run on page load
     updateUserAvatar();
     fetchRestaurants();
+
+    // --- ALFRED LOGIC ---
+    const alfredToggleBtn = document.getElementById('alfred-toggle-btn');
+    const alfredChatWindow = document.getElementById('alfred-chat-window');
+    const alfredCloseBtn = document.getElementById('alfred-close-btn');
+    const alfredInputForm = document.getElementById('alfred-input-form');
+    const alfredInput = document.getElementById('alfred-input');
+    const alfredMessages = document.getElementById('alfred-messages');
+
+    // Toggle Window
+    if(alfredToggleBtn && alfredChatWindow) {
+        alfredToggleBtn.addEventListener('click', () => {
+            alfredChatWindow.classList.toggle('hidden');
+            if (!alfredChatWindow.classList.contains('hidden')) {
+                alfredInput.focus();
+            }
+        });
+        alfredCloseBtn.addEventListener('click', () => {
+            alfredChatWindow.classList.add('hidden');
+        });
+    }
+
+    function addMessage(text, sender) {
+        const div = document.createElement('div');
+        div.classList.add('message', sender);
+        div.textContent = text;
+        alfredMessages.appendChild(div);
+        alfredMessages.scrollTop = alfredMessages.scrollHeight;
+    }
+
+    if(alfredInputForm) {
+        alfredInputForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const text = alfredInput.value.trim();
+            if(!text) return;
+
+            // 1. Add User Message
+            addMessage(text, 'user');
+            alfredInput.value = '';
+
+            // 2. Show Loading State
+            const loadingDiv = document.createElement('div');
+            loadingDiv.classList.add('message', 'alfred');
+            loadingDiv.innerHTML = '<i class="fas fa-ellipsis-h"></i>';
+            loadingDiv.id = 'alfred-loading';
+            alfredMessages.appendChild(loadingDiv);
+
+            try {
+                // 3. Send to Backend
+                const response = await fetch('http://localhost:3000/alfred/ask', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ user_input: text })
+                });
+
+                // Remove loading indicator
+                const loader = document.getElementById('alfred-loading');
+                if(loader) loader.remove();
+
+                if(response.ok) {
+                    const data = await response.json();
+                    addMessage(data.reply, 'alfred');
+                } else {
+                    addMessage("I'm having trouble reaching my brain server. Please try again.", 'alfred');
+                }
+
+            } catch (err) {
+                console.error(err);
+                const loader = document.getElementById('alfred-loading');
+                if(loader) loader.remove();
+                addMessage("Connection error. Check your internet.", 'alfred');
+            }
+        });
+    }
 });

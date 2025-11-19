@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurant Details - VENU</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="nav-left">
+            <a href="../dashboard/dashboard.html" class="logo">VENU</a>
+        </div>
+        <div class="nav-right">
+            <a href="../dashboard/dashboard.html" class="nav-link">Back to Dashboard</a>
+            <a href="../profile/profile.html" class="user-avatar" id="restaurant-avatar-initials"></a>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="banner" id="restaurant-banner">
+            <div class="banner-content">
+                <div class="badges">
+                    <span class="badge status" id="res-status">Open</span>
+                    <span class="badge rating"><i class="fas fa-star"></i> <span id="res-rating">0.0</span> (190 reviews)</span>
+                </div>
+                <h1 id="res-name">Loading Name...</h1>
+                <h2 id="res-cuisine">Cuisine Type</h2>
+            </div>
+        </section>
+
+        <div class="details-grid">
+            
+            <div class="left-col">
+                <div class="card cta-card">
+                    <h3>Make a Reservation</h3>
+                    <button id="open-modal-btn" class="btn btn-primary btn-full">Reserve a Table</button>
+                </div>
+
+                <div class="card reviews-card">
+                    <div class="card-header">
+                        <h3>Reviews</h3>
+                        <span class="rating-mini"><i class="fas fa-star"></i> <span id="review-rating">4.3</span></span>
+                    </div>
+                    <div class="empty-state">
+                        <i class="fas fa-star"></i>
+                        <p>No reviews yet.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="right-col">
+                <div class="card info-card">
+                    <h3>Restaurant Info</h3>
+                    <ul class="info-list">
+                        <li>
+                            <div class="icon-box"><i class="fa-regular fa-clock"></i></div>
+                            <div class="text">
+                                <strong>Availability</strong>
+                                <p>Open from 12:01 PM to 10:00 PM</p>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="icon-box"><i class="fa-solid fa-phone"></i></div>
+                            <div class="text">
+                                <strong>Phone</strong>
+                                <p id="res-phone">(233) 555-0123</p>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="icon-box"><i class="fa-solid fa-link"></i></div>
+                            <div class="text">
+                                <strong>Website</strong>
+                                <p><a href="#" id="res-website">Visit Website</a></p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <div id="reservation-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Make a Reservation</h3>
+                <button class="close-modal"><i class="fas fa-times"></i></button>
+            </div>
+            <p class="modal-sub">Fill in the details to reserve a table.</p>
+            
+            <form id="reservation-form">
+                <div class="form-group">
+                    <select id="modal-party">
+                        <option value="2">2 People</option>
+                        <option value="3">3 People</option>
+                        <option value="4">4 People</option>
+                        <option value="5">5 People</option>
+                        <option value="6">6+ People</option>
+                    </select>
+                </div>
+                <div class="form-row">
+                    <input type="date" id="modal-date" required>
+                    <input type="time" id="modal-time" required>
+                </div>
+                
+                <div class="checkbox-group">
+                    <input type="checkbox" id="use-points">
+                    <label for="use-points">Use my points</label>
+                </div>
+
+                <div class="fee-summary">
+                    <p>Processing fees : 5 GHS</p>
+                    <p>Discount : 0</p>
+                    <p>Hold fee : 0</p>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-full">Reserve</button>
+                <p class="modal-footer-text">Your reservation is held for 30 minutes. Complete payment within this time, or it will be automatically canceled.</p>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
