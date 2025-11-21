@@ -405,57 +405,162 @@ app.post('/reservations', checkAuth, async (req, res) => {
 // ==========================================================
 // --- ALFRED AI ROUTE (POWERED BY GEMINI FREE) ---
 // ==========================================================
-app.post('/alfred/ask', async (req, res) => {
+
+let cachedRestaurantContext = "";
+
+async function refreshRestaurantContext() {
+    try {
+        const { data: restaurants, error } = await supabase
+            .from('restaurants')
+            .select('name, cuisine_type, location, price_range, average_rating, price_range');
+        
+        if (error) throw error;
+        
+        // Add Price Range legend to the context for clarity
+        const legend = "Price Ranges: $ (Budget), $$ (Mid-Range), $$$ (Fine Dining)";
+        
+        const context = restaurants.map(r => 
+            `- ${r.name} (${r.cuisine_type}): ${r.location}, Price: ${r.price_range}, Rating: ${r.average_rating} stars`
+        ).join('\n');
+        
+        cachedRestaurantContext = `${legend}\n\nList:\n${context}`;
+        console.log("Alfred's restaurant context refreshed.");
+
+    } catch (err) {
+        console.error("Failed to refresh AI context:", err);
+    }
+}
+
+// Call once on server startup (or use a cron job/setInterval)
+refreshRestaurantContext();
+app.post('/alfred/ask', checkAuth, async (req, res) => {
     const { user_input } = req.body;
+    const userId = req.userId;
     
     if (!user_input) {
         return res.status(400).json({ message: "Input required" });
     }
 
+    // Set a default reply here. This value is guaranteed to be non-null.
+    let reply = "I apologize, Alfred is currently unavailable. Please try again in a few moments.";
+    
     try {
-        // 1. Fetch restaurant data for context
-        const { data: restaurants, error } = await supabase
-            .from('restaurants')
-            .select('name, cuisine_type, location, price_range, average_rating');
+        // 1. Fetch user preference data (Reviews)
+        const { data: reviews } = await supabase
+            .from('reviews')
+            .select('rating, restaurants(name, cuisine_type)') 
+            .eq('user_id', userId)
+            .order('created_at', { ascending: false })
+            .limit(5);
 
-        if (error) throw error;
+        // 2. Format user preference string
+        const preferenceContext = reviews && reviews.length > 0 
+            ? "User Feedback:\n" + reviews.map(r => 
+                `- Rated ${r.restaurants.name} (${r.restaurants.cuisine_type}) ${r.rating} stars.`
+            ).join('\n')
+            : "User has not submitted reviews, base recommendations on general data.";
 
-        // 2. Create the context string
-        const restaurantContext = restaurants.map(r => 
-            `- ${r.name} (${r.cuisine_type}): ${r.location}, ${r.price_range}, ${r.average_rating} stars`
-        ).join('\n');
+        // 3. Fetch past chat history (Last 5 turns for short-term memory)
+        const { data: chatHistory } = await supabase
+            .from('ai_interactions')
+            .select('user_prompt, alfred_response')
+            .eq('user_id', userId)
+            .order('timestamp', { ascending: false })
+            .limit(5);
 
+        // 4. Format chat history for prompt
+        const chatContext = chatHistory && chatHistory.length > 0
+            ? "Past Interactions (Use this for conversation flow):\n" + chatHistory.reverse().map(c => 
+                `USER: ${c.user_prompt}\nALFRED: ${c.alfred_response}`
+            ).join('\n---\n')
+            : "This is the start of a new session.";
+
+        // 5. Construct the comprehensive system instruction
         const systemInstruction = `
-            You are Alfred, a sophisticated concierge for 'VENU', a restaurant reservation platform in Ghana.
+            You are Alfred, a sophisticated, friendly, and brief concierge for 'VENU', a restaurant reservation platform in Ghana.
             
-            Here is the list of available restaurants:
-            ${restaurantContext}
+            Current Time: ${new Date().toLocaleTimeString('en-GH')}
 
-            Rules:
-            1. Recommend only from this list.
-            2. If the user asks for something not listed, suggest the closest alternative from the list.
-            3. Keep answers short, friendly, and helpful.
+            -- CONTEXT --
+            ${cachedRestaurantContext} 
+
+            -- USER HISTORY --
+            ${preferenceContext}
+            
+            -- PAST INTERACTIONS --
+            ${chatContext}
+
+            -- RULES --
+            1.  Recommend only from the provided restaurant list.
+            2.  Use the User Feedback to tailor recommendations (e.g., avoid recommending a 1-star rated cuisine).
+            3.  Keep answers short, friendly, and helpful (max 3 sentences).
         `;
-
+        
+        // --- Generation Config for Robustness ---
+        const generationConfig = {
+            maxOutputTokens: 500, // Provides plenty of room for Alfred's response
+            temperature: 0.5,     
+        };
 
         const model = genAI.getGenerativeModel({ 
-            model: "gemini-3-pro-preview", // Use a known valid model name
-            systemInstruction: systemInstruction
+            model: "gemini-2.5-flash",
+            systemInstruction: systemInstruction,
+            config: generationConfig, // Pass the configuration
         });
 
-        // 4. Generate Response
+        // 6. Generate Response
         const result = await model.generateContent(user_input);
-        const response = await result.response;
-        const reply = response.text();
+        
+        // FIX: Check for text and log diagnostics if text is missing
+        if (result.text) {
+            reply = result.text;
+        } else {
+            console.error('Gemini API returned no text.');
+            
+            if (result.candidates && result.candidates.length > 0) {
+                const candidate = result.candidates[0];
+                console.error('Reason for no text (Finish Reason):', candidate.finishReason);
+                
+                if (candidate.safetyRatings) {
+                    // This is the critical output for safety filtering issues
+                    console.error('Safety Ratings:', candidate.safetyRatings); 
+                }
+            }
+        }
 
+        // 7. Save the interaction using the 'reply' variable (guaranteed non-null)
+        const { error: insertError } = await supabase
+            .from('ai_interactions')
+            .insert({ 
+                user_id: userId, 
+                user_prompt: user_input, 
+                alfred_response: reply 
+            });
+
+        if (insertError) console.error("Failed to save AI interaction:", insertError);
+        
         res.status(200).json({ reply: reply });
 
     } catch (err) {
         console.error('Alfred Error:', err);
-        res.status(500).json({ message: "Alfred is having trouble thinking right now." });
+        
+        // If the whole request fails, attempt to save the interaction with the error message
+        try {
+            await supabase
+                .from('ai_interactions')
+                .insert({ 
+                    user_id: userId, 
+                    user_prompt: user_input, 
+                    alfred_response: reply 
+                });
+        } catch(dbErr) {
+            console.error('Failed to save error interaction:', dbErr);
+        }
+        
+        // Send the fallback message to the frontend
+        res.status(500).json({ message: reply });
     }
 });
-
 // --- GET SINGLE RESTAURANT DETAILS (GET /restaurants/:id) ---
 app.get('/restaurants/:id', async (req, res) => {
     const { id } = req.params;

@@ -451,6 +451,8 @@ document.addEventListener('DOMContentLoaded', function() {
         alfredMessages.scrollTop = alfredMessages.scrollHeight;
     }
 
+    const apiBaseUrl = 'http://localhost:3000';
+
     if(alfredInputForm) {
         alfredInputForm.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -461,6 +463,12 @@ document.addEventListener('DOMContentLoaded', function() {
             addMessage(text, 'user');
             alfredInput.value = '';
 
+            const userId = localStorage.getItem('userId');
+            if(!userId) {
+                addMessage("Please log in to chat with Alfred.", 'alfred');
+                return;
+            }
+
             // 2. Show Loading State
             const loadingDiv = document.createElement('div');
             loadingDiv.classList.add('message', 'alfred');
@@ -470,9 +478,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
             try {
                 // 3. Send to Backend
-                const response = await fetch('http://localhost:3000/alfred/ask', {
+                const response = await fetch(`${apiBaseUrl}/alfred/ask`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'X-User-Id': userId
+                    },
                     body: JSON.stringify({ user_input: text })
                 });
 
@@ -483,6 +494,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 if(response.ok) {
                     const data = await response.json();
                     addMessage(data.reply, 'alfred');
+                } else if(response.status === 403) {
+                    addMessage("Session expired. Please log in again.", 'alfred');
                 } else {
                     addMessage("I'm having trouble reaching my brain server. Please try again.", 'alfred');
                 }
