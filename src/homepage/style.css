@@ -88,7 +88,8 @@ img {
 */
 .hero {
     /* Using a placeholder image from Unsplash */
-    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://images.unsplash.com/photo-1517248135820-ee3a424376be?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1200');
+    background-color: #1B4F72;
+    /* background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://images.unsplash.com/photo-1517248135820-ee3a424376be?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1200'); */
     background-size: cover;
     background-position: center;
     color: #fff;
