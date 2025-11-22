@@ -26,6 +26,10 @@ const corsOptions = {
 app.use(cors(corsOptions))
 app.use(express.json())
 
+// Serve static files from src directory
+app.use(express.static(path.join(__dirname)))
+app.use('/img', express.static(path.join(__dirname, '..', 'img')))
+
 // ==========================================================
 // --- ROUTES ---
 // ==========================================================
@@ -47,6 +51,22 @@ app.use('/alfred', aiRouter);
 
 // Mount Menu Routes at /menus and /restaurants/:id/menus
 app.use('/', menusRouter);
+
+// Explicit Root Route - serve homepage
+app.get('/', (req, res) => {
+    // Use process.cwd() to get the project root directory
+    // This is more reliable in Vercel serverless environment
+    const homepagePath = path.join(process.cwd(), 'src', 'homepage', 'homepage.html');
+    console.log('Attempting to serve homepage from:', homepagePath);
+
+    res.sendFile(homepagePath, (err) => {
+        if (err) {
+            console.error('Error serving homepage:', err);
+            res.status(404).send('Homepage not found: ' + err.message);
+        }
+    });
+});
+
 
 
 
