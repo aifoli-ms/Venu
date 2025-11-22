@@ -53,6 +53,12 @@ app.use('/', menusRouter);
 // ==========================================================
 // --- START SERVER ---
 // ==========================================================
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`)
-})
+// Only start the server if running locally (not on Vercel)
+if (process.env.NODE_ENV !== 'production' && require.main === module) {
+    app.listen(PORT, () => {
+        console.log(`Server running on port ${PORT}`)
+    })
+}
+
+// Export the Express app for Vercel serverless functions
+module.exports = app;
