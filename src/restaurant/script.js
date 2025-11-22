@@ -219,11 +219,75 @@ document.addEventListener('DOMContentLoaded', async () => {
                 <h4>${menu.name}</h4>
                 ${menu.description ? `<p>${menu.description}</p>` : ''}
             `;
+            // Add click event to open modal
+            menuEl.addEventListener('click', () => openMenuModal(menu));
             menusList.appendChild(menuEl);
         });
     }
 
     fetchMenus();
+
+    // 7. Menu Items Modal Logic
+    const menuModal = document.getElementById('menu-items-modal');
+    const closeMenuModalBtn = document.querySelector('.close-menu-modal');
+    const menuModalTitle = document.getElementById('menu-modal-title');
+    const menuItemsList = document.getElementById('menu-items-list');
+
+    async function openMenuModal(menu) {
+        menuModalTitle.textContent = menu.name;
+        menuItemsList.innerHTML = `
+            <div class="empty-state">
+                <p>Loading items...</p>
+            </div>`;
+        menuModal.classList.remove('hidden');
+
+        try {
+            const response = await fetch(`/menus/${menu.id}/items`);
+            if (!response.ok) throw new Error("Failed to fetch menu items");
+            const items = await response.json();
+            renderMenuItems(items);
+        } catch (error) {
+            console.error("Error loading menu items:", error);
+            menuItemsList.innerHTML = `
+                <div class="empty-state">
+                    <p>Error loading items.</p>
+                </div>`;
+        }
+    }
+
+    function renderMenuItems(items) {
+        menuItemsList.innerHTML = '';
+        if (items.length === 0) {
+            menuItemsList.innerHTML = `
+                <div class="empty-state">
+                    <p>No items in this menu.</p>
+                </div>`;
+            return;
+        }
+
+        items.forEach(item => {
+            const itemEl = document.createElement('div');
+            itemEl.className = 'menu-item-row';
+            itemEl.innerHTML = `
+                <div class="menu-item-info">
+                    <h4>${item.name}</h4>
+                    ${item.description ? `<p>${item.description}</p>` : ''}
+                </div>
+                <div class="menu-item-price">
+                    ₵${item.price ? item.price.toFixed(2) : '0.00'}
+                </div>
+            `;
+            menuItemsList.appendChild(itemEl);
+        });
+    }
+
+    if (closeMenuModalBtn) {
+        closeMenuModalBtn.addEventListener('click', () => menuModal.classList.add('hidden'));
+    }
+
+    window.addEventListener('click', (e) => {
+        if (e.target === menuModal) menuModal.classList.add('hidden');
+    });
 
 
     // Modal Handlers

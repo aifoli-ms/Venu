@@ -132,3 +132,37 @@ router.delete('/menus/:id', checkAuth, async (req, res) => {
 });
 
 module.exports = router;
+
+// --- GET MENU ITEMS (GET /menus/:id/items) ---
+router.get('/menus/:id/items', async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        // Query menu_items via the junction table menu_to_item
+        const { data, error } = await supabase
+            .from('menu_to_item')
+            .select(`
+                display_order,
+                is_available,
+                menu_items (
+                    *
+                )
+            `)
+            .eq('menu_id', id)
+            .eq('is_available', true)
+            .order('display_order', { ascending: true });
+
+        if (error) throw error;
+
+        // Flatten the structure for easier consumption
+        const items = data.map(entry => ({
+            ...entry.menu_items,
+            display_order: entry.display_order
+        }));
+
+        res.status(200).json(items);
+    } catch (err) {
+        console.error('Error fetching menu items:', err);
+        res.status(500).json({ message: "Server error fetching menu items" });
+    }
+});
