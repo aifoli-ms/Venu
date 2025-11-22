@@ -30,11 +30,6 @@ app.use(express.json())
 app.use(express.static(path.join(__dirname)))
 app.use('/img', express.static(path.join(__dirname, '..', 'img')))
 
-// Root route - serve homepage
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'homepage', 'homepage.html'))
-})
-
 // ==========================================================
 // --- ROUTES ---
 // ==========================================================

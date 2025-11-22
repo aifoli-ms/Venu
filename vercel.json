@@ -4,60 +4,12 @@
         {
             "src": "api/index.js",
             "use": "@vercel/node"
-        },
-        {
-            "src": "src/**/*.html",
-            "use": "@vercel/static"
-        },
-        {
-            "src": "src/**/*.css",
-            "use": "@vercel/static"
-        },
-        {
-            "src": "src/**/*.js",
-            "use": "@vercel/static"
-        },
-        {
-            "src": "img/**",
-            "use": "@vercel/static"
         }
     ],
     "routes": [
         {
-            "src": "/favicon.ico",
-            "dest": "/src/homepage/favicon.ico"
-        },
-        {
-            "src": "/users/(.*)",
-            "dest": "/api/index.js"
-        },
-        {
-            "src": "/profile/(.*)",
-            "dest": "/api/index.js"
-        },
-        {
-            "src": "/restaurants(.*)",
-            "dest": "/api/index.js"
-        },
-        {
-            "src": "/reservations(.*)",
-            "dest": "/api/index.js"
-        },
-        {
-            "src": "/alfred(.*)",
-            "dest": "/api/index.js"
-        },
-        {
-            "src": "/favorites/(.*)",
-            "dest": "/api/index.js"
-        },
-        {
-            "src": "/menus(.*)",
-            "dest": "/api/index.js"
-        },
-        {
             "src": "/(.*)",
-            "dest": "/src/$1"
+            "dest": "/api/index.js"
         }
     ]
 }
