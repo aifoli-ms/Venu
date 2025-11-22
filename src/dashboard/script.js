@@ -152,15 +152,9 @@ document.addEventListener('DOMContentLoaded', function () {
         const btnDisabled = isFullyBooked ? 'disabled' : '';
 
         // FIX: Correct local image paths for the browser
-        let imageUrl = restaurant.image_url || 'https://via.placeholder.com/400';
+        let imageUrl = restaurant.image_url 
 
-        if (imageUrl.includes('Sol-Lounge-Bar-exterior.jpg')) {
-            imageUrl = '../../img/Sol-Lounge-Bar-exterior.jpg';
-        } else if (imageUrl.includes('quattro-image.jpg')) {
-            imageUrl = '../../img/quattro-image.jpg';
-        } else if (imageUrl.includes('shogun-interior.jpg')) {
-            imageUrl = '../../img/shogun-interior.jpg';
-        }
+     
 
         return `
             <article class="restaurant-card" data-id="${restaurant.id}">
