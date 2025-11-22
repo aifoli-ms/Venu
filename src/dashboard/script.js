@@ -1,7 +1,7 @@
 // src/dashboard/script.js
 
-document.addEventListener('DOMContentLoaded', function() {
-    
+document.addEventListener('DOMContentLoaded', function () {
+
     // --- Global Elements ---
     const restaurantGrid = document.querySelector('.restaurant-grid');
     const filterPills = document.querySelectorAll('.filter-pills .pill');
@@ -30,10 +30,10 @@ document.addEventListener('DOMContentLoaded', function() {
     // ----------------------------------------------------
 
     function getInitials(name) {
-        if (!name) return 'SI'; 
-        
+        if (!name) return 'SI';
+
         const parts = name.split(/\s+/).filter(part => part.length > 0);
-        
+
         if (parts.length >= 2) {
             const firstInitial = parts[0].charAt(0).toUpperCase();
             const lastInitial = parts[parts.length - 1].charAt(0).toUpperCase();
@@ -43,44 +43,44 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         return 'SI';
     }
-    
+
     function updateUserAvatar() {
         const userName = localStorage.getItem('userName');
-        
+
         if (userAvatarEl) {
             const initials = getInitials(userName);
             userAvatarEl.textContent = initials;
-            
+
             // Set the correct navigation link
             if (!userName) {
-                 userAvatarEl.href = '../login/login.html';
+                userAvatarEl.href = '../login/login.html';
             } else {
-                 userAvatarEl.href = '../profile/profile.html';
+                userAvatarEl.href = '../profile/profile.html';
             }
         }
     }
-    
+
     // Favorite (Heart) Button Toggle Function
     function setupFavoriteToggles() {
         document.querySelectorAll('.favorite-btn').forEach(button => {
-            button.addEventListener('click', async function(e) {
+            button.addEventListener('click', async function (e) {
                 e.preventDefault();
-                
+
                 const userId = localStorage.getItem('userId');
                 if (!userId) {
                     alert("Please log in to add favorites.");
                     window.location.href = '../login/login.html';
                     return;
                 }
-                
+
                 const card = this.closest('.restaurant-card');
-                const restaurantId = card ? parseInt(card.dataset.id) : null; 
+                const restaurantId = card ? parseInt(card.dataset.id) : null;
 
                 if (!restaurantId) {
                     console.error("Restaurant ID not found.");
                     return;
                 }
-                
+
                 // Optimistic UI Update (Change heart icon immediately)
                 const icon = this.querySelector('i');
                 this.classList.toggle('active');
@@ -100,11 +100,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     if (!response.ok) {
                         throw new Error('Server reported failure to toggle favorite.');
                     }
-                    
+
                 } catch (error) {
                     console.error('API Error:', error);
                     alert("Failed to save favorite status. Try again.");
-                    
+
                     // Revert UI change if API fails
                     this.classList.toggle('active');
                     icon.classList.toggle('fa-regular');
@@ -117,12 +117,12 @@ document.addEventListener('DOMContentLoaded', function() {
     // Reserve Button Navigation Function
     function setupReserveButtons() {
         document.querySelectorAll('.reserve-btn').forEach(button => {
-            button.addEventListener('click', function(e) {
+            button.addEventListener('click', function (e) {
                 // Don't navigate if button is disabled (Fully Booked)
                 if (this.disabled || this.classList.contains('btn-disabled')) {
                     return;
                 }
-                
+
                 const restaurantId = this.getAttribute('data-restaurant-id');
                 if (restaurantId) {
                     window.location.href = `../restaurant/restaurant.html?id=${restaurantId}`;
@@ -137,29 +137,29 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function createRestaurantCard(restaurant) {
         // Use default status and favorite flag if not provided by the server
-        const isFullyBooked = restaurant.status === 'Fully Booked'; 
-        const isFavorite = restaurant.is_favorite || false; 
+        const isFullyBooked = restaurant.status === 'Fully Booked';
+        const isFavorite = restaurant.is_favorite || false;
 
-        const statusTag = isFullyBooked 
-            ? `<div class="status-tag">Fully Booked</div>` 
+        const statusTag = isFullyBooked
+            ? `<div class="status-tag">Fully Booked</div>`
             : '';
-        const btnClass = isFullyBooked 
-            ? 'btn btn-disabled' 
+        const btnClass = isFullyBooked
+            ? 'btn btn-disabled'
             : 'btn btn-primary';
-        const btnText = isFullyBooked 
-            ? 'Not Available' 
+        const btnText = isFullyBooked
+            ? 'Not Available'
             : 'Reserve a Table';
         const btnDisabled = isFullyBooked ? 'disabled' : '';
-        
+
         // FIX: Correct local image paths for the browser
         let imageUrl = restaurant.image_url || 'https://via.placeholder.com/400';
-        
+
         if (imageUrl.includes('Sol-Lounge-Bar-exterior.jpg')) {
-            imageUrl = '../../img/Sol-Lounge-Bar-exterior.jpg'; 
+            imageUrl = '../../img/Sol-Lounge-Bar-exterior.jpg';
         } else if (imageUrl.includes('quattro-image.jpg')) {
-            imageUrl = '../../img/quattro-image.jpg'; 
+            imageUrl = '../../img/quattro-image.jpg';
         } else if (imageUrl.includes('shogun-interior.jpg')) {
-            imageUrl = '../../img/shogun-interior.jpg'; 
+            imageUrl = '../../img/shogun-interior.jpg';
         }
 
         return `
@@ -179,13 +179,22 @@ document.addEventListener('DOMContentLoaded', function() {
                         </div>
                     </div>
                     <div class="card-details">
-                        <span>${restaurant.cuisine_type || 'General'}</span>
-                        <span style="padding: 0 0.2rem;"> • </span>
-                        <span><i class="fas fa-map-marker-alt"></i> ${restaurant.location || 'Unknown'}</span>
-                        <span style="padding: 0 0.2rem;"> • </span>
-                        <span>${restaurant.price_range || '$$'}</span>
-                        <span style="padding: 0 0.2rem;"> • </span>
-                        <span>${restaurant.total_reviews || 0} reviews</span>
+                        <div class="detail-badge">
+                            <i class="fas fa-utensils"></i>
+                            <span>${restaurant.cuisine_type || 'General'}</span>
+                        </div>
+                        <div class="detail-badge">
+                            <i class="fas fa-wallet"></i>
+                            <span>${restaurant.price_range || '$$'}</span>
+                        </div>
+                        <div class="detail-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>${restaurant.location || 'Unknown'}</span>
+                        </div>
+                        <div class="detail-item">
+                            <i class="fas fa-comment-alt"></i>
+                            <span>${restaurant.total_reviews || 0} reviews</span>
+                        </div>
                     </div>
                     <button class="${btnClass} reserve-btn" ${btnDisabled} data-restaurant-id="${restaurant.id}">${btnText}</button>
                 </div>
@@ -213,7 +222,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Toggle Filter Dropdown
     if (filterToggleBtn && filterDropdown) {
         filterToggleBtn.addEventListener('click', (e) => {
-            e.stopPropagation(); 
+            e.stopPropagation();
             filterDropdown.classList.toggle('show');
         });
 
@@ -223,7 +232,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 filterDropdown.classList.remove('show');
             }
         });
-        
+
         // Prevent clicks inside dropdown from closing it
         filterDropdown.addEventListener('click', (e) => e.stopPropagation());
     }
@@ -245,7 +254,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // B. Filter by Cuisine (Pills)
         if (currentCuisine !== 'All') {
-            filtered = filtered.filter(r => 
+            filtered = filtered.filter(r =>
                 r.cuisine_type && r.cuisine_type.toLowerCase().includes(currentCuisine.toLowerCase())
             );
         }
@@ -253,7 +262,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // C. Filter by Location (Input)
         const locValue = filterLocationInput ? filterLocationInput.value.toLowerCase().trim() : '';
         if (locValue) {
-            filtered = filtered.filter(r => 
+            filtered = filtered.filter(r =>
                 r.location && r.location.toLowerCase().includes(locValue)
             );
         }
@@ -280,10 +289,10 @@ document.addEventListener('DOMContentLoaded', function() {
         if (filterPriceInput) filterPriceInput.value = '';
         if (filterRatingInput) filterRatingInput.value = '0';
         if (searchInput) searchInput.value = '';
-        
+
         // Reset search term
         currentSearchTerm = '';
-        
+
         // Reset cuisine to "All"
         currentCuisine = 'All';
         filterPills.forEach(pill => {
@@ -292,7 +301,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 pill.classList.add('active');
             }
         });
-        
+
         // Reapply filters (which will show all restaurants now)
         applyFilters();
         filterDropdown.classList.remove('show'); // Close menu
@@ -323,17 +332,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Filter Pills Listener
     filterPills.forEach(pill => {
-        pill.addEventListener('click', function() {
+        pill.addEventListener('click', function () {
             // Update UI
             filterPills.forEach(p => p.classList.remove('active'));
             this.classList.add('active');
-            
+
             // Update Logic
             currentCuisine = this.textContent.trim();
             if (this.getAttribute('data-cuisine')) {
-                 currentCuisine = this.getAttribute('data-cuisine');
+                currentCuisine = this.getAttribute('data-cuisine');
             }
-            
+
             applyFilters();
         });
     });
@@ -353,7 +362,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     async function fetchRestaurants(filter = null) {
         const userId = localStorage.getItem('userId');
-        
+
         let url = 'http://localhost:3000/restaurants';
         if (filter === 'favorites') {
             url += '?filter=favorites';
@@ -363,19 +372,19 @@ document.addEventListener('DOMContentLoaded', function() {
             const response = await fetch(url, {
                 method: 'GET',
                 headers: {
-                    'X-User-Id': userId || '' 
+                    'X-User-Id': userId || ''
                 }
             });
-            
+
             if (!response.ok) {
                 if (response.status === 403 && filter === 'favorites') {
-                     restaurantGrid.innerHTML = '<p style="text-align: center; grid-column: 1 / -1; color: var(--primary-color);">Please log in to view your favorite restaurants.</p>';
-                     return;
+                    restaurantGrid.innerHTML = '<p style="text-align: center; grid-column: 1 / -1; color: var(--primary-color);">Please log in to view your favorite restaurants.</p>';
+                    return;
                 }
                 throw new Error('Server error: ' + response.statusText);
             }
             const restaurants = await response.json();
-            
+
             // Normalize data and Store Globally
             allRestaurantsData = restaurants.map((r, index) => ({
                 ...r,
@@ -398,7 +407,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // ----------------------------------------------------
     // --- 5. EVENT LISTENERS AND INITIAL LOAD ---
     // ----------------------------------------------------
-    
+
     // Navigation Tab Event Listeners
     if (exploreLink) {
         exploreLink.addEventListener('click', (e) => {
@@ -406,7 +415,7 @@ document.addEventListener('DOMContentLoaded', function() {
             setActiveNavLink('explore-link');
             // Reset filters when going back to explore? Optional.
             // currentCuisine = 'All'; 
-            fetchRestaurants(); 
+            fetchRestaurants();
         });
     }
 
@@ -414,10 +423,10 @@ document.addEventListener('DOMContentLoaded', function() {
         favoritesLink.addEventListener('click', (e) => {
             e.preventDefault();
             setActiveNavLink('favorites-link');
-            fetchRestaurants('favorites'); 
+            fetchRestaurants('favorites');
         });
     }
-    
+
     // Initial run on page load
     updateUserAvatar();
     fetchRestaurants();
@@ -431,7 +440,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const alfredMessages = document.getElementById('alfred-messages');
 
     // Toggle Window
-    if(alfredToggleBtn && alfredChatWindow) {
+    if (alfredToggleBtn && alfredChatWindow) {
         alfredToggleBtn.addEventListener('click', () => {
             alfredChatWindow.classList.toggle('hidden');
             if (!alfredChatWindow.classList.contains('hidden')) {
@@ -453,18 +462,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const apiBaseUrl = 'http://localhost:3000';
 
-    if(alfredInputForm) {
+    if (alfredInputForm) {
         alfredInputForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const text = alfredInput.value.trim();
-            if(!text) return;
+            if (!text) return;
 
             // 1. Add User Message
             addMessage(text, 'user');
             alfredInput.value = '';
 
             const userId = localStorage.getItem('userId');
-            if(!userId) {
+            if (!userId) {
                 addMessage("Please log in to chat with Alfred.", 'alfred');
                 return;
             }
@@ -480,7 +489,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 // 3. Send to Backend
                 const response = await fetch(`${apiBaseUrl}/alfred/ask`, {
                     method: 'POST',
-                    headers: { 
+                    headers: {
                         'Content-Type': 'application/json',
                         'X-User-Id': userId
                     },
@@ -489,12 +498,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 // Remove loading indicator
                 const loader = document.getElementById('alfred-loading');
-                if(loader) loader.remove();
+                if (loader) loader.remove();
 
-                if(response.ok) {
+                if (response.ok) {
                     const data = await response.json();
                     addMessage(data.reply, 'alfred');
-                } else if(response.status === 403) {
+                } else if (response.status === 403) {
                     addMessage("Session expired. Please log in again.", 'alfred');
                 } else {
                     addMessage("I'm having trouble reaching my brain server. Please try again.", 'alfred');
@@ -503,7 +512,7 @@ document.addEventListener('DOMContentLoaded', function() {
             } catch (err) {
                 console.error(err);
                 const loader = document.getElementById('alfred-loading');
-                if(loader) loader.remove();
+                if (loader) loader.remove();
                 addMessage("Connection error. Check your internet.", 'alfred');
             }
         });

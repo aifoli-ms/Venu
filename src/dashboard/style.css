@@ -46,7 +46,8 @@ body {
     background-color: #fff;
 }
 
-.nav-left, .nav-right {
+.nav-left,
+.nav-right {
     display: flex;
     align-items: center;
     gap: 1.5rem;
@@ -97,7 +98,8 @@ body {
 
 .search-bar input {
     width: 100%;
-    padding: 0.65rem 0.75rem 0.65rem 2.25rem; /* Left padding for icon */
+    padding: 0.65rem 0.75rem 0.65rem 2.25rem;
+    /* Left padding for icon */
     border-radius: 8px;
     border: 1px solid var(--border-color);
     background-color: var(--light-grey);
@@ -206,7 +208,8 @@ body {
     background-color: #fff;
     border-radius: var(--border-radius);
     box-shadow: var(--card-shadow);
-    overflow: hidden; /* Ensures image corners are rounded */
+    overflow: hidden;
+    /* Ensures image corners are rounded */
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
@@ -224,7 +227,8 @@ body {
 .card-image img {
     width: 100%;
     height: 100%;
-    object-fit: cover; /* Prevents image stretching */
+    object-fit: cover;
+    /* Prevents image stretching */
 }
 
 .status-tag {
@@ -258,7 +262,8 @@ body {
 /* Style for the "favorited" heart */
 .favorite-btn.active .fa-heart {
     color: red;
-    font-weight: 900; /* Makes it solid */
+    font-weight: 900;
+    /* Makes it solid */
 }
 
 .card-content {
@@ -291,17 +296,37 @@ body {
 
 .card-details {
     display: flex;
-    flex-wrap: wrap; /* Allows details to wrap on small cards */
-    gap: 0.5rem 1rem;
-    font-size: 0.9rem;
-    color: var(--medium-grey);
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
     margin-bottom: 1.25rem;
 }
 
-.card-details span {
+.detail-badge {
+    background: var(--light-grey);
+    padding: 0.4rem 0.75rem;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 500;
     display: flex;
     align-items: center;
-    gap: 0.3rem;
+    gap: 0.4rem;
+    border: 1px solid var(--border-color);
+    color: var(--dark-grey);
+}
+
+.detail-item {
+    font-size: 0.85rem;
+    color: var(--medium-grey);
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.detail-badge i,
+.detail-item i {
+    opacity: 0.7;
+    font-size: 0.8rem;
 }
 
 /* =====================
@@ -325,7 +350,8 @@ body {
 }
 
 .btn-primary:hover {
-    background-color: #EA580C; /* Darker orange */
+    background-color: #EA580C;
+    /* Darker orange */
 }
 
 .btn-disabled {
@@ -337,16 +363,19 @@ body {
 /* --- Filter Dropdown Styles --- */
 .filter-dropdown {
     position: absolute;
-    top: 110%; /* Position below the button */
+    top: 110%;
+    /* Position below the button */
     left: 0;
     width: 250px;
     background-color: #fff;
     border: 1px solid var(--border-color);
     border-radius: 12px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
     padding: 1.5rem;
-    z-index: 100; /* Ensure it sits on top of restaurant cards */
-    display: none; /* Hidden by default */
+    z-index: 100;
+    /* Ensure it sits on top of restaurant cards */
+    display: none;
+    /* Hidden by default */
 }
 
 .filter-dropdown.show {
@@ -367,7 +396,7 @@ body {
     color: var(--dark-grey);
 }
 
-.filter-group input, 
+.filter-group input,
 .filter-group select {
     padding: 0.5rem;
     border: 1px solid var(--border-color);
@@ -377,8 +406,15 @@ body {
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-10px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* ALFRED WIDGET STYLES */
@@ -420,7 +456,7 @@ body {
     height: 500px;
     background: white;
     border-radius: 16px;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
     display: flex;
     flex-direction: column;
     overflow: hidden;

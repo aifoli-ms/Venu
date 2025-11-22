@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +8,7 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
+
 <body>
 
     <header class="navbar">
@@ -24,15 +26,33 @@
             <div class="banner-content">
                 <div class="badges">
                     <span class="badge status" id="res-status">Open</span>
-                    <span class="badge rating"><i class="fas fa-star"></i> <span id="res-rating">0.0</span> (190 reviews)</span>
+                    <span class="badge rating"><i class="fas fa-star"></i> <span id="res-rating">0.0</span> (190
+                        reviews)</span>
                 </div>
                 <h1 id="res-name">Loading Name...</h1>
-                <h2 id="res-cuisine">Cuisine Type</h2>
+                <div class="res-details-row">
+                    <div class="detail-badge">
+                        <i class="fas fa-utensils"></i>
+                        <span id="res-cuisine">Cuisine</span>
+                    </div>
+                    <div class="detail-badge">
+                        <i class="fas fa-wallet"></i>
+                        <span id="res-price">$$$</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span id="res-location">Location</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-comment-alt"></i>
+                        <span id="res-total-reviews">0 reviews</span>
+                    </div>
+                </div>
             </div>
         </section>
 
         <div class="details-grid">
-            
+
             <div class="left-col">
                 <div class="card cta-card">
                     <h3>Make a Reservation</h3>
@@ -42,11 +62,15 @@
                 <div class="card reviews-card">
                     <div class="card-header">
                         <h3>Reviews</h3>
-                        <span class="rating-mini"><i class="fas fa-star"></i> <span id="review-rating">4.3</span></span>
+                        <span class="rating-mini"><i class="fas fa-star"></i> <span id="review-rating">--</span></span>
                     </div>
-                    <div class="empty-state">
-                        <i class="fas fa-star"></i>
-                        <p>No reviews yet.</p>
+                    <button id="open-review-modal-btn" class="btn btn-secondary btn-sm"
+                        style="margin-bottom: 1rem; width: 100%;">Write a Review</button>
+                    <div id="reviews-list" class="reviews-list">
+                        <div class="empty-state">
+                            <i class="fas fa-star"></i>
+                            <p>No reviews yet.</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -79,6 +103,16 @@
                     </ul>
                 </div>
 
+                <div class="card info-card">
+                    <h3>Menus</h3>
+                    <div id="menus-list" class="menus-list">
+                        <div class="empty-state">
+                            <i class="fas fa-utensils"></i>
+                            <p>Loading menus...</p>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </main>
@@ -90,7 +124,7 @@
                 <button class="close-modal"><i class="fas fa-times"></i></button>
             </div>
             <p class="modal-sub">Fill in the details to reserve a table.</p>
-            
+
             <form id="reservation-form">
                 <div class="form-group">
                     <select id="modal-party">
@@ -105,7 +139,7 @@
                     <input type="date" id="modal-date" required>
                     <input type="time" id="modal-time" required>
                 </div>
-                
+
                 <div class="checkbox-group">
                     <input type="checkbox" id="use-points">
                     <label for="use-points">Use my points</label>
@@ -118,11 +152,44 @@
                 </div>
 
                 <button type="submit" class="btn btn-primary btn-full">Reserve</button>
-                <p class="modal-footer-text">Your reservation is held for 30 minutes. Complete payment within this time, or it will be automatically canceled.</p>
+                <p class="modal-footer-text">Your reservation is held for 30 minutes. Complete payment within this time,
+                    or it will be automatically canceled.</p>
+            </form>
+        </div>
+    </div>
+
+    <div id="review-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Write a Review</h3>
+                <button class="close-review-modal"><i class="fas fa-times"></i></button>
+            </div>
+            <form id="review-form">
+                <div class="form-group">
+                    <label>Rating</label>
+                    <div class="star-rating-picker">
+                        <input type="radio" name="rating" id="star5" value="5" required><label for="star5"
+                            title="Excellent"><i class="fas fa-star"></i></label>
+                        <input type="radio" name="rating" id="star4" value="4"><label for="star4" title="Good"><i
+                                class="fas fa-star"></i></label>
+                        <input type="radio" name="rating" id="star3" value="3"><label for="star3" title="Average"><i
+                                class="fas fa-star"></i></label>
+                        <input type="radio" name="rating" id="star2" value="2"><label for="star2" title="Poor"><i
+                                class="fas fa-star"></i></label>
+                        <input type="radio" name="rating" id="star1" value="1"><label for="star1" title="Terrible"><i
+                                class="fas fa-star"></i></label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="review-comment">Comment</label>
+                    <textarea id="review-comment" rows="4" required placeholder="Share your experience..."></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary btn-full">Submit Review</button>
             </form>
         </div>
     </div>
 
     <script src="script.js"></script>
 </body>
+
 </html>
