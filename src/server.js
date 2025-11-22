@@ -52,6 +52,14 @@ app.use('/alfred', aiRouter);
 // Mount Menu Routes at /menus and /restaurants/:id/menus
 app.use('/', menusRouter);
 
+// Explicit Root Route - serve homepage
+app.get('/', (req, res) => {
+    const homepagePath = path.join(__dirname, 'homepage', 'homepage.html');
+    console.log('Serving homepage from:', homepagePath); // Debug log
+    res.sendFile(homepagePath);
+});
+
+
 
 
 // ==========================================================
