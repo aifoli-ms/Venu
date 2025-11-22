@@ -1,7 +1,7 @@
 // src/profile/script.js
 
 document.addEventListener('DOMContentLoaded', () => {
-    
+
     const sidebarLinks = document.querySelectorAll('.sidebar-link');
     const sections = document.querySelectorAll('.view-section');
 
@@ -10,8 +10,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const settingNameInput = document.getElementById('setting-name');
     const settingEmailInput = document.getElementById('setting-email');
     const settingPhoneInput = document.getElementById('setting-phone');
-    const settingPasswordInput = document.getElementById('setting-password'); 
-    
+    const settingPasswordInput = document.getElementById('setting-password');
+
     // NEW: Get reservation container
     const reservationsListEl = document.getElementById('reservations-list');
 
@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function formatReservationDate(dateString, timeString) {
         const dateOptions = { weekday: 'short', month: 'short', day: 'numeric' };
         const timeOptions = { hour: 'numeric', minute: '2-digit', hour12: true };
-        
+
         try {
             // Combine date and time to create a valid Date object
             const date = new Date(`${dateString}T${timeString}`);
@@ -35,14 +35,14 @@ document.addEventListener('DOMContentLoaded', () => {
         // Use a default status if none is provided
         const status = reservation.status || 'Confirmed';
         const statusClass = status.toLowerCase().replace(/\s/g, '-');
-        
+
         const formattedDateTime = formatReservationDate(
             reservation.reservation_date,
             reservation.reservation_time
         );
 
         // NOTE: Uses a simple placeholder image if the DB image is missing
-        const imageUrl = restaurant.image_url || 'https://via.placeholder.com/180'; 
+        const imageUrl = restaurant.image_url || 'https://via.placeholder.com/180';
 
         return `
             <div class="reservation-card" data-res-id="${reservation.id}">
@@ -70,11 +70,11 @@ document.addEventListener('DOMContentLoaded', () => {
     async function fetchAndRenderReservations() {
         const userId = localStorage.getItem('userId');
         if (!userId || !reservationsListEl) return;
-        
+
         reservationsListEl.innerHTML = '<p style="text-align: center;">Loading reservations...</p>';
 
         try {
-            const response = await fetch('http://localhost:3000/reservations/user', {
+            const response = await fetch('/reservations/user', {
                 method: 'GET',
                 headers: {
                     'X-User-Id': userId,
@@ -87,7 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             const reservations = await response.json();
-            
+
             if (reservations.length === 0) {
                 reservationsListEl.innerHTML = '<p style="text-align: center; color: var(--text-grey);">You have no past or upcoming reservations.</p>';
                 return;
@@ -106,17 +106,17 @@ document.addEventListener('DOMContentLoaded', () => {
     async function fetchAndPopulateUserData() {
         // ... (existing implementation remains the same) ...
         const userId = localStorage.getItem('userId');
-        
+
         if (!userId) {
             console.error("No user ID found in session. Redirecting to login.");
-            window.location.href = '../login/login.html'; 
+            window.location.href = '../login/login.html';
             return;
         }
-        
+
         if (sidebarNameEl) sidebarNameEl.textContent = 'Loading...';
 
         try {
-            const response = await fetch('http://localhost:3000/profile', {
+            const response = await fetch('/profile', {
                 method: 'GET',
                 headers: {
                     'X-User-Id': userId,
@@ -131,8 +131,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const user = await response.json();
             const fullName = user.name;
             const phoneNumber = user.phone_number;
-            
-            if (sidebarNameEl) sidebarNameEl.textContent = fullName; 
+
+            if (sidebarNameEl) sidebarNameEl.textContent = fullName;
             if (settingNameInput) settingNameInput.value = fullName;
             if (settingEmailInput) settingEmailInput.value = user.email;
             if (settingPhoneInput) settingPhoneInput.value = phoneNumber;
@@ -163,9 +163,9 @@ document.addEventListener('DOMContentLoaded', () => {
             link.classList.add('active');
 
             sections.forEach(sec => sec.style.display = 'none');
-            
+
             const targetId = link.getAttribute('data-target');
-            
+
             // Re-fetch when clicking the reservations link
             if (targetId === 'reservations') {
                 fetchAndRenderReservations();
@@ -201,7 +201,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (newPassword) { updateData.password = newPassword; }
 
             try {
-                const response = await fetch(`http://localhost:3000/users/${userId}`, {
+                const response = await fetch(`/users/${userId}`, {
                     method: 'PATCH',
                     headers: { 'Content-Type': 'application/json', 'X-User-Id': userId },
                     body: JSON.stringify(updateData)
@@ -212,7 +212,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     alert("Profile updated successfully!");
                     localStorage.setItem('userName', result.user.name);
                     if (sidebarNameEl) sidebarNameEl.textContent = result.user.name;
-                    fetchAndPopulateUserData(); 
+                    fetchAndPopulateUserData();
                 } else {
                     const errorData = await response.json();
                     alert(`Update failed: ${errorData.message}`);
@@ -226,8 +226,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- EXISTING: Toggle Password Visibility in Settings ---
     const togglePw = document.querySelector('.toggle-pw');
-    if(togglePw) {
-        togglePw.addEventListener('click', function() {
+    if (togglePw) {
+        togglePw.addEventListener('click', function () {
             const input = this.previousElementSibling;
             if (input.type === "password") {
                 input.type = "text";

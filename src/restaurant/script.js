@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // 2. Fetch Restaurant Details
     try {
-        const response = await fetch(`http://localhost:3000/restaurants/${restaurantId}`);
+        const response = await fetch(`/restaurants/${restaurantId}`);
         if (!response.ok) throw new Error("Failed to fetch details");
 
         const data = await response.json();
@@ -101,7 +101,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (!date || !time) { alert("Please select date and time"); return; }
 
         try {
-            const response = await fetch('http://localhost:3000/reservations', {
+            const response = await fetch('/reservations', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -138,7 +138,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Fetch and display reviews
     async function fetchReviews() {
         try {
-            const response = await fetch(`http://localhost:3000/restaurants/${restaurantId}/reviews`);
+            const response = await fetch(`/restaurants/${restaurantId}/reviews`);
             if (!response.ok) throw new Error("Failed to fetch reviews");
             const reviews = await response.json();
             renderReviews(reviews);
@@ -190,7 +190,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Fetch and display menus
     async function fetchMenus() {
         try {
-            const response = await fetch(`http://localhost:3000/restaurants/${restaurantId}/menus`);
+            const response = await fetch(`/restaurants/${restaurantId}/menus`);
             if (!response.ok) throw new Error("Failed to fetch menus");
             const menus = await response.json();
             renderMenus(menus);
@@ -255,7 +255,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         try {
-            const response = await fetch(`http://localhost:3000/restaurants/${restaurantId}/reviews`, {
+            const response = await fetch(`/restaurants/${restaurantId}/reviews`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

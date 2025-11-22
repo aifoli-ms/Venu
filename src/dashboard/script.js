@@ -88,7 +88,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 icon.classList.toggle('fa-solid');
 
                 try {
-                    const response = await fetch('http://localhost:3000/favorites/toggle', {
+                    const response = await fetch('/favorites/toggle', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -363,7 +363,7 @@ document.addEventListener('DOMContentLoaded', function () {
     async function fetchRestaurants(filter = null) {
         const userId = localStorage.getItem('userId');
 
-        let url = 'http://localhost:3000/restaurants';
+        let url = '/restaurants';
         if (filter === 'favorites') {
             url += '?filter=favorites';
         }
@@ -460,7 +460,7 @@ document.addEventListener('DOMContentLoaded', function () {
         alfredMessages.scrollTop = alfredMessages.scrollHeight;
     }
 
-    const apiBaseUrl = 'http://localhost:3000';
+    const apiBaseUrl = '';
 
     if (alfredInputForm) {
         alfredInputForm.addEventListener('submit', async (e) => {
