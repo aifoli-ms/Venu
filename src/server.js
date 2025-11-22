@@ -54,9 +54,17 @@ app.use('/', menusRouter);
 
 // Explicit Root Route - serve homepage
 app.get('/', (req, res) => {
-    const homepagePath = path.join(__dirname, 'homepage', 'homepage.html');
-    console.log('Serving homepage from:', homepagePath); // Debug log
-    res.sendFile(homepagePath);
+    // Use process.cwd() to get the project root directory
+    // This is more reliable in Vercel serverless environment
+    const homepagePath = path.join(process.cwd(), 'src', 'homepage', 'homepage.html');
+    console.log('Attempting to serve homepage from:', homepagePath);
+
+    res.sendFile(homepagePath, (err) => {
+        if (err) {
+            console.error('Error serving homepage:', err);
+            res.status(404).send('Homepage not found: ' + err.message);
+        }
+    });
 });
 
 
