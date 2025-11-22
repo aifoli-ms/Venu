@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Profile - VENU</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../footer.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
+
 <body>
 
     <header class="navbar">
@@ -23,7 +26,7 @@
     </header>
 
     <div class="profile-container">
-        
+
         <aside class="sidebar">
             <div class="sidebar-user">
                 <h3 id="sidebar-user-name">Loading...</h3>
@@ -51,12 +54,12 @@
         </aside>
 
         <main class="content-area">
-            
+
             <section id="reservations" class="view-section">
                 <h2 class="section-title">My Reservations</h2>
-                
+
                 <div id="reservations-list">
-                    </div>
+                </div>
 
                 <div class="pagination">
                     <button class="page-btn" disabled>&lt; Previous</button>
@@ -79,10 +82,12 @@
                             <span class="big-number">0</span> points
                         </div>
                         <div class="referral-area">
-                            <p>Share your referral link with restaurants to earn points for each successful referral.</p>
+                            <p>Share your referral link with restaurants to earn points for each successful referral.
+                            </p>
                             <p class="highlight-text">Your referral link:</p>
                             <div class="copy-box">
-                                <input type="text" value="https://www.theserva.com/for-restaurants?code=undefined" readonly>
+                                <input type="text" value="https://www.theserva.com/for-restaurants?code=undefined"
+                                    readonly>
                                 <button class="copy-btn"><i class="fa-regular fa-copy"></i> Copy</button>
                             </div>
                         </div>
@@ -125,7 +130,7 @@
                             <div class="form-group">
                                 <label>Password</label>
                                 <div class="input-wrapper">
-                                    <input type="password" id="setting-password"> 
+                                    <input type="password" id="setting-password">
                                     <i class="fa-regular fa-eye toggle-pw"></i>
                                 </div>
                             </div>
@@ -149,6 +154,41 @@
         </main>
     </div>
 
+    <footer class="site-footer">
+        <div class="footer-content">
+            <div class="footer-section brand">
+                <h3>VENU</h3>
+                <p>Discover and book the best restaurants in Ghana.</p>
+            </div>
+            <div class="footer-section links">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="../homepage/index.html">Home</a></li>
+                    <li><a href="../dashboard/dashboard.html">Restaurants</a></li>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="../login/login.html">Login</a></li>
+                </ul>
+            </div>
+            <div class="footer-section contact">
+                <h4>Contact</h4>
+                <p>Email: support@venu.com</p>
+                <p>Phone: +233 555 0123</p>
+            </div>
+            <div class="footer-section social">
+                <h4>Follow Us</h4>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 VENU. All rights reserved.</p>
+        </div>
+    </footer>
+
     <script src="script.js"></script>
 </body>
+
 </html>

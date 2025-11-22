@@ -1,153 +1,117 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Serva - Discover Restaurants</title>
-    <link rel="stylesheet" href="style.css" />
-  </head>
-  <body>
-    <header class="hero">
-      <nav>
-        <div class="logo">VENU</div>
-        <ul>
-          <li><a href="#">Restaurants</a></li>
-          <li><a href="#">About Us</a></li>
-        </ul>
-        <a
-          href="../login/login.html"
-          class="btn btn-secondary"
-        >
-          Sign In
-        </a>
-      </nav>
 
-      <div class="hero-content">
-        <h1>Discover Restaurants to Love in Ghana</h1>
-        <p>
-          Effortlessly manage your reservations, reduce no-shows, and increase
-          earnings - all while making bookings seamless for your guests.
-        </p>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Serva - Discover Restaurants</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="../footer.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
 
-        <form class="booking-form" id="homepage-booking-form">
-          <div class="form-group">
-            <label for="date">Date</label>
-            <input
-              type="text"
-              id="date"
-              value="13/11/2025"
-              onfocus="(this.type='date')"
-            />
-          </div>
-          <div class="form-group">
-            <label for="time">Time</label>
-            <input
-              type="text"
-              id="time"
-              value="7:00 PM"
-              onfocus="(this.type='time')"
-            />
-          </div>
-          <div class="form-group">
-            <label for="people">People</label>
-            <input
-              type="text"
-              id="people"
-              value="2 people"
-              onfocus="(this.type='number')"
-            />
-          </div>
-          <button type="submit" class="btn btn-primary">Find a table</button>
-        </form>
+<body>
+  <header class="hero">
+    <nav>
+      <div class="logo">VENU</div>
+      <ul>
+        <li><a href="#">Restaurants</a></li>
+        <li><a href="#">About Us</a></li>
+      </ul>
+      <a href="../login/login.html" class="btn btn-secondary">
+        Sign In
+      </a>
+    </nav>
+
+    <div class="hero-content">
+      <h1>Discover Restaurants to Love in Ghana</h1>
+      <p>
+        Effortlessly manage your reservations, reduce no-shows, and increase
+        earnings - all while making bookings seamless for your guests.
+      </p>
+
+      <form class="booking-form" id="homepage-booking-form">
+        <div class="form-group">
+          <label for="date">Date</label>
+          <input type="text" id="date" value="13/11/2025" onfocus="(this.type='date')" />
+        </div>
+        <div class="form-group">
+          <label for="time">Time</label>
+          <input type="text" id="time" value="7:00 PM" onfocus="(this.type='time')" />
+        </div>
+        <div class="form-group">
+          <label for="people">People</label>
+          <input type="text" id="people" value="2 people" onfocus="(this.type='number')" />
+        </div>
+        <button type="submit" class="btn btn-primary">Find a table</button>
+      </form>
+    </div>
+  </header>
+
+  <main>
+    <section class="features">
+      <div class="feature-item">
+        <h3>5,000+</h3>
+        <p>Diners Waitlisted</p>
       </div>
-    </header>
+      <div class="feature-item">
+        <h3>50+</h3>
+        <p>Restaurant Partners</p>
+      </div>
+      <div class="feature-item">
+        <h3>24/7+</h3>
+        <p>Instant Booking</p>
+      </div>
+    </section>
 
-    <main>
-      <section class="features">
-        <div class="feature-item">
-          <h3>5,000+</h3>
-          <p>Diners Waitlisted</p>
+    <section class="listings">
+      <h2>Experience Ghana</h2>
+      <p>Check out people's favorite restaurants in Ghana</p>
+
+      <div class="card-container" id="restaurants-list">
+        <!-- Restaurants will be populated here -->
+        <div class="loading-state" style="text-align: center; width: 100%; padding: 2rem;">
+          <p>Loading restaurants...</p>
         </div>
-        <div class="feature-item">
-          <h3>50+</h3>
-          <p>Restaurant Partners</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-section brand">
+        <h3>VENU</h3>
+        <p>Discover and book the best restaurants in Ghana.</p>
+      </div>
+      <div class="footer-section links">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="../homepage/index.html">Home</a></li>
+          <li><a href="../dashboard/dashboard.html">Restaurants</a></li>
+          <li><a href="#">About Us</a></li>
+          <li><a href="../login/login.html">Login</a></li>
+        </ul>
+      </div>
+      <div class="footer-section contact">
+        <h4>Contact</h4>
+        <p>Email: support@venu.com</p>
+        <p>Phone: +233 555 0123</p>
+      </div>
+      <div class="footer-section social">
+        <h4>Follow Us</h4>
+        <div class="social-icons">
+          <a href="#"><i class="fab fa-facebook"></i></a>
+          <a href="#"><i class="fab fa-instagram"></i></a>
+          <a href="#"><i class="fab fa-twitter"></i></a>
         </div>
-        <div class="feature-item">
-          <h3>24/7+</h3>
-          <p>Instant Booking</p>
-        </div>
-      </section>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2025 VENU. All rights reserved.</p>
+    </div>
+  </footer>
 
-      <section class="listings">
-        <h2>Experience Ghana</h2>
-        <p>Check out people's favorite restaurants in Ghana</p>
+  <script src="script.js"></script>
+</body>
 
-        <div class="card-container">
-          <div class="card">
-            <div class="card-image">
-              <img src="../../img/Sol-Lounge-Bar-exterior.jpg" alt="SOL" />
-            </div>
-            <div class="card-header">
-              <h3>SOL</h3>
-              <span class="rating">⭐ 4.3</span>
-              <span class="price">4 GHS</span>
-            </div>
-            <div class="card-body">
-              <p class="location">
-                Lake Sedrick - South Margaret - Pearlmouth +5 more
-              </p>
-              <p class="description">
-                Eum earum in et deserunt at non et. Magnam non dolorem illum
-                vitae.
-              </p>
-            </div>
-            <button class="btn btn-primary">
-              <a href="../login/login.html">Reserve a table</a>
-            </button>
-          </div>
-
-          <div class="card">
-            <div class="card-image">
-              <img src="../../img/quattro-image.jpg" alt="Quattro img" />
-            </div>
-            <div class="card-header">
-              <h3>Quattro</h3>
-              <span class="rating">⭐ 0</span>
-              <span class="price">3 GHS</span>
-            </div>
-            <div class="card-body">
-              <p class="location">East Legon</p>
-              <p class="description">Test restaurants</p>
-            </div>
-            <button class="btn btn-primary">
-              <a href="../login/login.html">Reserve a table</a>
-            </button>
-          </div>
-
-          <div class="card">
-            <div class="card-image">
-              <img src="../../img/shogun-interior.jpg" alt="Shogun" />
-            </div>
-            <div class="card-header">
-              <h3>Shogun</h3>
-              <span class="rating">⭐ 0</span>
-              <span class="price">1 GHS</span>
-            </div>
-            <div class="card-body">
-              <p class="location">Cantonments</p>
-              <p class="description">
-                Join us for an inspiring afternoon of conversation, culture, and
-                connection, hosted by Serva X Taro. Expect.
-              </p>
-            </div>
-            <button class="btn btn-primary">
-              <a href="../login/login.html">Reserve a table</a>
-            </button>
-          </div>
-        </div>
-      </section>
-    </main>
-
-    <script src="script.js"></script>
-  </body>
 </html>

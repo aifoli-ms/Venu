@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Discover Restaurants - VENU</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../footer.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
+
 <body>
 
     <header class="navbar">
@@ -14,9 +17,12 @@
             <h1 class="logo">VENU</h1>
             <nav>
                 <ul>
-                    <li><a href="#" class="nav-link active" id="explore-link"><i class="fa-regular fa-compass"></i> Explore</a></li>
-                    <li><a href="#" class="nav-link" id="reservations-link"><i class="fa-regular fa-calendar"></i> Reservations</a></li>
-                    <li><a href="#" class="nav-link" id="favorites-link"><i class="fa-regular fa-heart"></i> Favorites</a></li>
+                    <li><a href="#" class="nav-link active" id="explore-link"><i class="fa-regular fa-compass"></i>
+                            Explore</a></li>
+                    <li><a href="#" class="nav-link" id="reservations-link"><i class="fa-regular fa-calendar"></i>
+                            Reservations</a></li>
+                    <li><a href="#" class="nav-link" id="favorites-link"><i class="fa-regular fa-heart"></i>
+                            Favorites</a></li>
                 </ul>
             </nav>
         </div>
@@ -39,14 +45,15 @@
                 <h2>Discover Restaurants</h2>
                 <p>Explore the best dining experiences in Ghana</p>
             </div>
-            <div class="filter-controls" style="position: relative;"> <button class="filter-btn" id="filter-toggle-btn"><i class="fas fa-filter"></i> Filters</button>
-    
+            <div class="filter-controls" style="position: relative;"> <button class="filter-btn"
+                    id="filter-toggle-btn"><i class="fas fa-filter"></i> Filters</button>
+
                 <div class="filter-dropdown" id="filter-dropdown">
                     <div class="filter-group">
                         <label for="filter-location">Location</label>
                         <input type="text" id="filter-location" placeholder="e.g. East Legon">
                     </div>
-                    
+
                     <div class="filter-group">
                         <label for="filter-price">Price</label>
                         <select id="filter-price">
@@ -57,7 +64,7 @@
                             <option value="$$$$">$$$$ (Classy)</option>
                         </select>
                     </div>
-            
+
                     <div class="filter-group">
                         <label for="filter-rating">Rating</label>
                         <select id="filter-rating">
@@ -66,13 +73,15 @@
                             <option value="4.5">4.5+ Stars</option>
                         </select>
                     </div>
-            
+
                     <div style="display: flex; gap: 0.5rem; margin-top: 10px;">
-                        <button id="apply-filters-btn" class="btn btn-primary" style="flex: 1; font-size: 0.9rem;">Apply Filters</button>
-                        <button id="clear-filters-btn" class="btn" style="flex: 1; font-size: 0.9rem; background-color: var(--light-grey); color: var(--dark-grey); border: 1px solid var(--border-color);">Clear</button>
+                        <button id="apply-filters-btn" class="btn btn-primary" style="flex: 1; font-size: 0.9rem;">Apply
+                            Filters</button>
+                        <button id="clear-filters-btn" class="btn"
+                            style="flex: 1; font-size: 0.9rem; background-color: var(--light-grey); color: var(--dark-grey); border: 1px solid var(--border-color);">Clear</button>
                     </div>
                 </div>
-            
+
                 <div class="filter-pills">
                     <button class="pill active" data-cuisine="All">All</button>
                     <button class="pill" data-cuisine="Italian">Italian</button>
@@ -92,7 +101,7 @@
         <button id="alfred-toggle-btn" title="Ask Alfred">
             <i class="fa-solid fa-robot"></i>
         </button>
-        
+
         <div id="alfred-chat-window" class="hidden">
             <div class="alfred-header">
                 <h3>Alfred</h3>
@@ -109,7 +118,42 @@
             </form>
         </div>
     </div>
-    
+
+    <footer class="site-footer">
+        <div class="footer-content">
+            <div class="footer-section brand">
+                <h3>VENU</h3>
+                <p>Discover and book the best restaurants in Ghana.</p>
+            </div>
+            <div class="footer-section links">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="../homepage/index.html">Home</a></li>
+                    <li><a href="../dashboard/dashboard.html">Restaurants</a></li>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="../login/login.html">Login</a></li>
+                </ul>
+            </div>
+            <div class="footer-section contact">
+                <h4>Contact</h4>
+                <p>Email: support@venu.com</p>
+                <p>Phone: +233 555 0123</p>
+            </div>
+            <div class="footer-section social">
+                <h4>Follow Us</h4>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 VENU. All rights reserved.</p>
+        </div>
+    </footer>
+
     <script src="script.js"></script>
 </body>
+
 </html>
