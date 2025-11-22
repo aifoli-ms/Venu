@@ -2,7 +2,8 @@
 :root variables allow you to define colors and spacing in one place.
 */
 :root {
-    --primary-color: #F97316; /* Main orange theme color */
+    --primary-color: #F97316;
+    /* Main orange theme color */
     --dark-grey: #1F2937;
     --medium-grey: #6B7280;
     --light-grey: #F3F4F6;
@@ -57,12 +58,15 @@ img {
     background-color: var(--primary-color);
     color: #fff;
 }
+
 .btn-primary a {
-    color: #fff; /* Ensure link text inside button is white */
+    color: #fff;
+    /* Ensure link text inside button is white */
 }
 
 .btn-primary:hover {
-    background-color: #EA580C; /* Darker orange */
+    background-color: #EA580C;
+    /* Darker orange */
     transform: translateY(-2px);
 }
 
@@ -126,7 +130,8 @@ nav ul a {
 }
 
 .hero-content h1 {
-    font-size: 2.5rem; /* Responsive font size */
+    font-size: 2.5rem;
+    /* Responsive font size */
     font-weight: 700;
     margin-bottom: 1rem;
 }
@@ -146,19 +151,23 @@ nav ul a {
     border-radius: var(--border-radius);
     padding: 1rem;
     display: flex;
-    flex-wrap: wrap; /* Allow wrapping on small screens */
+    flex-wrap: wrap;
+    /* Allow wrapping on small screens */
     gap: 1rem;
-    align-items: flex-end; /* Aligns labels and inputs nicely */
+    align-items: flex-end;
+    /* Aligns labels and inputs nicely */
     max-width: 800px;
     margin: 0 auto;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 }
 
 .form-group {
-    flex-grow: 1; /* Each group tries to take equal space */
+    flex-grow: 1;
+    /* Each group tries to take equal space */
     display: flex;
     flex-direction: column;
-    min-width: 150px; /* Prevents items from getting too small */
+    min-width: 150px;
+    /* Prevents items from getting too small */
 }
 
 .form-group label {
@@ -175,6 +184,7 @@ nav ul a {
     font-size: 1rem;
     color: var(--dark-grey);
 }
+
 /* Removes the ugly calendar/time icon in Webkit */
 .form-group input::-webkit-calendar-picker-indicator {
     display: none;
@@ -231,7 +241,8 @@ nav ul a {
     margin-bottom: 0.5rem;
 }
 
-.listings > p { /* Target the main <p> tag */
+.listings>p {
+    /* Target the main <p> tag */
     font-size: 1.1rem;
     color: var(--medium-grey);
     text-align: center;
@@ -255,7 +266,8 @@ nav ul a {
     box-shadow: var(--card-shadow);
     overflow: hidden;
     display: flex;
-    flex-direction: column; /* Ensures button stays at bottom */
+    flex-direction: column;
+    /* Ensures button stays at bottom */
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
@@ -286,7 +298,8 @@ nav ul a {
 .card-header .rating {
     font-size: 0.95rem;
     font-weight: 500;
-    white-space: nowrap; /* Prevents wrap */
+    white-space: nowrap;
+    /* Prevents wrap */
 }
 
 .card-header .price {
@@ -314,7 +327,9 @@ nav ul a {
 
 /* Button inside the card */
 .card .btn {
-    width: calc(100% - 2.5rem); /* Full width minus padding */
+    width: calc(100% - 2.5rem);
+    /* Full width minus padding */
     margin: 0 1.25rem 1.25rem;
-    margin-top: auto; /* Pushes button to the bottom */
+    margin-top: auto;
+    /* Pushes button to the bottom */
 }
