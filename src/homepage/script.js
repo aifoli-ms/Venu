@@ -17,7 +17,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // 1. Check if user is logged in
             if (!userId) {
-                alert("Please sign in to find a table.");
                 // Redirects to login page if no session is found
                 window.location.href = '../login/login.html';
                 return;
