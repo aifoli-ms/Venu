@@ -26,6 +26,15 @@ const corsOptions = {
 app.use(cors(corsOptions))
 app.use(express.json())
 
+// Serve static files from src directory
+app.use(express.static(path.join(__dirname)))
+app.use('/img', express.static(path.join(__dirname, '..', 'img')))
+
+// Root route - serve homepage
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'homepage', 'homepage.html'))
+})
+
 // ==========================================================
 // --- ROUTES ---
 // ==========================================================
