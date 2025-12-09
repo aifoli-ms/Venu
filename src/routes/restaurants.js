@@ -2,13 +2,33 @@
 const express = require('express');
 const supabase = require('../supabaseClient');
 const checkAuth = require('../middleware/authMiddleware');
+const jwt = require('jsonwebtoken'); // Need jwt to manually verify here if not using middleware
 
 const router = express.Router();
+const JWT_SECRET = process.env.JWT_SECRET || process.env.SUPABASE_KEY;
 
 // --- GET ALL/FAVORITED RESTAURANTS (GET /restaurants) ---
 router.get('/restaurants', async (req, res) => {
     const filter = req.query.filter;
-    const userId = req.headers['x-user-id']; // Read potential user ID from header
+    let userId = null;
+
+    // Check for Authorization header to get User ID safely
+    const authHeader = req.headers['authorization'];
+    if (authHeader) {
+        const token = authHeader.split(' ')[1];
+        if (token) {
+            try {
+                const decoded = jwt.verify(token, JWT_SECRET);
+                userId = decoded.userId;
+            } catch (err) {
+                console.warn("Invalid token provided for restaurant fetch:", err.message);
+                if (filter === 'favorites') {
+                    return res.status(403).json({ message: "Invalid or expired session." });
+                }
+            }
+        }
+    }
+
     console.log(`[Restaurants] Fetching restaurants. Filter: ${filter || 'None'}, User: ${userId || 'Guest'}`);
 
     try {
