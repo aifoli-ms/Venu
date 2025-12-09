@@ -386,9 +386,18 @@ document.addEventListener('DOMContentLoaded', function () {
             });
 
             if (!response.ok) {
-                if (response.status === 403 && filter === 'favorites') {
-                    restaurantGrid.innerHTML = '<p style="text-align: center; grid-column: 1 / -1; color: var(--primary-color);">Please log in to view your favorite restaurants.</p>';
-                    return;
+                if (response.status === 403) {
+                    // Token expired or invalid
+                    console.warn("Session expired. Logging out.");
+                    localStorage.removeItem('authToken');
+                    localStorage.removeItem('userId');
+                    localStorage.removeItem('userName');
+
+                    if (filter === 'favorites') {
+                        // Redirect to login if trying to view favorites
+                        window.location.href = '../login/login.html?msg=expired';
+                        return;
+                    }
                 }
                 throw new Error('Server error: ' + response.statusText);
             }
