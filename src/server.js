@@ -29,13 +29,13 @@ app.use(express.json())
 // --- LOGGING MIDDLEWARE ---
 app.use((req, res, next) => {
     console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
-    if (Object.keys(req.body).length > 0) {
+    if (req.body && Object.keys(req.body).length > 0) {
         // redact potential sensitive fields
         const bodyCopy = { ...req.body };
         if (bodyCopy.password) bodyCopy.password = '***';
         console.log('   Body:', bodyCopy);
     }
-    if (Object.keys(req.query).length > 0) {
+    if (req.query && Object.keys(req.query).length > 0) {
         console.log('   Query:', req.query);
     }
     next();
