@@ -243,4 +243,14 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+    // --- LOGOUT LOGIC ---
+    const logoutBtn = document.getElementById('logout-btn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', () => {
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('userId');
+            localStorage.removeItem('userName');
+            window.location.href = '../login/login.html';
+        });
+    }
 });

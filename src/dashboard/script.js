@@ -60,6 +60,21 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+
+
+    const logoutBtn = document.getElementById('logout-btn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', () => {
+            // 1. Clear Local Storage
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('userId');
+            localStorage.removeItem('userName');
+
+            // 2. Redirect to Homepage or Login
+            window.location.href = '../login/login.html';
+        });
+    }
+
     // Favorite (Heart) Button Toggle Function
     function setupFavoriteToggles() {
         document.querySelectorAll('.favorite-btn').forEach(button => {
@@ -152,9 +167,9 @@ document.addEventListener('DOMContentLoaded', function () {
         const btnDisabled = isFullyBooked ? 'disabled' : '';
 
         // FIX: Correct local image paths for the browser
-        let imageUrl = restaurant.image_url 
+        let imageUrl = restaurant.image_url
 
-     
+
 
         return `
             <article class="restaurant-card" data-id="${restaurant.id}">

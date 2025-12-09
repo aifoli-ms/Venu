@@ -30,6 +30,19 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     updateUserAvatar();
 
+    const logoutBtn = document.getElementById('logout-btn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', () => {
+            // 1. Clear Local Storage
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('userId');
+            localStorage.removeItem('userName');
+
+            // 2. Redirect to Homepage or Login
+            window.location.href = '../login/login.html';
+        });
+    }
+
     // 1. Get Restaurant ID from URL
     const urlParams = new URLSearchParams(window.location.search);
     const restaurantId = urlParams.get('id');
