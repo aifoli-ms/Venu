@@ -147,6 +147,16 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
+    function escapeHtml(text) {
+        if (!text) return '';
+        return text
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    }
+
     function renderReviews(reviews) {
         reviewsList.innerHTML = '';
         if (reviews.length === 0) {
@@ -170,12 +180,17 @@ document.addEventListener('DOMContentLoaded', async () => {
             reviewEl.className = 'review-item';
             reviewEl.style.borderBottom = '1px solid #eee';
             reviewEl.style.padding = '1rem 0';
+
+            // SECURITY FIX: Escape user input to prevent XSS
+            const safeName = escapeHtml(review.users ? review.users.name : 'Anonymous');
+            const safeComment = escapeHtml(review.comment);
+
             reviewEl.innerHTML = `
                 <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
-                    <strong>${review.users ? review.users.name : 'Anonymous'}</strong>
+                    <strong>${safeName}</strong>
                     <span style="color: #F59E0B;"><i class="fas fa-star"></i> ${review.rating}</span>
                 </div>
-                <p style="color: #666; font-size: 0.9rem;">${review.comment}</p>
+                <p style="color: #666; font-size: 0.9rem;">${safeComment}</p>
                 <small style="color: #999;">${new Date(review.created_at).toLocaleDateString()}</small>
             `;
             reviewsList.appendChild(reviewEl);
