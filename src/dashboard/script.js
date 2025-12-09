@@ -92,7 +92,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
-                            'X-User-Id': userId
+                            'Authorization': `Bearer ${localStorage.getItem('authToken')}`
                         },
                         body: JSON.stringify({ restaurant_id: restaurantId })
                     });
@@ -366,7 +366,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const response = await fetch(url, {
                 method: 'GET',
                 headers: {
-                    'X-User-Id': userId || ''
+                    'Authorization': `Bearer ${userId ? localStorage.getItem('authToken') : ''}`
                 }
             });
 
@@ -485,7 +485,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'X-User-Id': userId
+                        'Authorization': `Bearer ${localStorage.getItem('authToken')}`
                     },
                     body: JSON.stringify({ user_input: text })
                 });

@@ -1,10 +1,12 @@
 // src/routes/auth.js
 const express = require('express');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken'); // Import jsonwebtoken
 const supabase = require('../supabaseClient');
 const checkAuth = require('../middleware/authMiddleware');
 
 const router = express.Router();
+const JWT_SECRET = process.env.JWT_SECRET || process.env.SUPABASE_KEY; // Use Secret
 
 // --- GET ALL USERS (Debug) ---
 router.get('/', async (req, res) => {
@@ -17,8 +19,10 @@ router.get('/', async (req, res) => {
 router.post('/', async (req, res) => {
     try {
         const { name, email, phone, password } = req.body
+        console.log(`[Auth] Signup attempt for email: ${email}`);
 
         if (!name || !email || !phone || !password) {
+            console.warn('[Auth] Signup failed: Missing fields');
             return res.status(400).json({ message: "All fields are required" })
         }
 
@@ -30,6 +34,7 @@ router.post('/', async (req, res) => {
             .single()
 
         if (existingUser) {
+            console.warn(`[Auth] Signup failed: User already exists (${email})`);
             return res.status(400).json({ message: "User with this email already exists" })
         }
 
@@ -49,14 +54,15 @@ router.post('/', async (req, res) => {
             ])
 
         if (error) {
-            console.error('Supabase Insert Error:', error)
+            console.error('[Auth] Supabase Insert Error:', error)
             return res.status(500).json({ message: "Error creating user" })
         }
 
+        console.log(`[Auth] User created successfully: ${email}`);
         res.status(201).json({ message: "User created successfully" })
 
     } catch (err) {
-        console.error(err)
+        console.error('[Auth] Internal Error:', err)
         res.status(500).json({ message: "Internal server error" })
     }
 })
@@ -65,6 +71,7 @@ router.post('/', async (req, res) => {
 router.post('/login', async (req, res) => {
     try {
         const { email, password } = req.body
+        console.log(`[Auth] Login attempt for email: ${email}`);
 
         // 1. Fetch user from Supabase
         const { data: user, error } = await supabase
@@ -74,14 +81,20 @@ router.post('/login', async (req, res) => {
             .single()
 
         if (error || !user) {
+            console.warn(`[Auth] Login failed: User not found (${email})`);
             return res.status(400).send("Cannot find user")
         }
 
         // 2. Compare Passwords
         if (await bcrypt.compare(password, user.password_hash)) {
-            // Send user details for frontend session storage
+            console.log(`[Auth] Login success: ${email} (${user.id})`);
+            // Generate JWT Token
+            const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: '24h' });
+
+            // Send user details + token
             res.status(200).json({
                 message: "Success",
+                token: token,
                 user: {
                     id: user.id,
                     email: user.email,
@@ -89,11 +102,12 @@ router.post('/login', async (req, res) => {
                 }
             });
         } else {
+            console.warn(`[Auth] Login failed: Incorrect password (${email})`);
             res.status(401).send("Not Allowed")
         }
 
     } catch (err) {
-        console.error(err)
+        console.error('[Auth] Login Error:', err)
         res.status(500).send("Server Error")
     }
 })

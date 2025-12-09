@@ -77,7 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const response = await fetch('/reservations/user', {
                 method: 'GET',
                 headers: {
-                    'X-User-Id': userId,
+                    'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
                     'Content-Type': 'application/json'
                 }
             });
@@ -119,7 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const response = await fetch('/profile', {
                 method: 'GET',
                 headers: {
-                    'X-User-Id': userId,
+                    'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
                     'Content-Type': 'application/json'
                 }
             });
@@ -203,7 +203,10 @@ document.addEventListener('DOMContentLoaded', () => {
             try {
                 const response = await fetch(`/users/${userId}`, {
                     method: 'PATCH',
-                    headers: { 'Content-Type': 'application/json', 'X-User-Id': userId },
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+                    },
                     body: JSON.stringify(updateData)
                 });
 

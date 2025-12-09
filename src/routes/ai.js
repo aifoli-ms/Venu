@@ -158,13 +158,14 @@ router.post('/ask', checkAuth, async (req, res) => {
             const call = functionCalls[0];
             if (call.name === "makeReservation") {
                 const { restaurant_id, date, time, party_size } = call.args;
-                console.log("Alfred initiating reservation:", call.args);
+                console.log(`[Alfred] Tool Execution: makeReservation for ${restaurant_id} on ${date} at ${time}`);
 
                 try {
                     const confirmation = await createReservation(userId, restaurant_id, date, time, party_size);
                     reply = `I've successfully booked a table for ${party_size} at the restaurant for ${date} at ${time}. Enjoy your meal!`;
+                    console.log(`[Alfred] Reservation Success: ${reply}`);
                 } catch (resErr) {
-                    console.error("Alfred reservation failed:", resErr);
+                    console.error("[Alfred] Reservation Failed:", resErr);
                     reply = "I encountered an issue while trying to make that reservation. Please try again or check the details.";
                 }
             }
@@ -173,8 +174,9 @@ router.post('/ask', checkAuth, async (req, res) => {
             const text = response.text();
             if (text) {
                 reply = text;
+                console.log(`[Alfred] Response generated (Length: ${reply.length})`);
             } else {
-                console.error('Gemini API returned no text and no function call.');
+                console.error('[Alfred] Gemini API returned no text and no function call.');
             }
         }
 
@@ -187,12 +189,12 @@ router.post('/ask', checkAuth, async (req, res) => {
                 alfred_response: reply
             });
 
-        if (insertError) console.error("Failed to save AI interaction:", insertError);
+        if (insertError) console.error("[Alfred] Failed to save AI interaction:", insertError);
 
         res.status(200).json({ reply: reply });
 
     } catch (err) {
-        console.error('Alfred Error:', err);
+        console.error('[Alfred] Processing Error:', err);
 
         try {
             await supabase
@@ -203,7 +205,7 @@ router.post('/ask', checkAuth, async (req, res) => {
                     alfred_response: reply
                 });
         } catch (dbErr) {
-            console.error('Failed to save error interaction:', dbErr);
+            console.error('[Alfred] Failed to save error interaction:', dbErr);
         }
 
         res.status(500).json({ message: reply });

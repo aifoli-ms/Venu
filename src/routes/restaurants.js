@@ -9,11 +9,13 @@ const router = express.Router();
 router.get('/restaurants', async (req, res) => {
     const filter = req.query.filter;
     const userId = req.headers['x-user-id']; // Read potential user ID from header
+    console.log(`[Restaurants] Fetching restaurants. Filter: ${filter || 'None'}, User: ${userId || 'Guest'}`);
 
     try {
         if (filter === 'favorites') {
             // 1. Check for authentication if filtering by favorites
             if (!userId) {
+                console.warn('[Restaurants] Favorites access denied: No User ID');
                 return res.status(403).json({ message: "Must be logged in to view favorites." });
             }
 
@@ -31,6 +33,7 @@ router.get('/restaurants', async (req, res) => {
 
             // 3. Flatten the response and explicitly set is_favorite: true
             const favoritedRestaurants = data.map(item => ({ ...item.restaurants, is_favorite: true }));
+            console.log(`[Restaurants] Returning ${favoritedRestaurants.length} favorites for user ${userId}`);
             return res.status(200).json(favoritedRestaurants);
 
         } else {
@@ -67,15 +70,16 @@ router.get('/restaurants', async (req, res) => {
             }
 
             if (error) {
-                console.error('Supabase fetch error:', error);
+                console.error('[Restaurants] Supabase fetch error:', error);
                 return res.status(500).json({ message: "Failed to fetch restaurants" });
             }
 
+            console.log(`[Restaurants] Returning ${data ? data.length : 0} restaurants`);
             return res.status(200).json(data);
         }
 
     } catch (err) {
-        console.error('Server error:', err);
+        console.error('[Restaurants] Server error:', err);
         res.status(500).json({ message: "Internal server error" });
     }
 });

@@ -43,6 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     localStorage.setItem('userId', data.user.id);
                     localStorage.setItem('userName', data.user.name);
                     localStorage.setItem('userEmail', data.user.email);
+                    localStorage.setItem('authToken', data.token); // Store JWT Token
 
                     // Redirect to dashboard
                     window.location.href = '../dashboard/dashboard.html';

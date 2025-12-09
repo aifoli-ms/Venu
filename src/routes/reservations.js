@@ -9,6 +9,7 @@ const router = express.Router();
 // --- GET USER RESERVATIONS (GET /reservations/user) ---
 router.get('/user', checkAuth, async (req, res) => {
     const userId = req.userId;
+    console.log(`[Reservations] Fetching reservations for user: ${userId}`);
 
     try {
         // Fetch reservations for the logged-in user, and join with the restaurants table
@@ -28,14 +29,15 @@ router.get('/user', checkAuth, async (req, res) => {
             .order('reservation_time', { ascending: false });
 
         if (error) {
-            console.error('Supabase Reservations Fetch Error:', error);
+            console.error('[Reservations] Supabase Fetch Error:', error);
             return res.status(500).json({ message: "Failed to fetch reservations." });
         }
 
+        console.log(`[Reservations] Found ${reservations.length} reservations.`);
         res.status(200).json(reservations);
 
     } catch (err) {
-        console.error('Server error fetching reservations:', err);
+        console.error('[Reservations] Server error:', err);
         res.status(500).json({ message: "Internal server error." });
     }
 });
