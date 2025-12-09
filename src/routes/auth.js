@@ -67,8 +67,10 @@ router.post('/', async (req, res) => {
     }
 })
 
+const loginLimiter = require('../middleware/rateLimiter');
+
 // --- LOGIN ROUTE (POST /users/login) ---
-router.post('/login', async (req, res) => {
+router.post('/login', loginLimiter, async (req, res) => {
     try {
         const { email, password } = req.body
         console.log(`[Auth] Login attempt for email: ${email}`);
