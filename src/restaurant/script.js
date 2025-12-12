@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', async () => {
 
-    // 0. Update User Avatar
+
     function getInitials(name) {
         if (!name) return 'SI';
         const parts = name.split(/\s+/).filter(part => part.length > 0);
@@ -33,20 +33,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     const logoutBtn = document.getElementById('logout-btn');
     if (logoutBtn) {
         logoutBtn.addEventListener('click', () => {
-            // 1. Clear Local Storage
+
             localStorage.removeItem('authToken');
             localStorage.removeItem('userId');
             localStorage.removeItem('userName');
-
-            // 2. Redirect to Homepage or Login
             window.location.href = '../login/login.html';
         });
     }
 
-    // 1. Get Restaurant ID from URL
     const urlParams = new URLSearchParams(window.location.search);
     const restaurantId = urlParams.get('id');
-    const userId = localStorage.getItem('userId'); // Needed for reservation
+    const userId = localStorage.getItem('userId');
 
     if (!restaurantId) {
         alert("No restaurant specified.");
@@ -54,9 +51,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         return;
     }
 
-    // 2. Fetch Restaurant Details
     try {
-        const response = await fetch(`/restaurants/${restaurantId}`);
+        const response = await fetch(`${API_BASE_URL}/restaurants/${restaurantId}`);
         if (!response.ok) throw new Error("Failed to fetch details");
 
         const data = await response.json();
@@ -75,13 +71,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         document.getElementById('res-rating').textContent = data.average_rating || 'New';
 
-        // Set status
+
         const statusEl = document.getElementById('res-status');
         statusEl.textContent = data.status || 'Open';
         if (data.status === 'Fully Booked') statusEl.style.background = '#EF4444'; // Red
     }
 
-    // 3. Modal Logic
+
     const modal = document.getElementById('reservation-modal');
     const openBtn = document.getElementById('open-modal-btn');
     const closeBtn = document.querySelector('.close-modal');
@@ -98,12 +94,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     closeBtn.addEventListener('click', () => modal.classList.add('hidden'));
 
-    // Close on outside click
+
     window.addEventListener('click', (e) => {
         if (e.target === modal) modal.classList.add('hidden');
     });
 
-    // 4. Handle Reservation Submit
+
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
 
@@ -114,7 +110,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (!date || !time) { alert("Please select date and time"); return; }
 
         try {
-            const response = await fetch('/reservations', {
+            const response = await fetch(`${API_BASE_URL}/reservations`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -129,8 +125,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
 
             if (response.ok) {
-                alert("Reservation Confirmed!");
+                // Show Success Modal
                 modal.classList.add('hidden');
+                document.getElementById('reservation-success-modal').classList.remove('hidden');
+                form.reset();
             } else {
                 const err = await response.json();
                 alert("Error: " + err.message);
@@ -141,17 +139,17 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     });
 
-    // 5. Review Logic
+
     const reviewModal = document.getElementById('review-modal');
     const openReviewBtn = document.getElementById('open-review-modal-btn');
     const closeReviewBtn = document.querySelector('.close-review-modal');
     const reviewForm = document.getElementById('review-form');
     const reviewsList = document.getElementById('reviews-list');
 
-    // Fetch and display reviews
+
     async function fetchReviews() {
         try {
-            const response = await fetch(`/restaurants/${restaurantId}/reviews`);
+            const response = await fetch(`${API_BASE_URL}/restaurants/${restaurantId}/reviews`);
             if (!response.ok) throw new Error("Failed to fetch reviews");
             const reviews = await response.json();
             renderReviews(reviews);
@@ -182,11 +180,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             return;
         }
 
-        // Calculate average rating
+
         const totalRating = reviews.reduce((acc, r) => acc + r.rating, 0);
         const avgRating = (totalRating / reviews.length).toFixed(1);
         document.getElementById('review-rating').textContent = avgRating;
-        document.getElementById('res-rating').textContent = avgRating; // Update main rating too
+        document.getElementById('res-rating').textContent = avgRating;
 
         reviews.forEach(review => {
             const reviewEl = document.createElement('div');
@@ -194,9 +192,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             reviewEl.style.borderBottom = '1px solid #eee';
             reviewEl.style.padding = '1rem 0';
 
-            // SECURITY FIX: Escape user input to prevent XSS
-            const safeName = escapeHtml(review.users ? review.users.name : 'Anonymous');
-            const safeComment = escapeHtml(review.comment);
+
+            const safeName = review.users ? review.users.name : 'Anonymous';
+            const safeComment = review.comment;
 
             reviewEl.innerHTML = `
                 <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
@@ -212,23 +210,34 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     fetchReviews();
 
-    // 6. Menu Logic
+
     const menusList = document.getElementById('menus-list');
 
-    // Fetch and display menus
+
     async function fetchMenus() {
         try {
-            const response = await fetch(`/restaurants/${restaurantId}/menus`);
-            if (!response.ok) throw new Error("Failed to fetch menus");
-            const menus = await response.json();
-            renderMenus(menus);
+            const response = await fetch(`${API_BASE_URL}/restaurants/${restaurantId}/menus`);
+            if (!response.ok) {
+                const text = await response.text();
+                console.error("Fetch failed:", response.status, text);
+                throw new Error("Failed to fetch menus: " + response.status);
+            }
+
+            const clone = response.clone();
+            try {
+                const menus = await response.json();
+                renderMenus(menus);
+            } catch (jsonError) {
+                const text = await clone.text();
+                console.error("JSON Error:", jsonError, "Raw Body:", text);
+            }
         } catch (error) {
             console.error("Error loading menus:", error);
         }
     }
 
     function renderMenus(menus) {
-        if (!menusList) return; // Guard if element doesn't exist yet
+        if (!menusList) return;
 
         menusList.innerHTML = '';
         if (menus.length === 0) {
@@ -247,7 +256,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 <h4>${menu.name}</h4>
                 ${menu.description ? `<p>${menu.description}</p>` : ''}
             `;
-            // Add click event to open modal
             menuEl.addEventListener('click', () => openMenuModal(menu));
             menusList.appendChild(menuEl);
         });
@@ -255,7 +263,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     fetchMenus();
 
-    // 7. Menu Items Modal Logic
+
     const menuModal = document.getElementById('menu-items-modal');
     const closeMenuModalBtn = document.querySelector('.close-menu-modal');
     const menuModalTitle = document.getElementById('menu-modal-title');
@@ -270,7 +278,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         menuModal.classList.remove('hidden');
 
         try {
-            const response = await fetch(`/menus/${menu.id}/items`);
+            const response = await fetch(`${API_BASE_URL}/menus/${menu.id}/items`);
             if (!response.ok) throw new Error("Failed to fetch menu items");
             const items = await response.json();
             renderMenuItems(items);
@@ -296,13 +304,16 @@ document.addEventListener('DOMContentLoaded', async () => {
         items.forEach(item => {
             const itemEl = document.createElement('div');
             itemEl.className = 'menu-item-row';
+
+            const priceVal = item.price ? Number(item.price) : 0;
+
             itemEl.innerHTML = `
                 <div class="menu-item-info">
                     <h4>${item.name}</h4>
                     ${item.description ? `<p>${item.description}</p>` : ''}
                 </div>
                 <div class="menu-item-price">
-                    ₵${item.price ? item.price.toFixed(2) : '0.00'}
+                    ₵${priceVal.toFixed(2)}
                 </div>
             `;
             menuItemsList.appendChild(itemEl);
@@ -318,7 +329,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
 
-    // Modal Handlers
+
     openReviewBtn.addEventListener('click', () => {
         if (!userId) {
             alert("Please login to write a review.");
@@ -334,7 +345,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (e.target === reviewModal) reviewModal.classList.add('hidden');
     });
 
-    // Submit Review
+
     reviewForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         const ratingEl = document.querySelector('input[name="rating"]:checked');
@@ -347,7 +358,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         try {
-            const response = await fetch(`/restaurants/${restaurantId}/reviews`, {
+            const response = await fetch(`${API_BASE_URL}/restaurants/${restaurantId}/reviews`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -357,10 +368,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
 
             if (response.ok) {
-                alert("Review submitted!");
+                // Show Success Modal
                 reviewModal.classList.add('hidden');
+                document.getElementById('review-success-modal').classList.remove('hidden');
+
                 reviewForm.reset();
-                fetchReviews(); // Refresh list
+                fetchReviews();
             } else {
                 const err = await response.json();
                 alert("Error: " + err.message);
@@ -368,6 +381,39 @@ document.addEventListener('DOMContentLoaded', async () => {
         } catch (error) {
             console.error(error);
             alert("Failed to submit review");
+        }
+    });
+
+
+    // Success Modal Logic
+    const successModal = document.getElementById('review-success-modal');
+    const closeSuccessBtn = document.querySelector('.close-success-modal');
+
+    if (closeSuccessBtn) {
+        closeSuccessBtn.addEventListener('click', () => {
+            successModal.classList.add('hidden');
+        });
+    }
+
+    window.addEventListener('click', (e) => {
+        if (e.target === successModal) {
+            successModal.classList.add('hidden');
+        }
+    });
+
+    // Reservation Success Modal Logic
+    const resSuccessModal = document.getElementById('reservation-success-modal');
+    const closeResSuccessBtn = document.querySelector('.close-reservation-success-modal');
+
+    if (closeResSuccessBtn) {
+        closeResSuccessBtn.addEventListener('click', () => {
+            resSuccessModal.classList.add('hidden');
+        });
+    }
+
+    window.addEventListener('click', (e) => {
+        if (e.target === resSuccessModal) {
+            resSuccessModal.classList.add('hidden');
         }
     });
 });

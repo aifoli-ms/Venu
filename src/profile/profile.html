@@ -117,6 +117,34 @@
         </main>
     </div>
 
+    <!-- Confirmation Modal -->
+    <div id="cancel-confirm-modal" class="modal hidden">
+        <div class="modal-content">
+            <div style="margin-bottom: 1rem; color: #F59E0B; font-size: 3rem;">
+                <i class="fas fa-exclamation-circle"></i>
+            </div>
+            <h3>Cancel Reservation?</h3>
+            <p style="color: #666; margin-bottom: 1.5rem;">Are you sure you want to cancel this reservation? This action
+                cannot be undone.</p>
+            <div class="modal-actions">
+                <button id="cancel-no" class="btn-secondary">No, Keep it</button>
+                <button id="cancel-yes" class="btn-danger">Yes, Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="cancel-success-modal" class="modal hidden">
+        <div class="modal-content">
+            <div style="margin-bottom: 1rem; color: #10B981; font-size: 3rem;">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h3>Reservation Cancelled</h3>
+            <p style="color: #666; margin-bottom: 1.5rem;">Your reservation has been successfully cancelled.</p>
+            <button id="success-close" class="btn-primary" style="width: 100%;">Close</button>
+        </div>
+    </div>
+
     <footer class="site-footer">
         <div class="footer-content">
             <div class="footer-section brand">
@@ -151,6 +179,7 @@
         </div>
     </footer>
 
+    <script src="../config.js"></script>
     <script src="script.js"></script>
 </body>
 

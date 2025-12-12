@@ -22,7 +22,7 @@ body {
     padding: 2rem;
 }
 
-/* NAVBAR */
+
 .navbar {
     display: flex;
     justify-content: space-between;
@@ -72,10 +72,10 @@ body {
     text-decoration: none;
 }
 
-/* BANNER */
+
 .banner {
     background: linear-gradient(135deg, #4B5563, #1F2937);
-    /* Dark Grey Gradient */
+ 
     border-radius: 16px;
     padding: 3rem 2.5rem;
     color: white;
@@ -148,7 +148,7 @@ body {
     opacity: 0.8;
 }
 
-/* LAYOUT GRID */
+
 .details-grid {
     display: grid;
     grid-template-columns: 2fr 1fr;
@@ -161,7 +161,7 @@ body {
     }
 }
 
-/* CARDS */
+
 .card {
     background: #fff;
     border: 1px solid var(--border-color);
@@ -187,7 +187,7 @@ body {
     cursor: pointer;
 }
 
-/* INFO LIST */
+
 .info-list {
     list-style: none;
     padding: 0;
@@ -218,7 +218,7 @@ body {
     text-decoration: none;
 }
 
-/* REVIEWS CARD */
+
 .card-header {
     display: flex;
     justify-content: space-between;
@@ -259,7 +259,7 @@ body {
     font-size: 0.9rem;
 }
 
-/* MODAL STYLES */
+
 .modal {
     position: fixed;
     top: 0;
@@ -343,7 +343,7 @@ body {
     line-height: 1.4;
 }
 
-/* REVIEW MODAL SPECIFIC */
+
 .btn-secondary {
     background-color: #fff;
     color: var(--dark-grey);
@@ -373,11 +373,10 @@ body {
     color: var(--dark-grey);
 }
 
-/* STAR RATING PICKER */
+
 .star-rating-picker {
     display: flex;
     flex-direction: row-reverse;
-    /* Reverse for CSS hover magic */
     justify-content: flex-end;
     gap: 0.5rem;
     margin-top: 0.5rem;
@@ -398,7 +397,6 @@ body {
 .star-rating-picker label:hover~label,
 .star-rating-picker input:checked~label {
     color: #F59E0B;
-    /* Star Color */
 }
 
 textarea#review-comment {
@@ -417,7 +415,7 @@ textarea#review-comment:focus {
     box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1);
 }
 
-/* REVIEW LIST ITEMS */
+
 .review-item {
     animation: fadeIn 0.3s ease-in-out;
 }
@@ -434,7 +432,7 @@ textarea#review-comment:focus {
     }
 }
 
-/* MENU STYLES */
+
 .menus-list {
     display: flex;
     flex-direction: column;
@@ -471,7 +469,7 @@ textarea#review-comment:focus {
     line-height: 1.5;
 }
 
-/* Menu Items Modal */
+
 .menu-modal-content {
     max-width: 600px;
     width: 90%;
@@ -479,12 +477,12 @@ textarea#review-comment:focus {
     display: flex;
     flex-direction: column;
     padding: 0;
-    /* Reset padding for sticky header */
+   
     border-radius: 16px;
     border: 1px solid rgba(0, 0, 0, 0.05);
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
     overflow: hidden;
-    /* For border radius */
+
     background: #fff;
 }
 
@@ -517,7 +515,7 @@ textarea#review-comment:focus {
     margin-top: 0;
 }
 
-/* Custom Scrollbar */
+
 .menu-items-list::-webkit-scrollbar {
     width: 6px;
 }

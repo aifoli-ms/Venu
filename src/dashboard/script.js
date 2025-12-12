@@ -1,8 +1,7 @@
-// src/dashboard/script.js
 
 document.addEventListener('DOMContentLoaded', function () {
 
-    // --- Global Elements ---
+
     const restaurantGrid = document.querySelector('.restaurant-grid');
     const filterPills = document.querySelectorAll('.filter-pills .pill');
     const navLinks = document.querySelectorAll('.navbar nav .nav-link');
@@ -10,7 +9,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const favoritesLink = document.getElementById('favorites-link');
     const userAvatarEl = document.querySelector('.user-avatar');
 
-    // --- New Filter Elements ---
     const filterToggleBtn = document.getElementById('filter-toggle-btn');
     const filterDropdown = document.getElementById('filter-dropdown');
     const applyFiltersBtn = document.getElementById('apply-filters-btn');
@@ -20,14 +18,10 @@ document.addEventListener('DOMContentLoaded', function () {
     const filterRatingInput = document.getElementById('filter-rating');
     const searchInput = document.getElementById('search-input');
 
-    // --- State Management ---
-    let allRestaurantsData = []; // Store fetched data here to filter locally
+
+    let allRestaurantsData = [];
     let currentCuisine = 'All';
     let currentSearchTerm = '';
-
-    // ----------------------------------------------------
-    // --- 1. UTILITY FUNCTIONS: AVATAR AND TOGGLES ---
-    // ----------------------------------------------------
 
     function getInitials(name) {
         if (!name) return 'SI';
@@ -51,7 +45,6 @@ document.addEventListener('DOMContentLoaded', function () {
             const initials = getInitials(userName);
             userAvatarEl.textContent = initials;
 
-            // Set the correct navigation link
             if (!userName) {
                 userAvatarEl.href = '../login/login.html';
             } else {
@@ -65,17 +58,14 @@ document.addEventListener('DOMContentLoaded', function () {
     const logoutBtn = document.getElementById('logout-btn');
     if (logoutBtn) {
         logoutBtn.addEventListener('click', () => {
-            // 1. Clear Local Storage
+
             localStorage.removeItem('authToken');
             localStorage.removeItem('userId');
             localStorage.removeItem('userName');
-
-            // 2. Redirect to Homepage or Login
             window.location.href = '../login/login.html';
         });
     }
 
-    // Favorite (Heart) Button Toggle Function
     function setupFavoriteToggles() {
         document.querySelectorAll('.favorite-btn').forEach(button => {
             button.addEventListener('click', async function (e) {
@@ -96,14 +86,14 @@ document.addEventListener('DOMContentLoaded', function () {
                     return;
                 }
 
-                // Optimistic UI Update (Change heart icon immediately)
+
                 const icon = this.querySelector('i');
                 this.classList.toggle('active');
                 icon.classList.toggle('fa-regular');
                 icon.classList.toggle('fa-solid');
 
                 try {
-                    const response = await fetch('/favorites/toggle', {
+                    const response = await fetch(`${API_BASE_URL}/favorites/toggle`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -120,7 +110,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     console.error('API Error:', error);
                     alert("Failed to save favorite status. Try again.");
 
-                    // Revert UI change if API fails
+
                     this.classList.toggle('active');
                     icon.classList.toggle('fa-regular');
                     icon.classList.toggle('fa-solid');
@@ -129,11 +119,9 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Reserve Button Navigation Function
     function setupReserveButtons() {
         document.querySelectorAll('.reserve-btn').forEach(button => {
             button.addEventListener('click', function (e) {
-                // Don't navigate if button is disabled (Fully Booked)
                 if (this.disabled || this.classList.contains('btn-disabled')) {
                     return;
                 }
@@ -146,12 +134,9 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // ----------------------------------------------------
-    // --- 2. RENDERING FUNCTIONS ---
-    // ----------------------------------------------------
 
     function createRestaurantCard(restaurant) {
-        // Use default status and favorite flag if not provided by the server
+
         const isFullyBooked = restaurant.status === 'Fully Booked';
         const isFavorite = restaurant.is_favorite || false;
 
@@ -166,7 +151,7 @@ document.addEventListener('DOMContentLoaded', function () {
             : 'Reserve a Table';
         const btnDisabled = isFullyBooked ? 'disabled' : '';
 
-        // FIX: Correct local image paths for the browser
+
         let imageUrl = restaurant.image_url
 
 
@@ -224,33 +209,29 @@ document.addEventListener('DOMContentLoaded', function () {
         setupReserveButtons();
     }
 
-    // ----------------------------------------------------
-    // --- 3. FILTER LOGIC ---
-    // ----------------------------------------------------
 
-    // Toggle Filter Dropdown
     if (filterToggleBtn && filterDropdown) {
         filterToggleBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             filterDropdown.classList.toggle('show');
         });
 
-        // Close dropdown when clicking outside
+
         document.addEventListener('click', (e) => {
             if (!filterDropdown.contains(e.target) && e.target !== filterToggleBtn) {
                 filterDropdown.classList.remove('show');
             }
         });
 
-        // Prevent clicks inside dropdown from closing it
+
         filterDropdown.addEventListener('click', (e) => e.stopPropagation());
     }
 
-    // Apply Filters Logic
+
     function applyFilters() {
         let filtered = allRestaurantsData;
 
-        // A. Filter by Search Term (Name, Location, Cuisine)
+
         if (currentSearchTerm) {
             const searchLower = currentSearchTerm.toLowerCase().trim();
             filtered = filtered.filter(r => {
@@ -261,14 +242,12 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         }
 
-        // B. Filter by Cuisine (Pills)
         if (currentCuisine !== 'All') {
             filtered = filtered.filter(r =>
                 r.cuisine_type && r.cuisine_type.toLowerCase().includes(currentCuisine.toLowerCase())
             );
         }
 
-        // C. Filter by Location (Input)
         const locValue = filterLocationInput ? filterLocationInput.value.toLowerCase().trim() : '';
         if (locValue) {
             filtered = filtered.filter(r =>
@@ -276,13 +255,12 @@ document.addEventListener('DOMContentLoaded', function () {
             );
         }
 
-        // D. Filter by Price (Select)
+
         const priceValue = filterPriceInput ? filterPriceInput.value : '';
         if (priceValue) {
             filtered = filtered.filter(r => r.price_range === priceValue);
         }
 
-        // E. Filter by Rating (Select)
         const ratingValue = filterRatingInput ? parseFloat(filterRatingInput.value) : 0;
         if (ratingValue > 0) {
             filtered = filtered.filter(r => (r.average_rating || 0) >= ratingValue);
@@ -291,18 +269,15 @@ document.addEventListener('DOMContentLoaded', function () {
         renderRestaurants(filtered);
     }
 
-    // Clear Filters Function
+
     function clearFilters() {
-        // Reset all filter inputs
         if (filterLocationInput) filterLocationInput.value = '';
         if (filterPriceInput) filterPriceInput.value = '';
         if (filterRatingInput) filterRatingInput.value = '0';
         if (searchInput) searchInput.value = '';
 
-        // Reset search term
         currentSearchTerm = '';
 
-        // Reset cuisine to "All"
         currentCuisine = 'All';
         filterPills.forEach(pill => {
             pill.classList.remove('active');
@@ -311,27 +286,24 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
 
-        // Reapply filters (which will show all restaurants now)
         applyFilters();
-        filterDropdown.classList.remove('show'); // Close menu
+        filterDropdown.classList.remove('show');
     }
-
-    // "Apply Filters" Button Listener
     if (applyFiltersBtn) {
         applyFiltersBtn.addEventListener('click', () => {
             applyFilters();
-            filterDropdown.classList.remove('show'); // Close menu
+            filterDropdown.classList.remove('show');
         });
     }
 
-    // "Clear Filters" Button Listener
+
     if (clearFiltersBtn) {
         clearFiltersBtn.addEventListener('click', () => {
             clearFilters();
         });
     }
 
-    // Search Input Listener
+
     if (searchInput) {
         searchInput.addEventListener('input', (e) => {
             currentSearchTerm = e.target.value;
@@ -339,14 +311,13 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Filter Pills Listener
+
     filterPills.forEach(pill => {
         pill.addEventListener('click', function () {
-            // Update UI
+
             filterPills.forEach(p => p.classList.remove('active'));
             this.classList.add('active');
 
-            // Update Logic
             currentCuisine = this.textContent.trim();
             if (this.getAttribute('data-cuisine')) {
                 currentCuisine = this.getAttribute('data-cuisine');
@@ -357,9 +328,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
 
-    // ----------------------------------------------------
-    // --- 4. DATA FETCHING AND UI LOGIC ---
-    // ----------------------------------------------------
 
     function setActiveNavLink(linkId) {
         navLinks.forEach(link => link.classList.remove('active'));
@@ -372,7 +340,7 @@ document.addEventListener('DOMContentLoaded', function () {
     async function fetchRestaurants(filter = null) {
         const userId = localStorage.getItem('userId');
 
-        let url = '/restaurants';
+        let url = `${API_BASE_URL}/restaurants`;
         if (filter === 'favorites') {
             url += '?filter=favorites';
         }
@@ -387,14 +355,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
             if (!response.ok) {
                 if (response.status === 403) {
-                    // Token expired or invalid
+
                     console.warn("Session expired. Logging out.");
                     localStorage.removeItem('authToken');
                     localStorage.removeItem('userId');
                     localStorage.removeItem('userName');
 
                     if (filter === 'favorites') {
-                        // Redirect to login if trying to view favorites
                         window.location.href = '../login/login.html?msg=expired';
                         return;
                     }
@@ -403,36 +370,30 @@ document.addEventListener('DOMContentLoaded', function () {
             }
             const restaurants = await response.json();
 
-            // Normalize data and Store Globally
+
             allRestaurantsData = restaurants.map((r, index) => ({
                 ...r,
-                // Demo status logic (keep existing logic or replace with real data)
+
                 status: r.status || (index === 2 || index === 6 ? 'Fully Booked' : 'Available'),
                 price_range: r.price_range || '$$',
                 average_rating: r.average_rating || 0
             }));
 
-            // Render with current filters applied
+
             applyFilters();
 
         } catch (error) {
             console.error('Error fetching restaurants:', error);
-            restaurantGrid.innerHTML = '<p style="text-align: center; grid-column: 1 / -1; color: #EF4444;">Failed to load restaurants. Check if your Node.js server is running and connected to Supabase.</p>';
+            restaurantGrid.innerHTML = '<p style="text-align: center; grid-column: 1 / -1; color: #EF4444;">Failed to load restaurants. Please check your database connection.</p>';
         }
     }
 
 
-    // ----------------------------------------------------
-    // --- 5. EVENT LISTENERS AND INITIAL LOAD ---
-    // ----------------------------------------------------
 
-    // Navigation Tab Event Listeners
     if (exploreLink) {
         exploreLink.addEventListener('click', (e) => {
             e.preventDefault();
             setActiveNavLink('explore-link');
-            // Reset filters when going back to explore? Optional.
-            // currentCuisine = 'All'; 
             fetchRestaurants();
         });
     }
@@ -445,11 +406,11 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Initial run on page load
+
     updateUserAvatar();
     fetchRestaurants();
 
-    // --- ALFRED LOGIC ---
+
     const alfredToggleBtn = document.getElementById('alfred-toggle-btn');
     const alfredChatWindow = document.getElementById('alfred-chat-window');
     const alfredCloseBtn = document.getElementById('alfred-close-btn');
@@ -457,7 +418,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const alfredInput = document.getElementById('alfred-input');
     const alfredMessages = document.getElementById('alfred-messages');
 
-    // Toggle Window
+
     if (alfredToggleBtn && alfredChatWindow) {
         alfredToggleBtn.addEventListener('click', () => {
             alfredChatWindow.classList.toggle('hidden');
@@ -478,7 +439,7 @@ document.addEventListener('DOMContentLoaded', function () {
         alfredMessages.scrollTop = alfredMessages.scrollHeight;
     }
 
-    const apiBaseUrl = '';
+
 
     if (alfredInputForm) {
         alfredInputForm.addEventListener('submit', async (e) => {
@@ -486,7 +447,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const text = alfredInput.value.trim();
             if (!text) return;
 
-            // 1. Add User Message
+
             addMessage(text, 'user');
             alfredInput.value = '';
 
@@ -496,7 +457,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 return;
             }
 
-            // 2. Show Loading State
+
             const loadingDiv = document.createElement('div');
             loadingDiv.classList.add('message', 'alfred');
             loadingDiv.innerHTML = '<i class="fas fa-ellipsis-h"></i>';
@@ -504,8 +465,8 @@ document.addEventListener('DOMContentLoaded', function () {
             alfredMessages.appendChild(loadingDiv);
 
             try {
-                // 3. Send to Backend
-                const response = await fetch(`${apiBaseUrl}/alfred/ask`, {
+
+                const response = await fetch(`${API_BASE_URL}/alfred/ask`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -514,7 +475,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     body: JSON.stringify({ user_input: text })
                 });
 
-                // Remove loading indicator
+
                 const loader = document.getElementById('alfred-loading');
                 if (loader) loader.remove();
 

@@ -1,27 +1,25 @@
-// src/profile/script.js
+
 
 document.addEventListener('DOMContentLoaded', () => {
 
     const sidebarLinks = document.querySelectorAll('.sidebar-link');
     const sections = document.querySelectorAll('.view-section');
 
-    // Get the dynamic elements to populate (user settings)
+
     const sidebarNameEl = document.getElementById('sidebar-user-name');
     const settingNameInput = document.getElementById('setting-name');
     const settingEmailInput = document.getElementById('setting-email');
     const settingPhoneInput = document.getElementById('setting-phone');
     const settingPasswordInput = document.getElementById('setting-password');
 
-    // NEW: Get reservation container
     const reservationsListEl = document.getElementById('reservations-list');
 
-    // --- UTILITY FUNCTION: DATE FORMATTING ---
+
     function formatReservationDate(dateString, timeString) {
         const dateOptions = { weekday: 'short', month: 'short', day: 'numeric' };
         const timeOptions = { hour: 'numeric', minute: '2-digit', hour12: true };
 
         try {
-            // Combine date and time to create a valid Date object
             const date = new Date(`${dateString}T${timeString}`);
             return `${date.toLocaleDateString('en-US', dateOptions)} at ${date.toLocaleTimeString('en-US', timeOptions)}`;
         } catch {
@@ -29,10 +27,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // --- UTILITY FUNCTION: CARD GENERATION ---
+
     function createReservationCard(reservation) {
         const restaurant = reservation.restaurants;
-        // Use a default status if none is provided
+
         const status = reservation.status || 'Confirmed';
         const statusClass = status.toLowerCase().replace(/\s/g, '-');
 
@@ -41,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
             reservation.reservation_time
         );
 
-        // NOTE: Uses a simple placeholder image if the DB image is missing
+
         const imageUrl = restaurant.image_url || 'https://via.placeholder.com/180';
 
         return `
@@ -60,13 +58,92 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="res-footer">
                         <span class="res-date"><i class="fa-regular fa-calendar"></i> ${formattedDateTime}</span>
                         <span class="res-people"><i class="fa-solid fa-user-group"></i> ${reservation.party_size} people</span>
+                        
+                        ${status !== 'Cancelled' ? `<button class="btn-cancel" onclick="cancelReservation(${reservation.id})">Cancel Reservation</button>` : ''}
                     </div>
                 </div>
             </div>
         `;
     }
 
-    // --- NEW: FETCH AND RENDER RESERVATIONS ---
+    // Expose function globally so onclick works
+    // Modal Elements
+    const confirmModal = document.getElementById('cancel-confirm-modal');
+    const successModal = document.getElementById('cancel-success-modal');
+    const confirmYesBtn = document.getElementById('cancel-yes');
+    const confirmNoBtn = document.getElementById('cancel-no');
+    const successCloseBtn = document.getElementById('success-close');
+
+    let reservationToDelete = null;
+
+    // Expose function globally so onclick works
+    window.cancelReservation = (id) => {
+        reservationToDelete = id;
+        confirmModal.classList.remove('hidden');
+    };
+
+    if (confirmYesBtn) {
+        confirmYesBtn.addEventListener('click', async () => {
+            if (!reservationToDelete) return;
+
+            // Show loading state if desired, or just proceed
+            confirmYesBtn.textContent = "Cancelling...";
+            confirmYesBtn.disabled = true;
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/reservations/${reservationToDelete}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+                    }
+                });
+
+                if (response.ok) {
+                    confirmModal.classList.add('hidden');
+                    successModal.classList.remove('hidden');
+                } else {
+                    const err = await response.json();
+                    alert("Error: " + err.message);
+                    confirmModal.classList.add('hidden');
+                }
+            } catch (error) {
+                console.error(error);
+                alert("Failed to cancel.");
+                confirmModal.classList.add('hidden');
+            } finally {
+                confirmYesBtn.textContent = "Yes, Cancel";
+                confirmYesBtn.disabled = false;
+                reservationToDelete = null;
+            }
+        });
+    }
+
+    if (confirmNoBtn) {
+        confirmNoBtn.addEventListener('click', () => {
+            confirmModal.classList.add('hidden');
+            reservationToDelete = null;
+        });
+    }
+
+    if (successCloseBtn) {
+        successCloseBtn.addEventListener('click', () => {
+            successModal.classList.add('hidden');
+            window.location.reload();
+        });
+    }
+
+    window.addEventListener('click', (e) => {
+        if (e.target === confirmModal) {
+            confirmModal.classList.add('hidden');
+            reservationToDelete = null;
+        }
+        if (e.target === successModal) {
+            successModal.classList.add('hidden');
+            window.location.reload();
+        }
+    });
+
+
     async function fetchAndRenderReservations() {
         const userId = localStorage.getItem('userId');
         if (!userId || !reservationsListEl) return;
@@ -74,7 +151,7 @@ document.addEventListener('DOMContentLoaded', () => {
         reservationsListEl.innerHTML = '<p style="text-align: center;">Loading reservations...</p>';
 
         try {
-            const response = await fetch('/reservations/user', {
+            const response = await fetch(`${API_BASE_URL}/reservations/user`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
@@ -102,9 +179,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 
-    // --- EXISTING: FETCH AND POPULATE USER DATA (for settings/sidebar) ---
     async function fetchAndPopulateUserData() {
-        // ... (existing implementation remains the same) ...
         const userId = localStorage.getItem('userId');
 
         if (!userId) {
@@ -116,7 +191,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (sidebarNameEl) sidebarNameEl.textContent = 'Loading...';
 
         try {
-            const response = await fetch('/profile', {
+            const response = await fetch(`${API_BASE_URL}/profile`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
@@ -149,12 +224,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Call on page load
+
     fetchAndPopulateUserData();
-    fetchAndRenderReservations(); // Load reservations as it's the default tab
+    fetchAndRenderReservations();
 
 
-    // --- EXISTING: SIDEBAR NAVIGATION LOGIC ---
     sidebarLinks.forEach(link => {
         link.addEventListener('click', (e) => {
             e.preventDefault();
@@ -166,7 +240,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const targetId = link.getAttribute('data-target');
 
-            // Re-fetch when clicking the reservations link
             if (targetId === 'reservations') {
                 fetchAndRenderReservations();
             }
@@ -178,11 +251,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // --- EXISTING: SAVE SETTINGS LOGIC ---
     const settingsForm = document.getElementById('settings-form');
     if (settingsForm) {
         settingsForm.addEventListener('submit', async (e) => {
-            // ... (existing save changes logic) ...
             e.preventDefault();
 
             const userId = localStorage.getItem('userId');
@@ -201,7 +272,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (newPassword) { updateData.password = newPassword; }
 
             try {
-                const response = await fetch(`/users/${userId}`, {
+                const response = await fetch(`${API_BASE_URL}/users/${userId}`, {
                     method: 'PATCH',
                     headers: {
                         'Content-Type': 'application/json',
@@ -227,7 +298,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- EXISTING: Toggle Password Visibility in Settings ---
+
     const togglePw = document.querySelector('.toggle-pw');
     if (togglePw) {
         togglePw.addEventListener('click', function () {
@@ -243,7 +314,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
-    // --- LOGOUT LOGIC ---
+
     const logoutBtn = document.getElementById('logout-btn');
     if (logoutBtn) {
         logoutBtn.addEventListener('click', () => {

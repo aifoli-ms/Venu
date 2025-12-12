@@ -1,9 +1,6 @@
-/*
-:root variables allow you to define colors and spacing in one place.
-*/
+
 :root {
     --primary-color: #F97316;
-    /* Main orange theme color */
     --dark-grey: #1F2937;
     --medium-grey: #1B4F72;
     --light-grey: #F3F4F6;
@@ -12,10 +9,6 @@
     --border-radius: 12px;
 }
 
-/* =====================
-  GLOBAL & BASIC STYLES
-  =====================
-*/
 * {
     box-sizing: border-box;
     margin: 0;
@@ -38,10 +31,6 @@ img {
     display: block;
 }
 
-/* =====================
-  BUTTONS
-  =====================
-*/
 .btn {
     display: inline-block;
     padding: 0.75rem 1.5rem;
@@ -61,12 +50,10 @@ img {
 
 .btn-primary a {
     color: #fff;
-    /* Ensure link text inside button is white */
 }
 
 .btn-primary:hover {
     background-color: #EA580C;
-    /* Darker orange */
     transform: translateY(-2px);
 }
 
@@ -82,14 +69,8 @@ img {
 }
 
 
-/* =====================
-  HERO & NAVIGATION
-  =====================
-*/
 .hero {
-    /* Using a placeholder image from Unsplash */
     background-color: #1B4F72;
-    /* background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://images.unsplash.com/photo-1517248135820-ee3a424376be?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1200'); */
     background-size: cover;
     background-position: center;
     color: #fff;
@@ -132,7 +113,6 @@ nav ul a {
 
 .hero-content h1 {
     font-size: 2.5rem;
-    /* Responsive font size */
     font-weight: 700;
     margin-bottom: 1rem;
 }
@@ -143,20 +123,14 @@ nav ul a {
     color: #eee;
 }
 
-/* =====================
-  BOOKING FORM
-  =====================
-*/
 .booking-form {
     background-color: #fff;
     border-radius: var(--border-radius);
     padding: 1rem;
     display: flex;
     flex-wrap: wrap;
-    /* Allow wrapping on small screens */
     gap: 1rem;
     align-items: flex-end;
-    /* Aligns labels and inputs nicely */
     max-width: 800px;
     margin: 0 auto;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
@@ -164,11 +138,9 @@ nav ul a {
 
 .form-group {
     flex-grow: 1;
-    /* Each group tries to take equal space */
     display: flex;
     flex-direction: column;
     min-width: 150px;
-    /* Prevents items from getting too small */
 }
 
 .form-group label {
@@ -186,20 +158,13 @@ nav ul a {
     color: var(--dark-grey);
 }
 
-/* Removes the ugly calendar/time icon in Webkit */
 .form-group input::-webkit-calendar-picker-indicator {
     display: none;
 }
-
-/* Make the button take up space in the flex container */
 .booking-form .btn {
     flex-grow: 1;
 }
 
-/* =====================
-  FEATURES SECTION
-  =====================
-*/
 .features {
     display: flex;
     justify-content: center;
@@ -225,10 +190,6 @@ nav ul a {
     font-size: 1rem;
 }
 
-/* =====================
-  LISTINGS SECTION
-  =====================
-*/
 .listings {
     max-width: 1200px;
     margin: 0 auto;
@@ -243,7 +204,6 @@ nav ul a {
 }
 
 .listings>p {
-    /* Target the main <p> tag */
     font-size: 1.1rem;
     color: var(--medium-grey);
     text-align: center;
@@ -252,15 +212,9 @@ nav ul a {
 
 .card-container {
     display: grid;
-    /* Responsive grid: creates columns of at least 300px */
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 2rem;
 }
-
-/* =====================
-  CARD STYLES
-  =====================
-*/
 .card {
     background-color: #fff;
     border-radius: var(--border-radius);
@@ -268,7 +222,6 @@ nav ul a {
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    /* Ensures button stays at bottom */
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
@@ -300,7 +253,6 @@ nav ul a {
     font-size: 0.95rem;
     font-weight: 500;
     white-space: nowrap;
-    /* Prevents wrap */
 }
 
 .card-header .price {
@@ -326,11 +278,9 @@ nav ul a {
     line-height: 1.5;
 }
 
-/* Button inside the card */
+
 .card .btn {
     width: calc(100% - 2.5rem);
-    /* Full width minus padding */
     margin: 0 1.25rem 1.25rem;
     margin-top: auto;
-    /* Pushes button to the bottom */
 }

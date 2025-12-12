@@ -5,7 +5,6 @@
     padding: 4rem 2rem 2rem;
     font-family: 'Inter', sans-serif;
     margin-top: auto;
-    /* Push to bottom if flex column is used on body */
 }
 
 .footer-content {

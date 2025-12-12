@@ -1,19 +1,22 @@
-// src/config.js - API Configuration
-// This file helps switch between local and production API URLs
 
 const getApiBaseUrl = () => {
-    // Check if we're in production (deployed on Vercel)
-    if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
-        // Use the same origin as the frontend (Vercel deployment)
-        return window.location.origin;
+
+    const path = window.location.pathname;
+    const srcIndex = path.indexOf('/src/');
+
+    if (srcIndex !== -1) {
+
+        const root = window.location.origin + path.substring(0, srcIndex);
+        return root + '/index.php';
     }
-    // Use local development server
-    return 'http://localhost:3000';
+
+
+    return window.location.origin + '/index.php';
 };
 
 const API_BASE_URL = getApiBaseUrl();
 
-// Export for use in other files
+
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = { API_BASE_URL };
 }

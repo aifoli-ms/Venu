@@ -1,4 +1,3 @@
-/* Basic reset and font settings */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -8,24 +7,57 @@
 body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     background-color: #FFF7ED;
-    /* Light orange background */
     display: flex;
     flex-direction: column;
     min-height: 100vh;
     margin: 0;
 }
 
-/* Main container for centering */
 .login-container {
     width: 100%;
     max-width: 420px;
     text-align: center;
     margin: auto;
-    /* Vertically centers the component */
     padding: 20px;
 }
 
-/* The white card */
+.site-footer {
+    padding: 1rem !important;
+    background: transparent !important;
+    border: none !important;
+}
+
+.footer-content {
+    display: none !important;
+}
+
+.footer-bottom {
+    padding-top: 0 !important;
+    font-size: 0.8rem !important;
+    color: #9CA3AF !important;
+    border: none !important;
+}
+
+.footer-section h3 {
+    font-size: 1.2rem !important;
+    margin-bottom: 0.5rem !important;
+}
+
+.footer-section h4 {
+    font-size: 1rem !important;
+    margin-bottom: 0.8rem !important;
+}
+
+.footer-section p,
+.footer-section.links ul li a {
+    font-size: 0.85rem !important;
+}
+
+.footer-bottom {
+    padding-top: 1rem !important;
+    font-size: 0.8rem !important;
+}
+
 .login-form {
     background-color: #ffffff;
     padding: 2.5rem;
@@ -36,7 +68,6 @@ body {
 
 .logo {
     color: #F97316;
-    /* Orange color */
     font-size: 1.5rem;
     font-weight: 700;
     margin-bottom: 0.5rem;
@@ -49,44 +80,11 @@ h2 {
     margin-bottom: 1.5rem;
 }
 
-/* Google Button */
-.google-btn {
-    width: 100%;
-    padding: 0.75rem;
-    border: 1px solid #E5E7EB;
-    /* Light grey border */
-    border-radius: 8px;
-    background-color: #fff;
-    font-size: 0.95rem;
-    font-weight: 500;
-    color: #374151;
-    /* Dark grey text */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 0.5rem;
-    cursor: pointer;
-    transition: background-color 0.2s;
-}
-
-.google-btn:hover {
-    background-color: #F9FAFB;
-    /* Slight grey on hover */
-}
-
-.google-btn .fa-google {
-    font-size: 1.2rem;
-    color: #DB4437;
-    /* Google red */
-}
-
-/* "or" separator */
 .separator {
     display: flex;
     align-items: center;
     text-align: center;
     color: #9CA3AF;
-    /* Medium grey */
     margin: 1.5rem 0;
     font-size: 0.875rem;
 }
@@ -96,14 +94,13 @@ h2 {
     content: '';
     flex: 1;
     border-bottom: 1px solid #E5E7EB;
-    /* Light grey line */
 }
 
 .separator span {
     padding: 0 1rem;
 }
 
-/* Form inputs */
+
 .input-group {
     position: relative;
     margin-bottom: 1.25rem;
@@ -111,7 +108,7 @@ h2 {
 
 .input-group label {
     display: none;
-    /* Visually hidden, but good for accessibility */
+
 }
 
 .input-group .icon {
@@ -120,18 +117,15 @@ h2 {
     top: 50%;
     transform: translateY(-50%);
     color: #9CA3AF;
-    /* Icon color */
+
 }
 
 .input-group input {
     width: 100%;
     padding: 0.75rem 0.75rem 0.75rem 2.5rem;
-    /* Left padding for icon */
     border: 1px solid #D1D5DB;
-    /* Grey border */
     border-radius: 8px;
     background-color: #F9FAFB;
-    /* Light grey input field */
     font-size: 0.95rem;
     color: #111827;
 }
@@ -149,7 +143,7 @@ h2 {
     cursor: pointer;
 }
 
-/* Remember me & Forgot password */
+
 .options {
     display: flex;
     justify-content: space-between;
@@ -172,7 +166,6 @@ h2 {
 
 a {
     color: #F97316;
-    /* Orange */
     text-decoration: none;
 }
 
@@ -180,14 +173,13 @@ a:hover {
     text-decoration: underline;
 }
 
-/* Sign In Button */
+
 .signin-btn {
     width: 100%;
     padding: 0.75rem;
     border: none;
     border-radius: 8px;
     background-color: #F97316;
-    /* Orange */
     color: white;
     font-size: 1rem;
     font-weight: 600;
@@ -197,66 +189,49 @@ a:hover {
 
 .signin-btn:hover {
     background-color: #EA580C;
-    /* Darker orange */
 }
 
-/* Sign Up Link */
 .signup-link {
     font-size: 0.875rem;
     color: #374151;
     margin-top: 1.5rem;
 }
 
-/* Back to Home Link */
 .back-home {
     display: inline-block;
     margin-top: 1.5rem;
     font-size: 0.9rem;
     color: #6B7280;
-    /* Darker grey */
 }
 
 .back-home i {
     margin-right: 0.25rem;
 }
 
-/* Add this to your existing style.css file, or ensure it's there */
-/* This will ensure the policy agreement checkbox and text align correctly */
+
 .policy-agreement {
     display: flex;
-    /* Changed from space-between to flex */
     justify-content: flex-start;
-    /* Align to start */
     gap: 8px;
-    /* Space between checkbox and text */
     margin-bottom: 1.5rem;
     font-size: 0.875rem;
     color: #374151;
     text-align: left;
-    /* Align text within the container */
 }
 
 .policy-agreement input[type="checkbox"] {
     flex-shrink: 0;
-    /* Prevent checkbox from shrinking */
     width: 16px;
     height: 16px;
     margin-top: 2px;
-    /* Adjust if needed to align with text baseline */
 }
 
 .policy-agreement label {
     display: block;
-    /* Allow text to wrap */
 }
 
-/*
-=================================
-Message Styles for Login Feedback
-=================================
-*/
+
 #message {
-    /* Styles for the <p id="message"> tag */
     font-size: 0.9rem;
     font-weight: 500;
     text-align: center;
@@ -264,26 +239,19 @@ Message Styles for Login Feedback
     padding: 0.75rem;
     border-radius: 8px;
     display: none;
-    /* Hide it by default */
 }
 
 #message.success {
-    /* This class is added by JS on success */
     display: block;
     color: #155724;
-    /* Dark green text */
     background-color: #d4edda;
-    /* Light green background */
     border: 1px solid #c3e6cb;
 }
 
 #message.error {
-    /* This class is added by JS on error */
     display: block;
     color: #721c24;
-    /* Dark red text */
     background-color: #f8d7da;
-    /* Light red background */
     border: 1px solid #f5c6cb;
 }
 

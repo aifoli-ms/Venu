@@ -1,0 +1,186 @@
+<?php
+
+
+function handleAiRequest($method, $uri)
+{
+    $db = new Database();
+    $jwt = new JwtHelper();
+
+
+    $headers = getallheaders();
+    $authHeader = $headers['Authorization'] ?? $headers['authorization'] ?? '';
+    $token = str_replace('Bearer ', '', $authHeader);
+
+    $user = $jwt->verify($token);
+
+    if (!$user) {
+        jsonResponse(['message' => 'Unauthorized'], 401);
+    }
+    $userId = $user['userId'];
+
+
+    if ($method === 'POST' && preg_match('#^/alfred/ask$#', $uri)) {
+        $input = json_decode(file_get_contents('php://input'), true);
+        $userInput = sanitizeInput($input['user_input'] ?? null);
+
+        if (!$userInput) {
+            jsonResponse(['message' => 'Input required'], 400);
+        }
+
+
+        $restResp = $db->select('Vrestaurants', [], 'id,name,cuisine_type,location,price_range,average_rating');
+        $restaurants = $restResp['data'] ?? [];
+
+        $legend = "Price Ranges: $ (Budget), $$ (Mid-Range), $$$ (Fine Dining)";
+        $restContext = $legend . "\n\nList:\n";
+        foreach ($restaurants as $r) {
+            $price = $r['price_range'] ?? 'N/A';
+            $rating = $r['average_rating'] ?? 'N/A';
+            $restContext .= "- [ID: {$r['id']}] {$r['name']} ({$r['cuisine_type']}): {$r['location']}, Price: $price, Rating: $rating stars\n";
+        }
+
+
+        $sql = "
+             SELECT rv.rating, r.name as restaurant_name, r.cuisine_type 
+             FROM Vreviews rv
+             JOIN Vrestaurants r ON rv.restaurant_id = r.id
+             WHERE rv.user_id = ?
+             ORDER BY rv.created_at DESC
+             LIMIT 5
+        ";
+        $reviewsResp = $db->rawSelect($sql, [$userId]);
+
+        $prefContext = "User has not submitted reviews, base recommendations on general data.";
+        if (!empty($reviewsResp['data'])) {
+            $prefContext = "User Feedback:\n";
+            foreach ($reviewsResp['data'] as $rev) {
+                $rName = $rev['restaurant_name'] ?? 'Unknown';
+                $rCuisine = $rev['cuisine_type'] ?? 'Unknown';
+                $prefContext .= "- Rated $rName ($rCuisine) {$rev['rating']} stars.\n";
+            }
+        }
+
+
+        $sql = "SELECT user_prompt, alfred_response FROM Vai_interactions WHERE user_id = ? ORDER BY created_at DESC LIMIT 5";
+        $histResp = $db->rawSelect($sql, [$userId]);
+
+        $chatContext = "This is the start of a new session.";
+        if (!empty($histResp['data'])) {
+            $history = array_reverse($histResp['data']);
+            $chatContext = "Past Interactions:\n";
+            foreach ($history as $h) {
+                $chatContext .= "USER: {$h['user_prompt']}\nALFRED: {$h['alfred_response']}\n---\n";
+            }
+        }
+
+        $systemInstruction = "
+            You are Alfred, a sophisticated, friendly, and brief concierge for 'VENU', a restaurant reservation platform in Ghana.
+            Current Time: " . date('Y-m-d H:i:s') . "
+            -- CONTEXT --
+            $restContext
+            -- USER HISTORY --
+            $prefContext
+            -- PAST INTERACTIONS --
+            $chatContext
+            -- RULES --
+            1. Recommend only from the provided restaurant list.
+            2. Use the User Feedback to tailor recommendations.
+            3. Keep answers short, friendly, and helpful (max 3 sentences).
+            4. If the user wants to make a reservation, ask for any missing details (restaurant, date, time, party size) before calling the tool.
+            5. Use the 'makeReservation' tool ONLY when you have all the necessary details.
+        ";
+
+
+        $apiKey = getenv('GEMINI_API_KEY');
+        $geminiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=$apiKey";
+
+        $toolAuth = [
+            'function_declarations' => [
+                [
+                    'name' => 'makeReservation',
+                    'description' => 'Reserve a table at a restaurant.',
+                    'parameters' => [
+                        'type' => 'OBJECT',
+                        'properties' => [
+                            'restaurant_id' => ['type' => 'STRING', 'description' => 'ID of the restaurant'],
+                            'date' => ['type' => 'STRING', 'description' => 'YYYY-MM-DD'],
+                            'time' => ['type' => 'STRING', 'description' => 'HH:MM'],
+                            'party_size' => ['type' => 'INTEGER', 'description' => 'Number of people']
+                        ],
+                        'required' => ['restaurant_id', 'date', 'time', 'party_size']
+                    ]
+                ]
+            ]
+        ];
+
+        $payload = [
+            'contents' => [
+                ['role' => 'user', 'parts' => [['text' => $systemInstruction . "\n\nUser Input: " . $userInput]]]
+            ],
+            'tools' => [$toolAuth],
+            'generationConfig' => [
+                'maxOutputTokens' => 500,
+                'temperature' => 0.5
+            ]
+        ];
+
+        $ch = curl_init($geminiUrl);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+
+        $geminiRaw = curl_exec($ch);
+        $geminiErr = curl_error($ch);
+        curl_close($ch);
+
+        if ($geminiErr) {
+            jsonResponse(['message' => 'AI Service Unavailable'], 500);
+        }
+
+        $geminiResp = json_decode($geminiRaw, true);
+
+
+        $reply = "I apologize, Alfred is currently unavailable.";
+        $candidate = $geminiResp['candidates'][0] ?? null;
+
+        if ($candidate) {
+            $parts = $candidate['content']['parts'] ?? [];
+            foreach ($parts as $part) {
+                if (isset($part['functionCall'])) {
+
+                    $fc = $part['functionCall'];
+                    if ($fc['name'] === 'makeReservation') {
+                        $args = $fc['args'];
+
+                        $res = $db->insert('Vreservations', [
+                            'user_id' => $userId,
+                            'restaurant_id' => $args['restaurant_id'],
+                            'reservation_date' => $args['date'],
+                            'reservation_time' => $args['time'],
+                            'party_size' => $args['party_size'],
+                            'status' => 'Confirmed'
+                        ]);
+
+                        if ($res['status'] < 400) {
+                            $reply = "I've successfully booked a table for {$args['party_size']} at the restaurant for {$args['date']} at {$args['time']}. Enjoy your meal!";
+                        } else {
+                            $reply = "I encountered an issue while trying to make that reservation.";
+                        }
+                    }
+                } elseif (isset($part['text'])) {
+                    $reply = $part['text'];
+                }
+            }
+        }
+
+
+        $db->insert('Vai_interactions', [
+            'user_id' => $userId,
+            'user_prompt' => $userInput,
+            'alfred_response' => $reply
+        ]);
+
+        jsonResponse(['reply' => $reply]);
+    }
+}

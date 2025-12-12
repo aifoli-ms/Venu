@@ -191,6 +191,30 @@
         </div>
     </div>
 
+    <div id="review-success-modal" class="modal hidden">
+        <div class="modal-content" style="text-align: center;">
+            <div style="margin-bottom: 1rem; color: #10B981; font-size: 3rem;">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h3>Review Submitted!</h3>
+            <p style="color: #666; margin-bottom: 1.5rem;">Thank you for your feedback. Your review helps others find
+                great places to eat.</p>
+            <button class="btn btn-primary btn-full close-success-modal">Close</button>
+        </div>
+    </div>
+
+    <div id="reservation-success-modal" class="modal hidden">
+        <div class="modal-content" style="text-align: center;">
+            <div style="margin-bottom: 1rem; color: #10B981; font-size: 3rem;">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h3>Reservation Confirmed!</h3>
+            <p style="color: #666; margin-bottom: 1.5rem;">Your table has been successfully booked. We look forward to
+                seeing you!</p>
+            <button class="btn btn-primary btn-full close-reservation-success-modal">Close</button>
+        </div>
+    </div>
+
     <div id="menu-items-modal" class="modal hidden">
         <div class="modal-content menu-modal-content">
             <div class="modal-header">
@@ -198,7 +222,7 @@
                 <button class="close-menu-modal"><i class="fas fa-times"></i></button>
             </div>
             <div id="menu-items-list" class="menu-items-list">
-                <!-- Items will be populated here -->
+
                 <div class="empty-state">
                     <p>Loading items...</p>
                 </div>
@@ -240,6 +264,7 @@
         </div>
     </footer>
 
+    <script src="../config.js"></script>
     <script src="script.js"></script>
 </body>
 

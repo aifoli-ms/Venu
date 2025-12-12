@@ -1,10 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    // --- GLOBAL ELEMENTS ---
+
     const togglePassword = document.getElementById('togglePassword');
     const messageEl = document.getElementById('message');
 
-    // 1. Password Visibility Toggle
+
     if (togglePassword) {
         const passwordInput = document.getElementById('password');
         togglePassword.addEventListener('click', () => {
@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
             togglePassword.classList.toggle('fa-eye');
         });
     }
-    // --- LOGIN LOGIC (Only runs on login.html) ---
+
     const loginForm = document.getElementById('signin-form');
     if (loginForm) {
         loginForm.addEventListener('submit', async (event) => {
@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const passwordInput = document.getElementById('password');
 
             try {
-                const response = await fetch('/users/login', {
+                const response = await fetch(`${API_BASE_URL}/users/login`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -35,20 +35,28 @@ document.addEventListener('DOMContentLoaded', () => {
                     })
                 });
 
-                // If response status is OK (200), parse JSON
                 if (response.ok) {
                     const data = await response.json();
 
-                    // SESSION FIX: Store user data in localStorage
                     localStorage.setItem('userId', data.user.id);
                     localStorage.setItem('userName', data.user.name);
                     localStorage.setItem('userEmail', data.user.email);
-                    localStorage.setItem('authToken', data.token); // Store JWT Token
+                    localStorage.setItem('authToken', data.token);
 
-                    // Redirect to dashboard
-                    window.location.href = '../dashboard/dashboard.html';
+
+                    localStorage.setItem('userRole', data.user.role || 'user');
+
+                    if (data.user.role === 'owner' && data.user.owner_restaurant_id) {
+                        window.location.href = `../restaurant/manage.html?id=${data.user.owner_restaurant_id}`;
+                    } else if (data.user.role === 'owner') {
+                        // Owner but no restaurant assigned yet? Maybe fallback or show alert
+                        alert("Login successful, but no restaurant is linked to your account.");
+                        // window.location.href = '../restaurant/create.html'; // Future feature?
+                    } else {
+                        window.location.href = '../dashboard/dashboard.html';
+                    }
                 } else {
-                    // For non-200 errors (400, 401), read error message
+
                     const resultText = await response.text();
                     messageEl.textContent = resultText;
                     messageEl.className = 'message error';
@@ -62,16 +70,15 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- SIGNUP LOGIC (Only runs on signup.html) ---
+
     const signupForm = document.getElementById('signup-form');
     if (signupForm) {
         signupForm.addEventListener('submit', async (event) => {
             event.preventDefault();
 
-            // We define these inputs HERE, so they don't crash the Login page
             const nameInput = document.getElementById('name');
             const emailInput = document.getElementById('email');
-            const phoneInput = document.getElementById('phone'); // Only exists on signup
+            const phoneInput = document.getElementById('phone');
             const passwordInput = document.getElementById('password');
             const confirmPasswordInput = document.getElementById('confirm-password');
 
@@ -81,8 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             try {
-                // Send phone number during signup
-                const response = await fetch('/users', {
+                const response = await fetch(`${API_BASE_URL}/users`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
