@@ -2,10 +2,13 @@
 
 function handleProfileRequest($method, $uri)
 {
+    if (function_exists('console_log')) {
+        console_log("Handling Profile Request: $method $uri");
+    }
     $db = new Database();
     $jwt = new JwtHelper();
 
-   
+
     $headers = getallheaders();
     $authHeader = $headers['Authorization'] ?? $headers['authorization'] ?? '';
     $token = str_replace('Bearer ', '', $authHeader);
@@ -17,7 +20,7 @@ function handleProfileRequest($method, $uri)
     }
     $userId = $user['userId'];
 
-    
+
     if ($method === 'GET' && preg_match('#^/profile$#', $uri)) {
         $fields = 'name, email, phone_number';
         $response = $db->select('Vusers', ['id' => $userId], $fields);

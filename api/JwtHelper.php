@@ -11,8 +11,11 @@ class JwtHelper
 
     public function sign($payload)
     {
+        if (function_exists('console_log')) {
+            console_log("JWT Sign: payload=" . json_encode($payload));
+        }
         $header = json_encode(['typ' => 'JWT', 'alg' => 'HS256']);
-        $payload['exp'] = time() + (24 * 60 * 60); 
+        $payload['exp'] = time() + (24 * 60 * 60);
 
         $base64UrlHeader = $this->base64UrlEncode($header);
         $base64UrlPayload = $this->base64UrlEncode(json_encode($payload));
@@ -26,8 +29,12 @@ class JwtHelper
     public function verify($token)
     {
         $parts = explode('.', $token);
-        if (count($parts) !== 3)
+        if (count($parts) !== 3) {
+            if (function_exists('console_log'))
+                console_log("JWT Verify: Invalid token format");
             return false;
+        }
+
 
         $header = $parts[0];
         $payload = $parts[1];
@@ -36,13 +43,22 @@ class JwtHelper
         $validSignature = hash_hmac('sha256', $header . "." . $payload, $this->secret, true);
         $base64UrlValidSignature = $this->base64UrlEncode($validSignature);
 
-        if ($base64UrlValidSignature !== $signature)
+        if ($base64UrlValidSignature !== $signature) {
+            if (function_exists('console_log'))
+                console_log("JWT Verify: Invalid signature");
             return false;
+        }
 
         $decodedPayload = json_decode($this->base64UrlDecode($payload), true);
 
         if (isset($decodedPayload['exp']) && $decodedPayload['exp'] < time()) {
+            if (function_exists('console_log'))
+                console_log("JWT Verify: Token expired");
             return false;
+        }
+
+        if (function_exists('console_log')) {
+            console_log("JWT Verify: Success for User " . ($decodedPayload['userId'] ?? 'unknown'));
         }
 
         return $decodedPayload;

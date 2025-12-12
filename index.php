@@ -1,8 +1,9 @@
 <?php
 
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
+ini_set('display_errors', 0);
+ini_set('display_startup_errors', 0);
 error_reporting(E_ALL);
+date_default_timezone_set('UTC');
 
 $filePath = __DIR__ . $_SERVER['REQUEST_URI'];
 $served = false;
@@ -36,7 +37,7 @@ if ($served) {
 
 
 if ($_SERVER['REQUEST_URI'] === '/' || $_SERVER['REQUEST_URI'] === '/index.html' || $_SERVER['REQUEST_URI'] === '/index.php') {
- 
+
     header("Location: /src/homepage/index.html");
     exit;
 }
@@ -53,12 +54,33 @@ if (file_exists(__DIR__ . '/.env')) {
     }
 }
 
+
+if (!function_exists('getallheaders')) {
+    function getallheaders()
+    {
+        $headers = [];
+        foreach ($_SERVER as $name => $value) {
+            if (substr($name, 0, 5) == 'HTTP_') {
+                $headers[str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))))] = $value;
+            }
+        }
+        return $headers;
+    }
+}
+
 function jsonResponse($data, $status = 200)
 {
     header('Content-Type: application/json');
     http_response_code($status);
     echo json_encode($data);
     exit;
+}
+
+function console_log($message)
+{
+    // Write to stderr so it shows up in the php -S terminal
+    $timestamp = date('Y-m-d H:i:s');
+    file_put_contents('php://stderr', "[$timestamp] [Venu API] " . print_r($message, true) . "\n");
 }
 
 header("Access-Control-Allow-Origin: *");
@@ -95,7 +117,6 @@ require_once __DIR__ . '/api/config.php';
 require_once __DIR__ . '/api/Database.php';
 require_once __DIR__ . '/api/JwtHelper.php';
 
-require_once __DIR__ . '';
 if (preg_match('#^/users#', $uri)) {
     require_once __DIR__ . '/api/Controllers/Auth.php';
     handleAuthRequest($method, $uri);

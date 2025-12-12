@@ -19,7 +19,7 @@ class Database
         try {
             $this->pdo = new PDO($dsn, $config['username'], $config['password'], $options);
         } catch (PDOException $e) {
-     
+
             jsonResponse(['message' => 'Database connection failed: ' . $e->getMessage()], 500);
             exit;
         }
@@ -29,16 +29,22 @@ class Database
     public function query($sql, $params = [])
     {
         try {
+            if (function_exists('console_log')) {
+                console_log("SQL Query: " . substr($sql, 0, 200) . " | Params: " . json_encode($params));
+            }
             $stmt = $this->pdo->prepare($sql);
             $stmt->execute($params);
             return $stmt;
         } catch (PDOException $e) {
+            if (function_exists('console_log')) {
+                console_log("SQL Error: " . $e->getMessage());
+            }
             jsonResponse(['message' => 'Query failed: ' . $e->getMessage()], 500);
             exit;
         }
     }
 
-    
+
     public function select($table, $where = [], $fields = '*')
     {
         $sql = "SELECT $fields FROM `$table`";
@@ -56,7 +62,7 @@ class Database
         $stmt = $this->query($sql, $params);
         return [
             'data' => $stmt->fetchAll(),
-            'status' => 200 
+            'status' => 200
         ];
     }
 
@@ -79,10 +85,10 @@ class Database
         $sql = "INSERT INTO `$table` (`$fields`) VALUES ($placeholders)";
         $this->query($sql, array_values($data));
 
-        
+
         $lastId = $this->pdo->lastInsertId();
 
-   
+
         if ($lastId) {
             $stmt = $this->query("SELECT * FROM `$table` WHERE id = ?", [$lastId]);
             return ['data' => $stmt->fetchAll(), 'status' => 201];
@@ -103,7 +109,7 @@ class Database
 
         $setClause = implode(', ', $fields);
 
-     
+
         $whereClauses = [];
         foreach ($where as $key => $value) {
             $whereClauses[] = "`$key` = ?";
@@ -114,7 +120,7 @@ class Database
         $sql = "UPDATE `$table` SET $setClause WHERE $whereSql";
         $this->query($sql, $params);
 
-   
+
 
         $stmt = $this->query("SELECT * FROM `$table` WHERE $whereSql", array_values($where));
         return ['data' => $stmt->fetchAll(), 'status' => 200];

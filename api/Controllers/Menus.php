@@ -2,11 +2,16 @@
 
 function handleMenusRequest($method, $uri)
 {
+    if (function_exists('console_log')) {
+        console_log("Handling Menus Request: $method $uri");
+    }
     $db = new Database();
     $jwt = new JwtHelper();
 
     if ($method === 'GET' && preg_match('#^/restaurants/([0-9]+)/menus/?$#', $uri, $matches)) {
         $id = $matches[1];
+        if (function_exists('console_log'))
+            console_log("Fetching menus for restaurant $id");
 
 
         $sql = "SELECT * FROM Vmenus WHERE restaurant_id = ? AND is_active = 1 ORDER BY name ASC";

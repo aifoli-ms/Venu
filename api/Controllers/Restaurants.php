@@ -3,6 +3,9 @@
 
 function handleRestaurantsRequest($method, $uri)
 {
+    if (function_exists('console_log')) {
+        console_log("Handling Restaurants Request: $method $uri");
+    }
     $db = new Database();
     $jwt = new JwtHelper();
 
@@ -175,7 +178,7 @@ function handleRestaurantsRequest($method, $uri)
         $id = $matches[1];
         $input = json_decode(file_get_contents('php://input'), true);
 
-        
+
         $resCheck = $db->select('Vrestaurants', ['id' => $id]);
         if (empty($resCheck['data'])) {
             jsonResponse(['message' => 'Restaurant not found'], 404);
@@ -186,7 +189,7 @@ function handleRestaurantsRequest($method, $uri)
             jsonResponse(['message' => 'Forbidden: You do not own this restaurant.'], 403);
         }
 
-       
+
         $permittedFields = ['name', 'location', 'capacity', 'cuisine_type', 'description', 'image_url'];
         $updates = [];
 
@@ -200,7 +203,7 @@ function handleRestaurantsRequest($method, $uri)
             jsonResponse(['message' => 'No fields to update.'], 400);
         }
 
-        
+
         $res = $db->update('Vrestaurants', $updates, ['id' => $id]);
 
         if ($res['status'] >= 400) {

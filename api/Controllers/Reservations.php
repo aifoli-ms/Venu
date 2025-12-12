@@ -3,6 +3,9 @@
 
 function handleReservationsRequest($method, $uri)
 {
+    if (function_exists('console_log')) {
+        console_log("Handling Reservations Request: $method $uri");
+    }
     $db = new Database();
     $jwt = new JwtHelper();
 
@@ -74,12 +77,12 @@ function handleReservationsRequest($method, $uri)
 
         $restaurant = $checkOwner['data'][0];
 
-  
+
         if ((int) $restaurant['owner_id'] !== (int) $userId) {
             jsonResponse(['message' => 'Access Forbidden: You are not the owner of this restaurant.'], 403);
         }
 
-       
+
         $sql = "
             SELECT r.*, u.name as user_name
             FROM Vreservations r
@@ -150,26 +153,26 @@ function handleReservationsRequest($method, $uri)
             jsonResponse(['message' => 'Status is required.'], 400);
         }
 
-       
+
         $resQuery = $db->select('Vreservations', ['id' => $reservationId]);
         if (empty($resQuery['data'])) {
             jsonResponse(['message' => 'Reservation not found.'], 404);
         }
         $reservation = $resQuery['data'][0];
 
-      
+
         $restQuery = $db->select('Vrestaurants', ['id' => $reservation['restaurant_id']]);
         if (empty($restQuery['data'])) {
             jsonResponse(['message' => 'Restaurant not found.'], 404);
         }
         $restaurant = $restQuery['data'][0];
 
-      
+
         if ((int) $restaurant['owner_id'] !== (int) $userId) {
             jsonResponse(['message' => 'Unauthorized: Only the restaurant owner can modify this reservation.'], 403);
         }
 
-      
+
         $update = $db->update('Vreservations', ['status' => $newStatus], ['id' => $reservationId]);
 
         if ($update['status'] >= 400) {

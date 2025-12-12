@@ -3,6 +3,9 @@
 
 function handleAiRequest($method, $uri)
 {
+    if (function_exists('console_log')) {
+        console_log("Handling AI Request: $method $uri");
+    }
     $db = new Database();
     $jwt = new JwtHelper();
 
@@ -14,6 +17,8 @@ function handleAiRequest($method, $uri)
     $user = $jwt->verify($token);
 
     if (!$user) {
+        if (function_exists('console_log'))
+            console_log("AI Request: Unauthorized");
         jsonResponse(['message' => 'Unauthorized'], 401);
     }
     $userId = $user['userId'];
@@ -22,6 +27,10 @@ function handleAiRequest($method, $uri)
     if ($method === 'POST' && preg_match('#^/alfred/ask$#', $uri)) {
         $input = json_decode(file_get_contents('php://input'), true);
         $userInput = sanitizeInput($input['user_input'] ?? null);
+
+        if (function_exists('console_log')) {
+            console_log("Alfred Ask: User $userId prompted: " . substr($userInput, 0, 50) . "...");
+        }
 
         if (!$userInput) {
             jsonResponse(['message' => 'Input required'], 400);
