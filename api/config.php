@@ -1,8 +1,8 @@
 <?php
-$servername = "localhost";
-$db_username = "shaun.esua";
-$db_password = "ShaunAtoAifoli18";
-$db_name = "webtech_2025A_shaun_esua";
+$servername = "_________";
+$db_username = "_________";
+$db_password = "________";
+$db_name = "__________";
 
 
 mysqli_report(MYSQLI_REPORT_OFF);
