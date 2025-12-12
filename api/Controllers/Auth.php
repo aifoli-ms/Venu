@@ -10,9 +10,18 @@ function handleAuthRequest($method, $uri)
     $input = json_decode(file_get_contents('php://input'), true);
 
 
+    require_once __DIR__ . '/../RateLimiter.php';
     if ($method === 'POST' && preg_match('#^/users/login$#', $uri)) {
+        $ip = $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
+        $limiter = new RateLimiter();
+
+        // Check if blocked (5 failures per 15 mins = 900 seconds)
+        if ($limiter->isBlocked($ip, 'login_failed', 5, 900)) {
+            jsonResponse(['message' => 'Too many failed login attempts. Please try again in 15 minutes.'], 429);
+        }
+
         $email = sanitizeInput($input['email'] ?? '');
-        $password = $input['password'] ?? ''; 
+        $password = $input['password'] ?? '';
 
         if (!$email || !$password) {
             jsonResponse(['message' => 'Email and password are required'], 400);
@@ -22,6 +31,8 @@ function handleAuthRequest($method, $uri)
         $response = $db->select('Vusers', ['email' => $email]);
 
         if ($response['status'] !== 200 || empty($response['data'])) {
+            // Log failed attempt
+            $limiter->increment($ip, 'login_failed', 900);
             jsonResponse(['message' => 'Cannot find user'], 400);
         }
 
@@ -29,6 +40,9 @@ function handleAuthRequest($method, $uri)
 
 
         if (password_verify($password, $user['password_hash'])) {
+            // Success - clear failed attempts
+            $limiter->clear($ip, 'login_failed');
+
             $token = $jwt->sign(['userId' => $user['id']]);
 
             jsonResponse([
@@ -42,7 +56,7 @@ function handleAuthRequest($method, $uri)
                 ]
             ]);
 
-            
+
             if (isset($user['role']) && $user['role'] === 'owner') {
                 $resCheck = $db->select('Vrestaurants', ['owner_id' => $user['id']]);
                 if (!empty($resCheck['data'])) {
@@ -56,6 +70,8 @@ function handleAuthRequest($method, $uri)
                 'user' => $userData
             ]);
         } else {
+            // Log failed attempt
+            $limiter->increment($ip, 'login_failed', 900);
             jsonResponse(['message' => 'Not Allowed'], 401);
         }
     }
@@ -65,7 +81,7 @@ function handleAuthRequest($method, $uri)
         $name = sanitizeInput($input['name'] ?? null);
         $email = sanitizeInput($input['email'] ?? null);
         $phone = sanitizeInput($input['phone'] ?? null);
-        $password = $input['password'] ?? null; 
+        $password = $input['password'] ?? null;
 
         if (!$name || !$email || !$phone || !$password) {
             jsonResponse(['message' => 'All fields are required'], 400);
