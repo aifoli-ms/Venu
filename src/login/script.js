@@ -45,13 +45,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
                     localStorage.setItem('userRole', data.user.role || 'user');
+                    if (data.user.owner_restaurant_id) {
+                        localStorage.setItem('ownerRestaurantId', data.user.owner_restaurant_id);
+                    }
 
                     if (data.user.role === 'owner' && data.user.owner_restaurant_id) {
                         window.location.href = `../restaurant/manage.html?id=${data.user.owner_restaurant_id}`;
-                    } else if (data.user.role === 'owner') {
-                        // Owner but no restaurant assigned yet? Maybe fallback or show alert
-                        alert("Login successful, but no restaurant is linked to your account.");
-                        // window.location.href = '../restaurant/create.html'; // Future feature?
                     } else {
                         window.location.href = '../dashboard/dashboard.html';
                     }

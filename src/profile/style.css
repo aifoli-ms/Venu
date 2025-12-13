@@ -1,5 +1,5 @@
 :root {
-    --primary-orange: #F97316;
+    --primary-color: #800020;
     --primary-light: #FFF7ED;
     --text-dark: #1F2937;
     --text-grey: #6B7280;
@@ -32,9 +32,9 @@ body {
 }
 
 .logo {
-    font-weight: 800;
+    font-weight: normal;
     font-size: 1.5rem;
-    color: var(--primary-orange);
+    color: var(--primary-color);
     text-decoration: none;
 }
 
@@ -47,7 +47,7 @@ body {
 .nav-link {
     text-decoration: none;
     color: var(--text-dark);
-    font-weight: 500;
+    font-weight: normal;
     font-size: 0.9rem;
 }
 
@@ -56,7 +56,7 @@ body {
     padding: 0.5rem 1rem;
     border-radius: 20px;
     font-size: 0.9rem;
-    font-weight: 600;
+    font-weight: normal;
     cursor: pointer;
 }
 
@@ -81,7 +81,7 @@ body {
 
 .sidebar-user h3 {
     font-size: 1.1rem;
-    font-weight: 700;
+    font-weight: normal;
     line-height: 1.4;
 }
 
@@ -96,13 +96,13 @@ body {
     padding: 0.75rem 0;
     color: var(--text-grey);
     text-decoration: none;
-    font-weight: 500;
+    font-weight: normal;
     transition: color 0.2s;
 }
 
 .sidebar-link:hover,
 .sidebar-link.active {
-    color: var(--primary-orange);
+    color: var(--primary-color);
 }
 
 .sidebar-link i {
@@ -117,7 +117,7 @@ body {
 
 .section-title {
     font-size: 1.25rem;
-    font-weight: 700;
+    font-weight: normal;
     margin-bottom: 1.5rem;
 }
 
@@ -139,7 +139,7 @@ body {
     align-items: center;
     justify-content: center;
     color: #A3A3A3;
-    font-weight: 600;
+    font-weight: normal;
     font-size: 1.2rem;
 }
 
@@ -156,7 +156,7 @@ body {
 
 .res-header h3 {
     font-size: 1rem;
-    font-weight: 600;
+    font-weight: normal;
 }
 
 .res-status.cancelled {
@@ -165,7 +165,7 @@ body {
     font-size: 0.7rem;
     padding: 0.2rem 0.5rem;
     border-radius: 12px;
-    font-weight: 600;
+    font-weight: normal;
 }
 
 .res-sub {
@@ -204,28 +204,13 @@ body {
 }
 
 .page-btn.active {
-    background: var(--primary-orange);
+    background: var(--primary-color);
     color: #fff;
-    border-color: var(--primary-orange);
+    border-color: var(--primary-color);
 }
 
 
 
-.history-section h3 {
-    display: flex;
-    gap: 0.5rem;
-    align-items: center;
-    font-size: 1rem;
-    margin-bottom: 1rem;
-}
-
-.empty-state {
-    background: #fff;
-    border: 1px solid var(--border-color);
-    border-radius: 12px;
-    padding: 4rem;
-    text-align: center;
-}
 
 
 .settings-card {
@@ -236,41 +221,7 @@ body {
     max-width: 800px;
 }
 
-.avatar-section {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 2rem;
-}
 
-.avatar-circle {
-    width: 100px;
-    height: 100px;
-    background: #9CA3AF;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #fff;
-    font-size: 2.5rem;
-    position: relative;
-}
-
-.edit-avatar-btn {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    background: var(--primary-orange);
-    color: white;
-    border: 2px solid #fff;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.9rem;
-    cursor: pointer;
-}
 
 .form-row {
     display: flex;
@@ -286,7 +237,7 @@ body {
 
 .form-group label {
     font-size: 0.85rem;
-    font-weight: 600;
+    font-weight: normal;
     margin-bottom: 0.5rem;
 }
 
@@ -314,12 +265,7 @@ body {
     cursor: pointer;
 }
 
-.flag-icon {
-    position: absolute;
-    left: 1rem;
-    top: 50%;
-    transform: translateY(-50%);
-}
+
 
 .form-actions {
     display: flex;
@@ -334,17 +280,17 @@ body {
     border: none;
     padding: 0.75rem 1.5rem;
     border-radius: 6px;
-    font-weight: 600;
+    font-weight: normal;
     cursor: pointer;
 }
 
 .btn-save {
-    background: var(--primary-orange);
+    background: var(--primary-color);
     color: #fff;
     border: none;
     padding: 0.75rem 1.5rem;
     border-radius: 6px;
-    font-weight: 600;
+    font-weight: normal;
     cursor: pointer;
 }
 
@@ -392,20 +338,7 @@ body {
     text-align: center;
 }
 
-.modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
-}
 
-.close-modal {
-    background: none;
-    border: none;
-    font-size: 1.2rem;
-    cursor: pointer;
-    color: #6B7280;
-}
 
 .modal-actions {
     display: flex;
@@ -421,7 +354,7 @@ body {
     padding: 0.6rem 1.2rem;
     border-radius: 6px;
     cursor: pointer;
-    font-weight: 500;
+    font-weight: normal;
 }
 
 .btn-secondary:hover {
@@ -435,15 +368,15 @@ body {
     padding: 0.6rem 1.2rem;
     border-radius: 6px;
     cursor: pointer;
-    font-weight: 500;
+    font-weight: normal;
 }
 
 .btn-primary {
-    background-color: var(--primary-orange);
+    background-color: var(--primary-color);
     color: #fff;
     border: none;
     padding: 0.6rem 1.2rem;
     border-radius: 6px;
     cursor: pointer;
-    font-weight: 500;
+    font-weight: normal;
 }

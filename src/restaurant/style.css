@@ -1,5 +1,5 @@
 :root {
-    --primary-color: #F97316;
+    --primary-color: #800020;
     --dark-grey: #1F2937;
     --light-grey: #F3F4F6;
     --border-color: #E5E7EB;
@@ -42,7 +42,7 @@ body {
 .logo {
     color: var(--primary-color);
     font-size: 1.5rem;
-    font-weight: 700;
+    font-weight: normal;
     text-decoration: none;
     margin: 0;
 }
@@ -50,7 +50,7 @@ body {
 .nav-link {
     text-decoration: none;
     color: var(--medium-grey, #6B7280);
-    font-weight: 500;
+    font-weight: normal;
     font-size: 0.95rem;
 }
 
@@ -62,12 +62,12 @@ body {
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background-color: #FFEDD5;
+    background-color: #FFE4E6;
     color: var(--primary-color);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-weight: 600;
+    font-weight: normal;
     font-size: 0.9rem;
     text-decoration: none;
 }
@@ -75,7 +75,7 @@ body {
 
 .banner {
     background: linear-gradient(135deg, #4B5563, #1F2937);
- 
+
     border-radius: 16px;
     padding: 3rem 2.5rem;
     color: white;
@@ -93,7 +93,7 @@ body {
     padding: 0.4rem 0.8rem;
     border-radius: 20px;
     font-size: 0.85rem;
-    font-weight: 600;
+    font-weight: normal;
 }
 
 .badge.status {
@@ -106,10 +106,14 @@ body {
     color: #1F2937;
 }
 
+.badge.rating .fa-star {
+    color: #FFD700;
+}
+
 #res-name {
     font-size: 3rem;
     margin: 0 0 0.5rem 0;
-    font-weight: 700;
+    font-weight: normal;
 }
 
 .res-details-row {
@@ -126,7 +130,7 @@ body {
     padding: 0.5rem 1rem;
     border-radius: 50px;
     font-size: 0.9rem;
-    font-weight: 500;
+    font-weight: normal;
     display: flex;
     align-items: center;
     gap: 0.5rem;
@@ -173,7 +177,7 @@ body {
 .card h3 {
     margin-bottom: 1rem;
     font-size: 1.1rem;
-    font-weight: 700;
+    font-weight: normal;
 }
 
 .btn-full {
@@ -188,35 +192,7 @@ body {
 }
 
 
-.info-list {
-    list-style: none;
-    padding: 0;
-}
 
-.info-list li {
-    display: flex;
-    gap: 1rem;
-    margin-bottom: 1.5rem;
-}
-
-.icon-box {
-    color: var(--primary-color);
-    margin-top: 3px;
-}
-
-.text strong {
-    display: block;
-    font-size: 0.9rem;
-    margin-bottom: 0.2rem;
-}
-
-.text p,
-.text a {
-    font-size: 0.9rem;
-    color: #6B7280;
-    margin: 0;
-    text-decoration: none;
-}
 
 
 .card-header {
@@ -231,11 +207,11 @@ body {
     align-items: center;
     gap: 0.3rem;
     color: var(--dark-grey);
-    font-weight: 600;
+    font-weight: normal;
 }
 
 .rating-mini i {
-    color: var(--primary-color);
+    color: #FFD700;
 }
 
 .empty-state {
@@ -351,7 +327,7 @@ body {
     padding: 0.6rem 1rem;
     border-radius: 6px;
     cursor: pointer;
-    font-weight: 500;
+    font-weight: normal;
     transition: all 0.2s;
 }
 
@@ -396,7 +372,7 @@ body {
 .star-rating-picker label:hover,
 .star-rating-picker label:hover~label,
 .star-rating-picker input:checked~label {
-    color: #F59E0B;
+    color: #FFD700;
 }
 
 textarea#review-comment {
@@ -412,7 +388,7 @@ textarea#review-comment {
 textarea#review-comment:focus {
     outline: none;
     border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1);
+    box-shadow: 0 0 0 3px rgba(128, 0, 32, 0.1);
 }
 
 
@@ -451,14 +427,14 @@ textarea#review-comment:focus {
 .menu-item:hover {
     background-color: #FFF;
     border-color: var(--primary-color);
-    box-shadow: 0 2px 8px rgba(249, 115, 22, 0.1);
+    box-shadow: 0 2px 8px rgba(128, 0, 32, 0.1);
     transform: translateY(-2px);
 }
 
 .menu-item h4 {
     margin: 0 0 0.5rem 0;
     font-size: 1rem;
-    font-weight: 600;
+    font-weight: normal;
     color: var(--dark-grey);
 }
 
@@ -477,7 +453,7 @@ textarea#review-comment:focus {
     display: flex;
     flex-direction: column;
     padding: 0;
-   
+
     border-radius: 16px;
     border: 1px solid rgba(0, 0, 0, 0.05);
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
@@ -504,7 +480,7 @@ textarea#review-comment:focus {
 .menu-modal-content h3 {
     margin: 0;
     font-size: 1.25rem;
-    font-weight: 700;
+    font-weight: normal;
     color: var(--dark-grey);
 }
 
@@ -551,7 +527,7 @@ textarea#review-comment:focus {
 .menu-item-info h4 {
     margin: 0 0 0.35rem 0;
     font-size: 1.05rem;
-    font-weight: 600;
+    font-weight: normal;
     color: var(--dark-grey);
 }
 
@@ -564,7 +540,7 @@ textarea#review-comment:focus {
 }
 
 .menu-item-price {
-    font-weight: 700;
+    font-weight: normal;
     color: var(--primary-color);
     white-space: nowrap;
     margin-left: 1.5rem;

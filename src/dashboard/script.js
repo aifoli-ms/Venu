@@ -9,6 +9,24 @@ document.addEventListener('DOMContentLoaded', function () {
     const favoritesLink = document.getElementById('favorites-link');
     const userAvatarEl = document.querySelector('.user-avatar');
 
+
+
+    const userRole = localStorage.getItem('userRole');
+    const ownerRestaurantId = localStorage.getItem('ownerRestaurantId');
+    console.log('Debug Manage Button:', { userRole, ownerRestaurantId });
+
+    if (userRole === 'owner' && ownerRestaurantId) {
+        const navUl = document.querySelector('.navbar nav ul');
+        if (navUl) {
+            const manageLi = document.createElement('li');
+            manageLi.innerHTML = `<a href="../restaurant/manage.html?id=${ownerRestaurantId}" class="nav-link" id="manage-link" style="color: var(--primary-color); font-weight: bold;"><i class="fas fa-store"></i> Manage Restaurant</a>`;
+            navUl.appendChild(manageLi);
+            console.log('Manage button added to DOM');
+        } else {
+            console.error('Navbar list not found');
+        }
+    }
+
     const filterToggleBtn = document.getElementById('filter-toggle-btn');
     const filterDropdown = document.getElementById('filter-dropdown');
     const applyFiltersBtn = document.getElementById('apply-filters-btn');
@@ -179,7 +197,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         </div>
                         <div class="detail-badge">
                             <i class="fas fa-wallet"></i>
-                            <span>${restaurant.price_range || '$$'}</span>
+                            <span>${restaurant.price_range || '₵₵'}</span>
                         </div>
                         <div class="detail-item">
                             <i class="fas fa-map-marker-alt"></i>
@@ -375,7 +393,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 ...r,
 
                 status: r.status || (index === 2 || index === 6 ? 'Fully Booked' : 'Available'),
-                price_range: r.price_range || '$$',
+                price_range: (r.price_range || '₵₵').replace(/\$/g, '₵'),
                 average_rating: r.average_rating || 0
             }));
 
@@ -485,7 +503,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 } else if (response.status === 403) {
                     addMessage("Session expired. Please log in again.", 'alfred');
                 } else {
-                    addMessage("I'm having trouble reaching my brain server. Please try again.", 'alfred');
+                    addMessage("Alfred is currently unavailable. Please try again later.", 'alfred');
                 }
 
             } catch (err) {

@@ -42,6 +42,78 @@ function handleMenusRequest($method, $uri)
         jsonResponse($response['data']);
     }
 
+    if ($method === 'POST' && preg_match('#^/menus/([0-9]+)/items/?$#', $uri, $matches)) {
+        $headers = getallheaders();
+        $authHeader = $headers['Authorization'] ?? $headers['authorization'] ?? '';
+        $token = str_replace('Bearer ', '', $authHeader);
+        if (!$jwt->verify($token))
+            jsonResponse(['message' => 'Unauthorized'], 401);
+
+        $menuId = $matches[1];
+        $input = json_decode(file_get_contents('php://input'), true);
+
+        $name = sanitizeInput($input['name'] ?? null);
+        $description = sanitizeInput($input['description'] ?? null);
+        $price = $input['price'] ?? null;
+
+        if (!$name || !$price) {
+            jsonResponse(['message' => 'Name and price are required'], 400);
+        }
+
+        $itemRes = $db->insert('Vmenu_items', [
+            'name' => $name,
+            'description' => $description,
+            'price' => $price,
+            'image_url' => $input['image_url'] ?? null,
+            'is_vegetarian' => $input['is_vegetarian'] ?? 0,
+            'is_spicy' => $input['is_spicy'] ?? 0
+        ]);
+
+        if ($itemRes['status'] >= 400 || empty($itemRes['data'])) {
+            jsonResponse(['message' => 'Failed to create item'], 500);
+        }
+
+        $newItemId = $itemRes['data']; 
+
+   
+        $linkRes = $db->insert('Vmenu_to_item', [
+            'menu_id' => $menuId,
+            'item_id' => $newItemId,
+            'display_order' => 0,
+            'is_available' => 1
+        ]);
+
+        if ($linkRes['status'] >= 400) {
+            jsonResponse(['message' => 'Failed to link item to menu'], 500);
+        }
+
+        jsonResponse(['message' => 'Item added', 'id' => $newItemId, 'name' => $name], 201);
+    }
+
+    if ($method === 'DELETE' && preg_match('#^/menus/([0-9]+)/items/([0-9]+)/?$#', $uri, $matches)) {
+        $headers = getallheaders();
+        $authHeader = $headers['Authorization'] ?? $headers['authorization'] ?? '';
+        $token = str_replace('Bearer ', '', $authHeader);
+        if (!$jwt->verify($token))
+            jsonResponse(['message' => 'Unauthorized'], 401);
+
+        $menuId = $matches[1];
+        $itemId = $matches[2];
+
+
+        $sql = "UPDATE Vmenu_to_item SET is_available = 0 WHERE menu_id = ? AND item_id = ?";
+        $res = $db->rawSelect($sql, [$menuId, $itemId]);
+
+
+        $res = $db->update('Vmenu_to_item', ['is_available' => 0], ['menu_id' => $menuId, 'item_id' => $itemId]);
+
+        if ($res['status'] >= 400) {
+            jsonResponse(['message' => 'Failed to remove item'], 500);
+        }
+
+        jsonResponse(['message' => 'Item removed']);
+    }
+
 
     if ($method === 'GET' && preg_match('#^/menus/([0-9]+)/?$#', $uri, $matches)) {
         $id = $matches[1];

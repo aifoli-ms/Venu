@@ -40,12 +40,50 @@ function handleAiRequest($method, $uri)
         $restResp = $db->select('Vrestaurants', [], 'id,name,cuisine_type,location,price_range,average_rating');
         $restaurants = $restResp['data'] ?? [];
 
-        $legend = "Price Ranges: $ (Budget), $$ (Mid-Range), $$$ (Fine Dining)";
+
+        $menuSql = "
+            SELECT mi.name, mi.price, mi.is_vegetarian, mi.is_spicy, m.restaurant_id 
+            FROM Vmenu_items mi 
+            JOIN Vmenu_to_item mti ON mi.id = mti.item_id 
+            JOIN Vmenus m ON mti.menu_id = m.id 
+            WHERE m.is_active = 1 AND mti.is_available = 1
+        ";
+        $menuResp = $db->rawSelect($menuSql);
+        $menuItems = $menuResp['data'] ?? [];
+
+        $menusByRest = [];
+        foreach ($menuItems as $item) {
+            $rid = $item['restaurant_id'];
+            if (!isset($menusByRest[$rid]))
+                $menusByRest[$rid] = [];
+            $menusByRest[$rid][] = $item;
+        }
+
+        $legend = "Price Ranges: ₵ (Budget), ₵₵ (Mid-Range), ₵₵₵ (Fine Dining)";
         $restContext = $legend . "\n\nList:\n";
         foreach ($restaurants as $r) {
             $price = $r['price_range'] ?? 'N/A';
             $rating = $r['average_rating'] ?? 'N/A';
             $restContext .= "- [ID: {$r['id']}] {$r['name']} ({$r['cuisine_type']}): {$r['location']}, Price: $price, Rating: $rating stars\n";
+
+
+            if (isset($menusByRest[$r['id']])) {
+                $restContext .= "  Menu Highlights: ";
+                $highlights = [];
+                $count = 0;
+                foreach ($menusByRest[$r['id']] as $item) {
+                    if ($count++ >= 5)
+                        break;
+                    $attrs = [];
+                    if ($item['is_vegetarian'])
+                        $attrs[] = 'Veg';
+                    if ($item['is_spicy'])
+                        $attrs[] = 'Spicy';
+                    $attrStr = $attrs ? '(' . implode(',', $attrs) . ')' : '';
+                    $highlights[] = "{$item['name']} ₵{$item['price']} $attrStr";
+                }
+                $restContext .= implode(', ', $highlights) . "\n";
+            }
         }
 
 
@@ -133,15 +171,17 @@ function handleAiRequest($method, $uri)
             ]
         ];
 
-        $ch = curl_init($geminiUrl);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+        $context = stream_context_create([
+            'http' => [
+                'method' => 'POST',
+                'header' => "Content-Type: application/json\r\n",
+                'content' => json_encode($payload),
+                'ignore_errors' => true
+            ]
+        ]);
 
-        $geminiRaw = curl_exec($ch);
-        $geminiErr = curl_error($ch);
-        curl_close($ch);
+        $geminiRaw = file_get_contents($geminiUrl, false, $context);
+        $geminiErr = ($geminiRaw === false);
 
         if ($geminiErr) {
             jsonResponse(['message' => 'AI Service Unavailable'], 500);

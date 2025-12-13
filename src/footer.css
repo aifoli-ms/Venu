@@ -1,4 +1,4 @@
-/* Footer Styles */
+
 .site-footer {
     background-color: #1a1a1a;
     color: #ffffff;
@@ -27,7 +27,7 @@
     font-size: 1.1rem;
     margin-bottom: 1.2rem;
     color: #e0e0e0;
-    font-weight: 600;
+    font-weight: normal;
 }
 
 .footer-section p {

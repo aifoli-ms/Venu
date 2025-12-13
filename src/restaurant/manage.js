@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (avatar) avatar.textContent = initials;
 
 
- 
+
     async function fetchDetails() {
         try {
             const response = await fetch(`${API_BASE_URL}/restaurants/${restaurantId}`);
@@ -27,14 +27,14 @@ document.addEventListener('DOMContentLoaded', async () => {
             document.getElementById('res-name').textContent = data.name;
             document.getElementById('res-location').textContent = data.location;
 
-            
-            const capacity = data.capacity || 50; 
+
+            const capacity = data.capacity || 50;
             document.getElementById('total-capacity').textContent = capacity;
 
-            
+
             window.currentRestaurant = data;
 
-            return capacity; 
+            return capacity;
         } catch (e) {
             console.error(e);
             alert("Error loading restaurant details.");
@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         return 50;
     }
 
-    
+
     async function fetchReservations() {
         try {
             const response = await fetch(`${API_BASE_URL}/reservations/restaurant/${restaurantId}`, {
@@ -79,17 +79,17 @@ document.addEventListener('DOMContentLoaded', async () => {
         list.forEach(res => {
             const tr = document.createElement('tr');
 
-           
+
             let statusClass = 'status-badge';
             if (res.status === 'Confirmed') statusClass += ' status-confirmed';
 
             const dateObj = new Date(res.reservation_date + 'T' + res.reservation_time);
             const formattedDate = dateObj.toLocaleDateString() + ' ' + dateObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-            
+
             let actionHtml = '';
 
-            
+
             if (res.status === 'Confirmed') {
                 actionHtml = `
                     <div style="display: flex; align-items: center; gap: 10px;">
@@ -100,11 +100,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                     </div>
                 `;
             }
-            
+
             else {
-                
+
                 let badgeStyle = 'background: #eee; color: #777;';
-                if (res.status === 'Closed') badgeStyle = 'background: #fee2e2; color: #991b1b;'; 
+                if (res.status === 'Closed') badgeStyle = 'background: #fee2e2; color: #991b1b;';
 
                 actionHtml = `<span class="status-badge" style="${badgeStyle}">${res.status}</span>`;
             }
@@ -124,7 +124,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
-    
+
     let reservationToClose = null;
 
     window.closeReservation = (reservationId) => {
@@ -137,14 +137,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         reservationToClose = null;
     };
 
-    
+
     const confirmBtn = document.getElementById('confirm-close-btn');
     if (confirmBtn) {
         confirmBtn.onclick = async () => {
             if (!reservationToClose) return;
 
             const reservationId = reservationToClose;
-            
+
             confirmBtn.disabled = true;
             confirmBtn.innerText = "Processing...";
 
@@ -172,12 +172,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             } finally {
                 confirmBtn.disabled = false;
                 confirmBtn.innerText = "Yes, Close It";
-                closeModal(); 
+                closeModal();
             }
         };
     }
 
-    
+
     window.openEditModal = () => {
         const data = window.currentRestaurant || {};
 
@@ -240,7 +240,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
 
-    
+
     async function fetchReviews() {
         try {
             const response = await fetch(`${API_BASE_URL}/restaurants/${restaurantId}/reviews`);
@@ -254,7 +254,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 return;
             }
 
-          
+
             const total = reviews.reduce((acc, r) => acc + Number(r.rating), 0);
             const avg = (total / reviews.length).toFixed(1);
             document.getElementById('avg-rating').textContent = avg;
@@ -265,7 +265,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 item.innerHTML = `
                     <div style="display:flex; justify-content:space-between;">
                         <strong>${r.users.name || 'Anonymous'}</strong>
-                        <span style="color:#F59E0B;"><i class="fas fa-star"></i> ${r.rating}</span>
+                        <span style="color:#FFD700;"><i class="fas fa-star"></i> ${r.rating}</span>
                     </div>
                     <p style="margin: 0.5rem 0; color:#555;">${r.comment}</p>
                     <small style="color:#999;">${new Date(r.created_at).toLocaleDateString()}</small>
@@ -279,7 +279,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
 
-    
+
     const capacity = await fetchDetails();
     const allReservations = await fetchReservations();
     fetchReviews();
@@ -291,8 +291,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     function updateSpacesLeft() {
         const today = new Date().toISOString().split('T')[0];
 
-        
-        const list = window.currentReservations || []; 
+
+        const list = window.currentReservations || [];
 
         const todayReservations = list.filter(r => r.reservation_date === today && r.status !== 'Cancelled' && r.status !== 'Closed');
         const booked = todayReservations.reduce((acc, r) => acc + Number(r.party_size), 0);
@@ -302,16 +302,16 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         document.getElementById('spaces-left').textContent = `${left} / ${capacity}`;
 
-        
+
         const percentage = Math.min(100, (booked / capacity) * 100);
         document.getElementById('capacity-fill').style.width = `${percentage}%`;
 
         if (percentage > 90) {
-            document.getElementById('capacity-fill').style.backgroundColor = '#EF4444'; 
+            document.getElementById('capacity-fill').style.backgroundColor = '#EF4444';
         }
     }
 
-    
+
     const originalRender = renderReservations;
     renderReservations = (list) => {
         window.currentReservations = list;
@@ -319,5 +319,164 @@ document.addEventListener('DOMContentLoaded', async () => {
     };
 
     updateSpacesLeft();
+
+    // --- Menu Management Logic ---
+
+    const manageMenusModal = document.getElementById('manage-menus-modal');
+    const menuSelect = document.getElementById('manage-menu-select');
+    const menuItemsBody = document.getElementById('manage-menu-items-body');
+    const addItemForm = document.getElementById('add-menu-item-form');
+
+    window.openManageMenusModal = async () => {
+        manageMenusModal.style.display = 'flex';
+        await loadMenusForManager();
+    };
+
+    window.closeManageMenusModal = () => {
+        manageMenusModal.style.display = 'none';
+        menuSelect.innerHTML = '<option value="">Loading...</option>';
+        menuItemsBody.innerHTML = '<tr><td colspan="3" style="text-align: center; color: #999;">Select a menu to view items</td></tr>';
+    };
+
+    async function loadMenusForManager() {
+        try {
+            const response = await fetch(`${API_BASE_URL}/restaurants/${restaurantId}/menus`);
+            if (!response.ok) throw new Error("Failed to fetch menus");
+            const menus = await response.json();
+
+            menuSelect.innerHTML = '<option value="">-- Select a Menu --</option>';
+            menus.forEach(menu => {
+                const opt = document.createElement('option');
+                opt.value = menu.id;
+                opt.textContent = menu.name;
+                menuSelect.appendChild(opt);
+            });
+        } catch (error) {
+            console.error(error);
+            alert("Error loading menus");
+        }
+    }
+
+    window.loadMenuItems = async () => {
+        const menuId = menuSelect.value;
+        if (!menuId) {
+            menuItemsBody.innerHTML = '<tr><td colspan="3" style="text-align: center; color: #999;">Select a menu to view items</td></tr>';
+            return;
+        }
+
+        menuItemsBody.innerHTML = '<tr><td colspan="3" style="text-align: center; color: #999;">Loading items...</td></tr>';
+
+        try {
+            const response = await fetch(`${API_BASE_URL}/menus/${menuId}/items`);
+            if (!response.ok) throw new Error("Failed to fetch items");
+            const items = await response.json();
+            renderManagerMenuItems(items);
+        } catch (error) {
+            console.error(error);
+            menuItemsBody.innerHTML = '<tr><td colspan="3" style="text-align: center; color: red;">Error loading items</td></tr>';
+        }
+    };
+
+    function renderManagerMenuItems(items) {
+        menuItemsBody.innerHTML = '';
+        if (items.length === 0) {
+            menuItemsBody.innerHTML = '<tr><td colspan="3" style="text-align: center; color: #999;">No items in this menu.</td></tr>';
+            return;
+        }
+
+        items.forEach(item => {
+            const tr = document.createElement('tr');
+            tr.style.borderBottom = '1px solid #eee';
+
+            tr.innerHTML = `
+                <td style="padding: 0.75rem 0;">
+                    <div style="font-weight: bold;">${item.name}</div>
+                    <div style="font-size: 0.85rem; color: #666;">${item.description || ''}</div>
+                </td>
+                <td style="padding: 0.75rem 0;">₵${Number(item.price).toFixed(2)}</td>
+                <td style="padding: 0.75rem 0;">
+                    <button class="btn btn-sm" onclick="deleteMenuItem(${item.id})" style="background: #fee2e2; color: #991b1b; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer;">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </td>
+            `;
+            menuItemsBody.appendChild(tr);
+        });
+    }
+
+    if (addItemForm) {
+        addItemForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const menuId = menuSelect.value;
+            if (!menuId) {
+                alert("Please select a menu first.");
+                return;
+            }
+
+            const name = document.getElementById('new-item-name').value;
+            const price = document.getElementById('new-item-price').value;
+            const desc = document.getElementById('new-item-desc').value;
+
+            const btn = addItemForm.querySelector('button[type="submit"]');
+            btn.disabled = true;
+            btn.textContent = "Adding...";
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/menus/${menuId}/items`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        name: name,
+                        price: price,
+                        description: desc,
+                        // Defaults
+                        is_vegetarian: 0,
+                        is_spicy: 0
+                    })
+                });
+
+                if (response.ok) {
+                    // Refresh Item List
+                    addItemForm.reset();
+                    await loadMenuItems();
+                } else {
+                    const err = await response.json();
+                    alert("Error: " + err.message);
+                }
+            } catch (error) {
+                console.error(error);
+                alert("Connection failed");
+            } finally {
+                btn.disabled = false;
+                btn.textContent = "Add Item";
+            }
+        });
+    }
+
+    window.deleteMenuItem = async (itemId) => {
+        if (!confirm("Are you sure you want to remove this item?")) return;
+        const menuId = menuSelect.value; // Get current menu context
+
+        try {
+            const response = await fetch(`${API_BASE_URL}/menus/${menuId}/items/${itemId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            if (response.ok) {
+                await loadMenuItems();
+            } else {
+                alert("Failed to delete item.");
+            }
+        } catch (error) {
+            console.error(error);
+            alert("Connection error");
+        }
+    };
 
 });

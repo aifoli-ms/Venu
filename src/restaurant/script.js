@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.getElementById('res-name').textContent = data.name;
         document.getElementById('res-cuisine').textContent = data.cuisine_type;
         document.getElementById('res-location').textContent = data.location || 'Unknown';
-        document.getElementById('res-price').textContent = data.price_range || '$$';
+        document.getElementById('res-price').textContent = data.price_range || '₵₵';
         document.getElementById('res-total-reviews').textContent = `${data.total_reviews || 0} reviews`;
 
         document.getElementById('res-rating').textContent = data.average_rating || 'New';
@@ -74,7 +74,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         const statusEl = document.getElementById('res-status');
         statusEl.textContent = data.status || 'Open';
-        if (data.status === 'Fully Booked') statusEl.style.background = '#EF4444'; // Red
+        if (data.status === 'Fully Booked') statusEl.style.background = '#EF4444'; 
     }
 
 
@@ -199,7 +199,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             reviewEl.innerHTML = `
                 <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
                     <strong>${safeName}</strong>
-                    <span style="color: #F59E0B;"><i class="fas fa-star"></i> ${review.rating}</span>
+                    <span style="color: #FFD700;"><i class="fas fa-star"></i> ${review.rating}</span>
                 </div>
                 <p style="color: #666; font-size: 0.9rem;">${safeComment}</p>
                 <small style="color: #999;">${new Date(review.created_at).toLocaleDateString()}</small>
@@ -368,7 +368,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
 
             if (response.ok) {
-                // Show Success Modal
+         
                 reviewModal.classList.add('hidden');
                 document.getElementById('review-success-modal').classList.remove('hidden');
 
@@ -401,7 +401,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     });
 
-    // Reservation Success Modal Logic
+
     const resSuccessModal = document.getElementById('reservation-success-modal');
     const closeResSuccessBtn = document.querySelector('.close-reservation-success-modal');
 

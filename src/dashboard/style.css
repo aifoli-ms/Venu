@@ -1,7 +1,6 @@
-
 :root {
-    --primary-color: #F97316;
-    --primary-color-light: #FFEDD5;
+    --primary-color: #800020;
+    --primary-color-light: #FFE4E6;
     --disabled-color: #FDBA74;
     --dark-grey: #1F2937;
     --medium-grey: #6B7280;
@@ -50,7 +49,7 @@ body {
 .logo {
     color: var(--primary-color);
     font-size: 1.5rem;
-    font-weight: 700;
+    font-weight: normal;
 }
 
 .navbar nav ul {
@@ -62,7 +61,7 @@ body {
 .navbar nav a {
     text-decoration: none;
     color: var(--medium-grey);
-    font-weight: 500;
+    font-weight: normal;
     font-size: 0.95rem;
     display: flex;
     align-items: center;
@@ -117,7 +116,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-weight: 600;
+    font-weight: normal;
     font-size: 0.9rem;
 }
 
@@ -128,7 +127,7 @@ body {
 
 .discover-title h2 {
     font-size: 2rem;
-    font-weight: 700;
+    font-weight: normal;
     margin-bottom: 0.25rem;
 }
 
@@ -150,7 +149,7 @@ body {
     border-radius: 8px;
     background-color: #fff;
     font-size: 0.9rem;
-    font-weight: 500;
+    font-weight: normal;
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -168,7 +167,7 @@ body {
     border-radius: 20px;
     background-color: #fff;
     font-size: 0.9rem;
-    font-weight: 500;
+    font-weight: normal;
     cursor: pointer;
     transition: all 0.2s ease;
 }
@@ -223,7 +222,7 @@ body {
     padding: 0.35rem 0.75rem;
     border-radius: 6px;
     font-size: 0.8rem;
-    font-weight: 600;
+    font-weight: normal;
     backdrop-filter: blur(5px);
 }
 
@@ -245,7 +244,7 @@ body {
 
 .favorite-btn.active .fa-heart {
     color: red;
-    font-weight: 900;
+    font-weight: normal;
 }
 
 .card-content {
@@ -261,19 +260,19 @@ body {
 
 .card-header h3 {
     font-size: 1.25rem;
-    font-weight: 600;
+    font-weight: normal;
 }
 
 .rating {
     display: flex;
     align-items: center;
     gap: 0.25rem;
-    font-weight: 600;
+    font-weight: normal;
     font-size: 0.95rem;
 }
 
 .rating .fa-star {
-    color: var(--primary-color);
+    color: #FFD700;
 }
 
 .card-details {
@@ -289,7 +288,7 @@ body {
     padding: 0.4rem 0.75rem;
     border-radius: 50px;
     font-size: 0.85rem;
-    font-weight: 500;
+    font-weight: normal;
     display: flex;
     align-items: center;
     gap: 0.4rem;
@@ -318,7 +317,7 @@ body {
     border: none;
     border-radius: 8px;
     font-size: 1rem;
-    font-weight: 600;
+    font-weight: normal;
     cursor: pointer;
     transition: background-color 0.2s;
 }
@@ -329,7 +328,7 @@ body {
 }
 
 .btn-primary:hover {
-    background-color: #EA580C;
+    background-color: #DC2626;
 
 }
 
@@ -368,7 +367,7 @@ body {
 
 .filter-group label {
     font-size: 0.9rem;
-    font-weight: 600;
+    font-weight: normal;
     color: var(--dark-grey);
 }
 
@@ -409,10 +408,10 @@ body {
     width: 60px;
     height: 60px;
     border-radius: 50%;
-    font-weight: 600;
+    font-weight: normal;
     font-size: 1.5rem;
     cursor: pointer;
-    box-shadow: 0 4px 12px rgba(249, 115, 22, 0.4);
+    box-shadow: 0 4px 12px rgba(128, 0, 32, 0.4);
     transition: transform 0.2s;
     display: flex;
     align-items: center;

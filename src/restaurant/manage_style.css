@@ -1,0 +1,180 @@
+.manage-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.stat-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.stat-card .icon {
+    font-size: 2rem;
+    color: var(--primary-color);
+    background: rgba(128, 0, 32, 0.1);
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.stat-card .info h3 {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.stat-card .info p {
+    margin: 0;
+    font-size: 1.8rem;
+    font-weight: normal;
+    color: #333;
+}
+
+.reservation-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+
+.reservation-table th,
+.reservation-table td {
+    text-align: left;
+    padding: 1rem;
+    border-bottom: 1px solid #eee;
+}
+
+.reservation-table th {
+    font-weight: normal;
+    color: #555;
+    background: #f9f9f9;
+}
+
+.reservation-table tr:hover {
+    background: #fcfcfc;
+}
+
+.status-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: normal;
+}
+
+.status-confirmed {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.capacity-bar {
+    height: 10px;
+    background: #eee;
+    border-radius: 5px;
+    margin-top: 5px;
+    overflow: hidden;
+}
+
+.capacity-fill {
+    height: 100%;
+    background: var(--primary-color);
+    width: 0%;
+    transition: width 0.3s ease;
+}
+
+.review-card {
+    padding: 1rem;
+    border-bottom: 1px solid #eee;
+}
+
+.review-card:last-child {
+    border-bottom: none;
+}
+
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    backdrop-filter: blur(4px);
+}
+
+.modal-box {
+    background: white;
+    padding: 2rem;
+    border-radius: 16px;
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.modal-icon {
+    font-size: 3rem;
+    color: #800020;
+    margin-bottom: 1rem;
+}
+
+.modal-box h3 {
+    margin: 0 0 0.5rem 0;
+    color: #333;
+}
+
+.modal-box p {
+    color: #666;
+    margin-bottom: 1.5rem;
+    line-height: 1.5;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.btn-danger {
+    background: #EF4444;
+    color: white;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: normal;
+}
+
+.btn-danger:hover {
+    background: #DC2626;
+}
+
+.fa-star {
+    color: #FFD700;
+}
