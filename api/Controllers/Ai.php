@@ -42,7 +42,7 @@ function handleAiRequest($method, $uri)
 
 
         $menuSql = "
-            SELECT mi.name, mi.price, mi.is_vegetarian, mi.is_spicy, m.restaurant_id 
+            SELECT mi.name, mi.price, m.restaurant_id 
             FROM Vmenu_items mi 
             JOIN Vmenu_to_item mti ON mi.id = mti.item_id 
             JOIN Vmenus m ON mti.menu_id = m.id 
@@ -74,13 +74,8 @@ function handleAiRequest($method, $uri)
                 foreach ($menusByRest[$r['id']] as $item) {
                     if ($count++ >= 5)
                         break;
-                    $attrs = [];
-                    if ($item['is_vegetarian'])
-                        $attrs[] = 'Veg';
-                    if ($item['is_spicy'])
-                        $attrs[] = 'Spicy';
-                    $attrStr = $attrs ? '(' . implode(',', $attrs) . ')' : '';
-                    $highlights[] = "{$item['name']} ₵{$item['price']} $attrStr";
+                    // Removed checks for is_vegetarian/is_spicy as columns don't exist
+                    $highlights[] = "{$item['name']} ₵{$item['price']}";
                 }
                 $restContext .= implode(', ', $highlights) . "\n";
             }

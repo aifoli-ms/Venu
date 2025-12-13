@@ -503,7 +503,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 } else if (response.status === 403) {
                     addMessage("Session expired. Please log in again.", 'alfred');
                 } else {
-                    addMessage("Alfred is currently unavailable. Please try again later.", 'alfred');
+                    addMessage(`Error: Unknown error occurred.`, 'alfred');
                 }
 
             } catch (err) {
