@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Venu</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="admin-container">
+        <header>
+            <h1>Admin Dashboard</h1>
+            <nav>
+                <button onclick="showTab('dashboard')" class="active">Dashboard</button>
+                <button onclick="showTab('users')">Users</button>
+                <button onclick="showTab('reviews')">Reviews</button>
+                <button onclick="showTab('add-restaurant')">Add Restaurant</button>
+                <button onclick="logout()">Logout</button>
+            </nav>
+        </header>
+
+        <main id="dashboard-tab" class="tab-content active">
+            <h2>Overview</h2>
+            <div class="stats-container">
+                <div class="stat-card">
+                    <h3>Total Users</h3>
+                    <p id="total-users">Loading...</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Total Reviews</h3>
+                    <p id="total-reviews">Loading...</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Restaurants</h3>
+                    <p id="total-restaurants">Loading...</p>
+                </div>
+            </div>
+        </main>
+
+        <main id="users-tab" class="tab-content" style="display: none;">
+            <h2>Manage Users</h2>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="users-table-body">
+
+                    </tbody>
+                </table>
+            </div>
+        </main>
+
+        <main id="reviews-tab" class="tab-content" style="display: none;">
+            <h2>Manage Reviews</h2>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>User</th>
+                            <th>Restaurant</th>
+                            <th>Rating</th>
+                            <th>Comment</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="reviews-table-body">
+
+                    </tbody>
+                </table>
+            </div>
+        </main>
+
+        <main id="add-restaurant-tab" class="tab-content" style="display: none;">
+            <h2>Add New Restaurant</h2>
+            <form id="add-restaurant-form">
+                <div class="form-group">
+                    <label>Restaurant Name</label>
+                    <input type="text" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label>Location</label>
+                    <input type="text" name="location" required>
+                </div>
+                <div class="form-group">
+                    <label>Cuisine Type</label>
+                    <input type="text" name="cuisine_type" required>
+                </div>
+                <div class="form-group">
+                    <label>Capacity</label>
+                    <input type="number" name="capacity">
+                </div>
+            
+                <div class="form-group">
+                    <label>Image URL</label>
+                    <input type="text" name="image_url">
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea name="description"></textarea>
+                </div>
+                <button type="submit">Create Restaurant</button>
+            </form>
+        </main>
+    </div>
+
+
+    <div id="promote-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <h3>Promote to Restaurant Owner</h3>
+            <p>Select a restaurant to assign to this user:</p>
+            <select id="restaurant-select">
+
+            </select>
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+                <button class="btn-confirm" onclick="confirmPromotion()">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="generic-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <h3 id="generic-modal-title">Title</h3>
+            <p id="generic-modal-message">Message</p>
+            <div class="modal-actions">
+                <button id="generic-cancel-btn" class="btn-cancel" onclick="closeGenericModal()">Cancel</button>
+                <button id="generic-confirm-btn" class="btn-confirm">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

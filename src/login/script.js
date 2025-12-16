@@ -15,12 +15,32 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+
+    function showPopup(title, message, callback = null) {
+        document.getElementById('popup-title').innerText = title;
+        document.getElementById('popup-message').innerText = message;
+
+        const popup = document.getElementById('popup-overlay');
+        popup.style.display = 'flex';
+
+        const closeBtn = document.getElementById('popup-close-btn');
+
+        const newBtn = closeBtn.cloneNode(true);
+        closeBtn.parentNode.replaceChild(newBtn, closeBtn);
+
+        newBtn.addEventListener('click', () => {
+            popup.style.display = 'none';
+            if (callback) {
+                callback();
+            }
+        });
+    }
+
     const loginForm = document.getElementById('signin-form');
     if (loginForm) {
         loginForm.addEventListener('submit', async (event) => {
             event.preventDefault();
-            messageEl.textContent = '';
-            messageEl.className = 'message';
+
 
             const emailInput = document.getElementById('email');
             const passwordInput = document.getElementById('password');
@@ -49,22 +69,24 @@ document.addEventListener('DOMContentLoaded', () => {
                         localStorage.setItem('ownerRestaurantId', data.user.owner_restaurant_id);
                     }
 
-                    if (data.user.role === 'owner' && data.user.owner_restaurant_id) {
+
+                    if (data.user.role === 'admin') {
+                        window.location.href = '../admin/index.html';
+                    } else if (data.user.role === 'owner' && data.user.owner_restaurant_id) {
                         window.location.href = `../restaurant/manage.html?id=${data.user.owner_restaurant_id}`;
                     } else {
                         window.location.href = '../dashboard/dashboard.html';
                     }
-                } else {
 
-                    const resultText = await response.text();
-                    messageEl.textContent = resultText;
-                    messageEl.className = 'message error';
+                } else {
+                    const data = await response.json();
+    
+                    showPopup("Login Failed", data.message || "Invalid credentials");
                 }
 
             } catch (error) {
                 console.error(error);
-                messageEl.textContent = 'Connection error';
-                messageEl.className = 'message error';
+                showPopup("Error", "Connection error");
             }
         });
     }
@@ -75,39 +97,98 @@ document.addEventListener('DOMContentLoaded', () => {
         signupForm.addEventListener('submit', async (event) => {
             event.preventDefault();
 
-            const nameInput = document.getElementById('name');
-            const emailInput = document.getElementById('email');
-            const phoneInput = document.getElementById('phone');
-            const passwordInput = document.getElementById('password');
-            const confirmPasswordInput = document.getElementById('confirm-password');
 
-            if (passwordInput.value !== confirmPasswordInput.value) {
-                alert("Passwords do not match!");
+
+            const user_password_input = document.getElementById('password');
+            const confirm_user_password = document.getElementById('confirm-password');
+
+            const actual_password_text = user_password_input.value;
+            const repeat_password_text = confirm_user_password.value;
+
+
+            if (actual_password_text !== repeat_password_text) {
+                showPopup("Hold on!", "Passwords do not match!");
+                return;
+            }
+
+
+
+            if (actual_password_text.length < 8) {
+                showPopup("Password too short", "Password is too short... please make it at least 8 characters");
+                return;
+            }
+
+
+            if (actual_password_text.length > 64) {
+                showPopup("Password too long", "Wow that is a really long password! Maybe shorten it a bit? (under 64 chars)");
+                return;
+            }
+
+
+
+
+            let password_points = 0;
+
+
+
+            const has_big_letters = /[A-Z]/.test(actual_password_text);
+            if (has_big_letters) {
+                password_points = password_points + 1;
+            }
+
+
+            const has_small_letters = /[a-z]/.test(actual_password_text);
+            if (has_small_letters) {
+                password_points = password_points + 1;
+            }
+
+
+            const has_numbers = /[0-9]/.test(actual_password_text);
+            if (has_numbers) {
+                password_points = password_points + 1;
+            }
+
+
+            const has_weird_symbols = /[^A-Za-z0-9]/.test(actual_password_text);
+            if (has_weird_symbols) {
+                password_points = password_points + 1;
+            }
+
+
+
+            if (password_points < 3) {
+                showPopup("Weak Password", "Your password needs to be a bit stronger. Try mixing letters, numbers, and symbols!");
                 return;
             }
 
             try {
+                const user_full_name = document.getElementById('name').value;
+                const user_email_address = document.getElementById('email').value;
+                const user_phone_number = document.getElementById('phone').value;
+
+
                 const response = await fetch(`${API_BASE_URL}/users`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        name: nameInput.value,
-                        email: emailInput.value,
-                        phone: phoneInput.value,
-                        password: passwordInput.value
+                        name: user_full_name,
+                        email: user_email_address,
+                        phone: user_phone_number,
+                        password: actual_password_text
                     })
                 });
 
                 if (response.ok) {
-                    alert("Account created! Please sign in.");
-                    window.location.href = 'login.html';
+                    showPopup("Success!", "Account created! Please sign in.", () => {
+                        window.location.href = 'login.html';
+                    });
                 } else {
                     const data = await response.json();
-                    alert(data.message || "Error creating account");
+                    showPopup("Oops!", data.message || "Error creating account");
                 }
             } catch (error) {
                 console.error(error);
-                alert("Connection error");
+                showPopup("Error", "Connection error");
             }
         });
     }

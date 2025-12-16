@@ -320,7 +320,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     updateSpacesLeft();
 
-    // --- Menu Management Logic ---
+
 
     const manageMenusModal = document.getElementById('manage-menus-modal');
     const menuSelect = document.getElementById('manage-menu-select');
@@ -336,6 +336,41 @@ document.addEventListener('DOMContentLoaded', async () => {
         manageMenusModal.style.display = 'none';
         menuSelect.innerHTML = '<option value="">Loading...</option>';
         menuItemsBody.innerHTML = '<tr><td colspan="3" style="text-align: center; color: #999;">Select a menu to view items</td></tr>';
+    };
+
+    window.createNewMenu = async () => {
+        const input = document.getElementById('new-menu-name');
+        const name = input.value.trim();
+        if (!name) {
+            alert("Please enter a menu name.");
+            return;
+        }
+
+        try {
+            const response = await fetch(`${API_BASE_URL}/menus`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    restaurant_id: restaurantId,
+                    name: name
+                })
+            });
+
+            if (response.ok) {
+                alert("Menu created!");
+                input.value = '';
+                await loadMenusForManager();
+            } else {
+                const err = await response.json();
+                alert("Error: " + err.message);
+            }
+        } catch (e) {
+            console.error(e);
+            alert("Connection error");
+        }
     };
 
     async function loadMenusForManager() {
@@ -458,7 +493,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     window.deleteMenuItem = async (itemId) => {
         if (!confirm("Are you sure you want to remove this item?")) return;
-        const menuId = menuSelect.value; // Get current menu context
+        const menuId = menuSelect.value;
 
         try {
             const response = await fetch(`${API_BASE_URL}/menus/${menuId}/items/${itemId}`, {
