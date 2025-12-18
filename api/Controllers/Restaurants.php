@@ -1,5 +1,7 @@
 <?php
-
+// This file handles restaurant-related API requests
+// It manages restaurant listings, details, reviews, and user favorites
+// It enforces ownership checks for updates and authentications for interactions
 
 function handleRestaurantsRequest($method, $uri)
 {

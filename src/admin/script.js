@@ -1,3 +1,9 @@
+//This file is used to display the admin page
+//It handles all the logic for the admin page
+//It takes the information from the admin.html file and sends it to the API
+//It also handles the display of the admin page and reservations
+//It also handles the display of the popup messages
+
 const API_URL = '../../index.php';
 
 function getToken() {

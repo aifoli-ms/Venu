@@ -549,3 +549,94 @@ textarea#review-comment:focus {
     padding: 0.25rem 0.75rem;
     border-radius: 20px;
 }
+
+.restaurant-page-header {
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.restaurant-page-header h1 {
+    font-size: 2.5rem;
+    margin: 0 0 0.5rem 0;
+    font-weight: 700;
+    color: var(--dark-grey);
+    letter-spacing: -0.5px;
+}
+
+.header-meta {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: #4B5563;
+    font-size: 1rem;
+}
+
+.header-meta .rating-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-weight: 500;
+}
+
+.header-meta .rating-badge i {
+    color: #FFD700;
+}
+
+.header-meta .review-count {
+    color: #6B7280;
+    font-weight: normal;
+    font-size: 0.95rem;
+}
+
+.status-check {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.75rem;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.about-card ul.about-list {
+    list-style: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+.about-card ul.about-list li {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.8rem 0;
+    border-bottom: 1px solid #F3F4F6;
+    color: #4B5563;
+}
+
+.about-card ul.about-list li:last-child {
+    border-bottom: none;
+}
+
+.about-card ul.about-list li i {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #FFF1F2;
+    color: var(--primary-color);
+    border-radius: 50%;
+    font-size: 0.8rem;
+}
+
+.about-card h3 {
+    margin-top: 0;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #E5E7EB;
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+    font-weight: 500;
+}

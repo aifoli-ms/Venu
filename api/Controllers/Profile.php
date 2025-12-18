@@ -1,5 +1,7 @@
 <?php
-
+// This file handles profile-related API requests
+// It allows authenticated users to retrieve their own profile information
+// It ensures that only valid, logged-in users can access this data
 function handleProfileRequest($method, $uri)
 {
     if (function_exists('console_log')) {

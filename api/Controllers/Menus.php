@@ -1,5 +1,7 @@
 <?php
-
+// This file handles menu-related API requests
+// It processes menu creation, updates, and retrieval operations
+// It enforces proper authentication and authorization checks
 function handleMenusRequest($method, $uri)
 {
     if (function_exists('console_log')) {
@@ -50,6 +52,14 @@ function handleMenusRequest($method, $uri)
             jsonResponse(['message' => 'Unauthorized'], 401);
 
         $menuId = $matches[1];
+
+
+        $menuRes = $db->select('Vmenus', ['id' => $menuId]);
+        if (empty($menuRes['data'])) {
+            jsonResponse(['message' => 'Menu not found'], 404);
+        }
+        $restaurantId = $menuRes['data'][0]['restaurant_id'];
+
         $input = json_decode(file_get_contents('php://input'), true);
 
         $name = sanitizeInput($input['name'] ?? null);
@@ -61,21 +71,20 @@ function handleMenusRequest($method, $uri)
         }
 
         $itemRes = $db->insert('Vmenu_items', [
+            'restaurant_id' => $restaurantId,
             'name' => $name,
             'description' => $description,
             'price' => $price,
-            'image_url' => $input['image_url'] ?? null,
-            'is_vegetarian' => $input['is_vegetarian'] ?? 0,
-            'is_spicy' => $input['is_spicy'] ?? 0
+            'image_url' => $input['image_url'] ?? null
         ]);
 
         if ($itemRes['status'] >= 400 || empty($itemRes['data'])) {
             jsonResponse(['message' => 'Failed to create item'], 500);
         }
 
-        $newItemId = $itemRes['data']; 
+        $newItemId = $itemRes['data'][0]['id'];
 
-   
+
         $linkRes = $db->insert('Vmenu_to_item', [
             'menu_id' => $menuId,
             'item_id' => $newItemId,
@@ -147,6 +156,12 @@ function handleMenusRequest($method, $uri)
             'description' => $description,
             'is_active' => 1
         ]);
+
+        if ($res['status'] >= 400) {
+            jsonResponse(['message' => 'Failed to create menu'], 500);
+        }
+
+        jsonResponse(['message' => 'Menu created successfully', 'id' => $res['data'][0]['id']], 201);
     }
 
 

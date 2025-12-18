@@ -1,4 +1,6 @@
 <?php
+// This file is used to handle the rate limiting
+// It also handles rate limiting checks for login and other endpoints
 
 class RateLimiter
 {

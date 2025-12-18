@@ -1,4 +1,6 @@
 <?php
+//This file is used to handle the JWT authentication
+//It handles all the logic for the JWT authentication
 
 class JwtHelper
 {
@@ -6,7 +8,7 @@ class JwtHelper
 
     public function __construct()
     {
-        $this->secret = getenv('JWT_SECRET') ? getenv('JWT_SECRET') : getenv('SUPABASE_KEY');
+        $this->secret = getenv('JWT_SECRET');
     }
 
     public function sign($payload)

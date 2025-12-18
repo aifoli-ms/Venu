@@ -1,5 +1,8 @@
 <?php
 
+// This file handles AI chat requests for "Alfred" by processing user input
+// It gathers restaurant data, sends prompts to the Gemini AI, and returns the response
+// It can also programmatically create reservations in the database if the AI requests it
 
 function handleAiRequest($method, $uri)
 {
@@ -74,7 +77,7 @@ function handleAiRequest($method, $uri)
                 foreach ($menusByRest[$r['id']] as $item) {
                     if ($count++ >= 5)
                         break;
-                    // Removed checks for is_vegetarian/is_spicy as columns don't exist
+                   
                     $highlights[] = "{$item['name']} ₵{$item['price']}";
                 }
                 $restContext .= implode(', ', $highlights) . "\n";

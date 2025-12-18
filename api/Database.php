@@ -1,4 +1,9 @@
 <?php
+// This file is used to handle the database connection
+// It handles all the logic for the database connection
+// It takes the information from the config.php file and sends it to the API
+// It handles database queries including select, insert, update, and delete
+
 
 
 class Database

@@ -1,3 +1,6 @@
+//This file is used to get the API base URL
+
+
 
 const getApiBaseUrl = () => {
 
@@ -14,9 +17,6 @@ const getApiBaseUrl = () => {
     return window.location.origin + '/index.php';
 };
 
+
 const API_BASE_URL = getApiBaseUrl();
 
-
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { API_BASE_URL };
-}

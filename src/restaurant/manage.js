@@ -1,3 +1,10 @@
+//This file is used to manage a restaurant
+//It handles all the logic for the restaurant management page
+//It takes the information from the manage.html file and sends it to the API
+//It also handles the display of the restaurant details and reservations
+//It also handles the display of the restaurant menu
+
+
 document.addEventListener('DOMContentLoaded', async () => {
 
     const urlParams = new URLSearchParams(window.location.search);
@@ -5,9 +12,44 @@ document.addEventListener('DOMContentLoaded', async () => {
     const userId = localStorage.getItem('userId');
     const token = localStorage.getItem('authToken');
 
+
+    window.showMessage = (title, text, type = 'info') => {
+        const modal = document.getElementById('message-modal');
+        const iconEl = document.getElementById('msg-icon');
+        const titleEl = document.getElementById('msg-title');
+        const textEl = document.getElementById('msg-text');
+
+        if (!modal) {
+            alert(`${title}: ${text}`);
+            return;
+        }
+
+        titleEl.textContent = title;
+        textEl.textContent = text;
+
+        if (type === 'success') {
+            iconEl.innerHTML = '<i class="fas fa-check-circle" style="color: #10B981;"></i>';
+        } else if (type === 'error') {
+            iconEl.innerHTML = '<i class="fas fa-times-circle" style="color: #EF4444;"></i>';
+        } else {
+            iconEl.innerHTML = '<i class="fas fa-info-circle" style="color: #3B82F6;"></i>';
+        }
+
+        modal.style.display = 'flex';
+    };
+
+    window.closeMessageModal = () => {
+        const modal = document.getElementById('message-modal');
+        if (modal) modal.style.display = 'none';
+    };
+    // -----------------------------
+
     if (!restaurantId || !userId || !token) {
-        alert("Unauthorized access.");
-        window.location.href = '../dashboard/dashboard.html';
+        showMessage("Access Denied", "Unauthorized access.", "error");
+        // Small delay to allow user to see message before redirect, logic kept simple
+        setTimeout(() => {
+            window.location.href = '../dashboard/dashboard.html';
+        }, 2000);
         return;
     }
 
@@ -37,7 +79,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             return capacity;
         } catch (e) {
             console.error(e);
-            alert("Error loading restaurant details.");
+            showMessage("Error", "Error loading restaurant details.", "error");
         }
         return 50;
     }
@@ -50,8 +92,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
 
             if (response.status === 403) {
-                alert("Access Denied: You are not the owner of this restaurant.");
-                window.location.href = '../dashboard/dashboard.html';
+                showMessage("Access Denied", "You are not the owner of this restaurant.", "error");
+                setTimeout(() => window.location.href = '../dashboard/dashboard.html', 1500);
                 return [];
             }
 
@@ -68,6 +110,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     function renderReservations(list) {
+        window.currentReservations = list;
         const tbody = document.getElementById('reservations-body');
         tbody.innerHTML = '';
 
@@ -164,11 +207,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                     updateSpacesLeft();
                 } else {
                     const err = await response.json();
-                    alert("Error: " + err.message);
+                    showMessage("Error", err.message, "error");
                 }
             } catch (e) {
                 console.error(e);
-                alert("Connection error");
+                showMessage("Connection Error", "Failed to connect to server.", "error");
             } finally {
                 confirmBtn.disabled = false;
                 confirmBtn.innerText = "Yes, Close It";
@@ -221,17 +264,17 @@ document.addEventListener('DOMContentLoaded', async () => {
                 });
 
                 if (response.ok) {
-                    alert("Restaurant details updated successfully!");
+                    showMessage("Success", "Restaurant details updated successfully!", "success");
                     closeEditModal();
                     await fetchDetails();
                     updateSpacesLeft();
                 } else {
                     const err = await response.json();
-                    alert("Error: " + err.message);
+                    showMessage("Error", err.message, "error");
                 }
             } catch (err) {
                 console.error(err);
-                alert("Connection error");
+                showMessage("Connection Error", "Failed to connect to server.", "error");
             } finally {
                 btn.disabled = false;
                 btn.innerText = "Save Changes";
@@ -289,10 +332,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     };
 
     function updateSpacesLeft() {
-        const today = new Date().toISOString().split('T')[0];
-
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
+        const today = `${year}-${month}-${day}`;
 
         const list = window.currentReservations || [];
+
+
 
         const todayReservations = list.filter(r => r.reservation_date === today && r.status !== 'Cancelled' && r.status !== 'Closed');
         const booked = todayReservations.reduce((acc, r) => acc + Number(r.party_size), 0);
@@ -312,11 +360,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
 
-    const originalRender = renderReservations;
-    renderReservations = (list) => {
-        window.currentReservations = list;
-        originalRender(list);
-    };
+
 
     updateSpacesLeft();
 
@@ -342,7 +386,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const input = document.getElementById('new-menu-name');
         const name = input.value.trim();
         if (!name) {
-            alert("Please enter a menu name.");
+            showMessage("Missing Input", "Please enter a menu name.", "error");
             return;
         }
 
@@ -360,16 +404,16 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
 
             if (response.ok) {
-                alert("Menu created!");
+                showMessage("Success", "Menu created!", "success");
                 input.value = '';
                 await loadMenusForManager();
             } else {
                 const err = await response.json();
-                alert("Error: " + err.message);
+                showMessage("Error", err.message, "error");
             }
         } catch (e) {
             console.error(e);
-            alert("Connection error");
+            showMessage("Connection Error", "Failed to connect to server.", "error");
         }
     };
 
@@ -388,7 +432,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
         } catch (error) {
             console.error(error);
-            alert("Error loading menus");
+            showMessage("Error", "Error loading menus", "error");
         }
     }
 
@@ -444,7 +488,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             e.preventDefault();
             const menuId = menuSelect.value;
             if (!menuId) {
-                alert("Please select a menu first.");
+                showMessage("Action Required", "Please select a menu first.", "info");
                 return;
             }
 
@@ -466,24 +510,21 @@ document.addEventListener('DOMContentLoaded', async () => {
                     body: JSON.stringify({
                         name: name,
                         price: price,
-                        description: desc,
-                        // Defaults
-                        is_vegetarian: 0,
-                        is_spicy: 0
+                        description: desc
                     })
                 });
 
                 if (response.ok) {
-                    // Refresh Item List
+
                     addItemForm.reset();
                     await loadMenuItems();
                 } else {
                     const err = await response.json();
-                    alert("Error: " + err.message);
+                    showMessage("Error", err.message, "error");
                 }
             } catch (error) {
                 console.error(error);
-                alert("Connection failed");
+                showMessage("Connection Error", "Failed to connect to server.", "error");
             } finally {
                 btn.disabled = false;
                 btn.textContent = "Add Item";
@@ -506,11 +547,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (response.ok) {
                 await loadMenuItems();
             } else {
-                alert("Failed to delete item.");
+                showMessage("Error", "Failed to delete item.", "error");
             }
         } catch (error) {
             console.error(error);
-            alert("Connection error");
+            showMessage("Connection Error", "Failed to connect to server.", "error");
         }
     };
 

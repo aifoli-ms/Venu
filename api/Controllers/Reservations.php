@@ -1,5 +1,7 @@
 <?php
-
+// This file handles reservation-related API requests
+// It manages the creation, cancellation, and status updates of reservations
+// It enforces access control for customers and restaurant owners
 
 function handleReservationsRequest($method, $uri)
 {
@@ -111,6 +113,28 @@ function handleReservationsRequest($method, $uri)
 
         if (!$restaurant_id || !$date || !$time || !$party_size) {
             jsonResponse(['message' => 'Missing required reservation details.'], 400);
+        }
+
+
+        if ($date < date('Y-m-d')) {
+            jsonResponse(['message' => 'Cannot reserve a date in the past.'], 400);
+        }
+
+
+        $duplicateCheck = $db->select('Vreservations', [
+            'user_id' => $userId,
+            'restaurant_id' => $restaurant_id,
+            'reservation_date' => $date,
+            'reservation_time' => $time
+        ]);
+
+        if (!empty($duplicateCheck['data'])) {
+
+            foreach ($duplicateCheck['data'] as $existingRes) {
+                if ($existingRes['status'] !== 'Cancelled') {
+                    jsonResponse(['message' => 'You already have a reservation at this time.'], 400);
+                }
+            }
         }
 
         $res = $db->insert('Vreservations', [

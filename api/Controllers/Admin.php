@@ -1,5 +1,8 @@
-<?php
 
+<?php
+// This file handles administrative API requests
+// It processes actions such as managing users, assigning roles, and viewing system statistics
+// It enforces admin authorization before allowing any sensitive operations
 function handleAdminRequest($method, $uri)
 {
     $db = new Database();

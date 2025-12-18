@@ -1,3 +1,10 @@
+//This file is used to display the restaurant details
+//It handles all the logic for the restaurant page
+//It takes the information from the restaurant.html file and sends it to the API
+//It also handles the display of the restaurant details and reservations
+//It also handles the display of the restaurant menu
+
+
 document.addEventListener('DOMContentLoaded', async () => {
 
 
@@ -74,7 +81,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         const statusEl = document.getElementById('res-status');
         statusEl.textContent = data.status || 'Open';
-        if (data.status === 'Fully Booked') statusEl.style.background = '#EF4444'; 
+        if (data.status === 'Fully Booked') {
+            statusEl.style.background = '#EF4444';
+            statusEl.style.color = '#fff';
+        }
     }
 
 
@@ -85,8 +95,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     openBtn.addEventListener('click', () => {
         if (!userId) {
-            alert("Please login to reserve.");
-            window.location.href = '../login/login.html';
+            showError("Please login to reserve.", "Login Required", () => {
+                window.location.href = '../login/login.html';
+            });
             return;
         }
         modal.classList.remove('hidden');
@@ -100,6 +111,41 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
 
+    const errorModal = document.getElementById('error-modal');
+    const errorMsg = document.getElementById('error-msg');
+    const errorTitle = document.getElementById('error-modal-title');
+    const closeErrorBtn = document.querySelector('.close-error-modal');
+
+    // Close Error Modal logic
+    const closeErrorModal = () => {
+        errorModal.classList.add('hidden');
+        if (errorModal.onCloseAction) {
+            errorModal.onCloseAction();
+            errorModal.onCloseAction = null;
+        }
+    };
+
+    if (closeErrorBtn) {
+        closeErrorBtn.addEventListener('click', closeErrorModal);
+    }
+    window.addEventListener('click', (e) => {
+        if (e.target === errorModal) {
+            closeErrorModal();
+        }
+    });
+
+    function showError(message, title = "Error", onClose = null) {
+        if (errorMsg) errorMsg.textContent = message;
+        if (errorTitle) errorTitle.textContent = title;
+        if (errorModal) {
+            errorModal.classList.remove('hidden');
+            errorModal.onCloseAction = onClose;
+        } else {
+            alert(message); 
+            if (onClose) onClose();
+        }
+    }
+
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
 
@@ -107,7 +153,22 @@ document.addEventListener('DOMContentLoaded', async () => {
         const time = document.getElementById('modal-time').value;
         const party = document.getElementById('modal-party').value;
 
-        if (!date || !time) { alert("Please select date and time"); return; }
+        if (!date || !time) {
+            showError("Please select date and time", "Missing Info");
+            return;
+        }
+
+
+        const selectedDate = new Date(date);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0); 
+
+        const todayStr = new Date().toISOString().split('T')[0];
+
+        if (date < todayStr) {
+            showError("Cannot reserve a date in the past.", "Invalid Date");
+            return;
+        }
 
         try {
             const response = await fetch(`${API_BASE_URL}/reservations`, {
@@ -125,17 +186,16 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
 
             if (response.ok) {
-                // Show Success Modal
                 modal.classList.add('hidden');
                 document.getElementById('reservation-success-modal').classList.remove('hidden');
                 form.reset();
             } else {
                 const err = await response.json();
-                alert("Error: " + err.message);
+                showError(err.message || "Reservation failed.", "Reservation Error");
             }
         } catch (error) {
             console.error(error);
-            alert("Connection failed");
+            showError("Connection failed", "Network Error");
         }
     });
 
@@ -332,8 +392,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     openReviewBtn.addEventListener('click', () => {
         if (!userId) {
-            alert("Please login to write a review.");
-            window.location.href = '../login/login.html';
+            showError("Please login to write a review.", "Login Required", () => {
+                window.location.href = '../login/login.html';
+            });
             return;
         }
         reviewModal.classList.remove('hidden');
@@ -353,7 +414,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const comment = document.getElementById('review-comment').value;
 
         if (!rating) {
-            alert("Please select a rating");
+            showError("Please select a rating", "Rating Required");
             return;
         }
 
@@ -368,7 +429,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
 
             if (response.ok) {
-         
+
                 reviewModal.classList.add('hidden');
                 document.getElementById('review-success-modal').classList.remove('hidden');
 
@@ -376,16 +437,16 @@ document.addEventListener('DOMContentLoaded', async () => {
                 fetchReviews();
             } else {
                 const err = await response.json();
-                alert("Error: " + err.message);
+                showError(err.message, "Review Error");
             }
         } catch (error) {
             console.error(error);
-            alert("Failed to submit review");
+            showError("Failed to submit review", "Submission Error");
         }
     });
 
 
-    // Success Modal Logic
+
     const successModal = document.getElementById('review-success-modal');
     const closeSuccessBtn = document.querySelector('.close-success-modal');
 

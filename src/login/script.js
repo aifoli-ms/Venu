@@ -1,8 +1,16 @@
+//This file is used to handle the login and signup process
+//It handles all the logic for the login and signup pages
+//It takes the information from the login.html file and sends it to the API
+//It also handles the display of the login and signup pages
+//It also handles the display of the popup messages
+
+
+
+
 document.addEventListener('DOMContentLoaded', () => {
 
 
     const togglePassword = document.getElementById('togglePassword');
-    const messageEl = document.getElementById('message');
 
 
     if (togglePassword) {
@@ -12,6 +20,19 @@ document.addEventListener('DOMContentLoaded', () => {
             passwordInput.setAttribute('type', type);
             togglePassword.classList.toggle('fa-eye-slash');
             togglePassword.classList.toggle('fa-eye');
+        });
+    }
+
+    const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
+    if (toggleConfirmPassword) {
+        toggleConfirmPassword.addEventListener('click', function () {
+            const confirmPasswordInput = document.getElementById('confirm-password');
+            if (confirmPasswordInput) {
+                const type = confirmPasswordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                confirmPasswordInput.setAttribute('type', type);
+                this.classList.toggle('fa-eye-slash');
+                this.classList.toggle('fa-eye');
+            }
         });
     }
 
@@ -80,7 +101,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 } else {
                     const data = await response.json();
-    
+
                     showPopup("Login Failed", data.message || "Invalid credentials");
                 }
 

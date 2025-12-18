@@ -1,4 +1,10 @@
 
+//This file is used to display the user profile
+//It handles all the logic for the profile page
+//It takes the information from the profile.html file and sends it to the API
+//It also handles the display of the user profile and reservations
+//It also handles the display of the user settings
+
 
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -43,31 +49,30 @@ document.addEventListener('DOMContentLoaded', () => {
         const imageUrl = restaurant.image_url || 'https://via.placeholder.com/180';
 
         return `
-            <div class="reservation-card" data-res-id="${reservation.id}">
-                <div class="res-image">
+            <div class="reservation-item-card" data-res-id="${reservation.id}">
+                <div class="reservation-card-image-container">
                     <img src="${imageUrl}" alt="${restaurant.name}" style="width: 100%; height: 100%; object-fit: cover;">
                 </div>
-                <div class="res-info">
-                    <div class="res-header">
+                <div class="reservation-card-details-section">
+                    <div class="reservation-card-header-row">
                         <h3>${restaurant.name}</h3>
-                        <span class="res-status ${statusClass}">${status}</span>
+                        <span class="reservation-status-badge ${statusClass}">${status}</span>
                     </div>
-                    <p class="res-sub">${restaurant.cuisine_type || 'Restaurant'}</p>
-                    <p class="res-address"><i class="fas fa-map-marker-alt"></i> ${restaurant.location || 'N/A'}</p>
+                    <p class="reservation-cuisine-type-text">${restaurant.cuisine_type || 'Restaurant'}</p>
+                    <p class="reservation-location-address-text"><i class="fas fa-map-marker-alt"></i> ${restaurant.location || 'N/A'}</p>
                     
-                    <div class="res-footer">
-                        <span class="res-date"><i class="fa-regular fa-calendar"></i> ${formattedDateTime}</span>
-                        <span class="res-people"><i class="fa-solid fa-user-group"></i> ${reservation.party_size} people</span>
+                    <div class="reservation-card-footer-actions">
+                        <span class="reservation-date-time-text"><i class="fa-regular fa-calendar"></i> ${formattedDateTime}</span>
+                        <span class="reservation-party-size-text"><i class="fa-solid fa-user-group"></i> ${reservation.party_size} people</span>
                         
-                        ${status !== 'Cancelled' ? `<button class="btn-cancel" onclick="cancelReservation(${reservation.id})">Cancel Reservation</button>` : ''}
+                        ${status !== 'Cancelled' ? `<button class="button-cancel-action" onclick="cancelReservation(${reservation.id})">Cancel Reservation</button>` : ''}
                     </div>
                 </div>
             </div>
         `;
     }
 
-    // Expose function globally so onclick works
-    // Modal Elements
+
     const confirmModal = document.getElementById('cancel-confirm-modal');
     const successModal = document.getElementById('cancel-success-modal');
     const confirmYesBtn = document.getElementById('cancel-yes');
@@ -76,17 +81,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let reservationToDelete = null;
 
-    // Expose function globally so onclick works
+
     window.cancelReservation = (id) => {
         reservationToDelete = id;
-        confirmModal.classList.remove('hidden');
+        confirmModal.classList.remove('is-visually-hidden');
     };
 
     if (confirmYesBtn) {
         confirmYesBtn.addEventListener('click', async () => {
             if (!reservationToDelete) return;
 
-            // Show loading state if desired, or just proceed
+           
             confirmYesBtn.textContent = "Cancelling...";
             confirmYesBtn.disabled = true;
 
@@ -99,17 +104,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
 
                 if (response.ok) {
-                    confirmModal.classList.add('hidden');
-                    successModal.classList.remove('hidden');
+                    confirmModal.classList.add('is-visually-hidden');
+                    successModal.classList.remove('is-visually-hidden');
                 } else {
                     const err = await response.json();
                     alert("Error: " + err.message);
-                    confirmModal.classList.add('hidden');
+                    confirmModal.classList.add('is-visually-hidden');
                 }
             } catch (error) {
                 console.error(error);
                 alert("Failed to cancel.");
-                confirmModal.classList.add('hidden');
+                confirmModal.classList.add('is-visually-hidden');
             } finally {
                 confirmYesBtn.textContent = "Yes, Cancel";
                 confirmYesBtn.disabled = false;
@@ -120,25 +125,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (confirmNoBtn) {
         confirmNoBtn.addEventListener('click', () => {
-            confirmModal.classList.add('hidden');
+            confirmModal.classList.add('is-visually-hidden');
             reservationToDelete = null;
         });
     }
 
     if (successCloseBtn) {
         successCloseBtn.addEventListener('click', () => {
-            successModal.classList.add('hidden');
+            successModal.classList.add('is-visually-hidden');
             window.location.reload();
         });
     }
 
     window.addEventListener('click', (e) => {
         if (e.target === confirmModal) {
-            confirmModal.classList.add('hidden');
+            confirmModal.classList.add('is-visually-hidden');
             reservationToDelete = null;
         }
         if (e.target === successModal) {
-            successModal.classList.add('hidden');
+            successModal.classList.add('is-visually-hidden');
             window.location.reload();
         }
     });
@@ -233,8 +238,8 @@ document.addEventListener('DOMContentLoaded', () => {
         link.addEventListener('click', (e) => {
             e.preventDefault();
 
-            sidebarLinks.forEach(l => l.classList.remove('active'));
-            link.classList.add('active');
+            sidebarLinks.forEach(l => l.classList.remove('is-currently-active'));
+            link.classList.add('is-currently-active');
 
             sections.forEach(sec => sec.style.display = 'none');
 
@@ -299,7 +304,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 
-    const togglePw = document.querySelector('.toggle-pw');
+    const togglePw = document.querySelector('.password-visibility-toggle-icon');
     if (togglePw) {
         togglePw.addEventListener('click', function () {
             const input = this.previousElementSibling;

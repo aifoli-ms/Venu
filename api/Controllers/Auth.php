@@ -1,6 +1,8 @@
 <?php
 
-
+// This file handles authentication API requests
+// It processes login, registration, and profile update operations
+// It enforces proper authentication and authorization checks
 function handleAuthRequest($method, $uri)
 {
     $db = new Database();
@@ -93,12 +95,11 @@ function handleAuthRequest($method, $uri)
         $phone = sanitizeInput($input['phone'] ?? null);
         $password = $input['password'] ?? null;
 
-   
+
         if (!$name || !$email || !$phone || !$password) {
             jsonResponse(['message' => 'All fields are required'], 400);
         }
 
-if (!$email || !$phone || !$password) {
         if (strlen($password) < 8) {
             jsonResponse(['message' => 'The password is a bit too short... try 8 chars minimum'], 400);
         }
@@ -110,28 +111,28 @@ if (!$email || !$phone || !$password) {
 
         $points = 0;
 
-      
+
         if (preg_match('/[A-Z]/', $password)) {
             $points++;
         }
 
-       
+
         if (preg_match('/[a-z]/', $password)) {
             $points++;
         }
 
-       
+
         if (preg_match('/[0-9]/', $password)) {
             $points++;
         }
 
-       
+
         if (preg_match('/[^A-Za-z0-9]/', $password)) {
             $points++;
         }
 
 
-        
+
         if ($points < 3) {
             jsonResponse(['message' => 'Password too simple. Use a mix of letters, numbers and symbols.'], 400);
         }
@@ -224,4 +225,4 @@ if (!$email || !$phone || !$password) {
         }
         jsonResponse($response['data']);
     }
-}}
+}

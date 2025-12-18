@@ -27,33 +27,19 @@
     </header>
 
     <main class="container">
-        <section class="banner" id="restaurant-banner">
-            <div class="banner-content">
-                <div class="badges">
-                    <span class="badge status" id="res-status">Open</span>
-                    <span class="badge rating"><i class="fas fa-star"></i> <span id="res-rating">0.0</span></span>
-                </div>
+        <div class="restaurant-page-header">
+            <div class="header-content">
                 <h1 id="res-name">Loading Name...</h1>
-                <div class="res-details-row">
-                    <div class="detail-badge">
-                        <i class="fas fa-utensils"></i>
-                        <span id="res-cuisine">Cuisine</span>
-                    </div>
-                    <div class="detail-badge">
-                        <i class="fas fa-wallet"></i>
-                        <span id="res-price">$$$</span>
-                    </div>
-                    <div class="detail-item">
-                        <i class="fas fa-map-marker-alt"></i>
-                        <span id="res-location">Location</span>
-                    </div>
-                    <div class="detail-item">
-                        <i class="fas fa-comment-alt"></i>
-                        <span id="res-total-reviews">0 reviews</span>
-                    </div>
+                <div class="header-meta">
+                    <span class="rating-badge">
+                        <i class="fas fa-star"></i>
+                        <span id="res-rating" style="color: inherit;">0.0</span>
+                        <span class="review-count"> • <span id="res-total-reviews">0 reviews</span></span>
+                    </span>
+                    <span class="status-check" id="res-status" style="background:#ECFDF5; color:#059669;">Open</span>
                 </div>
             </div>
-        </section>
+        </div>
 
         <div class="details-grid">
 
@@ -80,6 +66,24 @@
             </div>
 
             <div class="right-col">
+                <div class="card about-card">
+                    <h3>About</h3>
+                    <ul class="about-list">
+                        <li>
+                            <i class="fas fa-utensils"></i>
+                            <span id="res-cuisine">Cuisine</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-wallet"></i>
+                            <span id="res-price">$$$</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span id="res-location">Location</span>
+                        </li>
+                    </ul>
+                </div>
+
                 <div class="card info-card">
                     <h3>Menus</h3>
                     <div id="menus-list" class="menus-list">
@@ -182,6 +186,17 @@
             <p style="color: #666; margin-bottom: 1.5rem;">Your table has been successfully booked. We look forward to
                 seeing you!</p>
             <button class="btn btn-primary btn-full close-reservation-success-modal">Close</button>
+        </div>
+    </div>
+
+    <div id="error-modal" class="modal hidden">
+        <div class="modal-content" style="text-align: center;">
+            <div style="margin-bottom: 1rem; color: #EF4444; font-size: 3rem;">
+                <i class="fas fa-exclamation-circle"></i>
+            </div>
+            <h3 id="error-modal-title">Error</h3>
+            <p id="error-msg" style="color: #666; margin-bottom: 1.5rem;">Something went wrong.</p>
+            <button class="btn btn-primary btn-full close-error-modal" style="background-color: #EF4444;">Close</button>
         </div>
     </div>
 

@@ -22,7 +22,7 @@ body {
 }
 
 
-.navbar {
+.main-navigation-bar {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -31,27 +31,27 @@ body {
     border-bottom: 1px solid var(--border-color);
 }
 
-.logo {
+.brand-logo-text {
     font-weight: normal;
     font-size: 1.5rem;
     color: var(--primary-color);
     text-decoration: none;
 }
 
-.nav-right {
+.navigation-right-section {
     display: flex;
     align-items: center;
     gap: 1.5rem;
 }
 
-.nav-link {
+.navigation-menu-link {
     text-decoration: none;
     color: var(--text-dark);
     font-weight: normal;
     font-size: 0.9rem;
 }
 
-.user-pill {
+.user-account-badge {
     border: 1px solid var(--border-color);
     padding: 0.5rem 1rem;
     border-radius: 20px;
@@ -61,7 +61,7 @@ body {
 }
 
 
-.profile-container {
+.user-profile-layout-container {
     display: flex;
     max-width: 1400px;
     margin: 0 auto;
@@ -101,7 +101,7 @@ body {
 }
 
 .sidebar-link:hover,
-.sidebar-link.active {
+.sidebar-link.is-currently-active {
     color: var(--primary-color);
 }
 
@@ -110,19 +110,19 @@ body {
 }
 
 
-.content-area {
+.main-content-display-area {
     flex: 1;
     padding: 2.5rem 4rem;
 }
 
-.section-title {
+.content-section-heading {
     font-size: 1.25rem;
     font-weight: normal;
     margin-bottom: 1.5rem;
 }
 
 
-.reservation-card {
+.reservation-item-card {
     background: #fff;
     border: 1px solid var(--border-color);
     border-radius: 12px;
@@ -132,7 +132,7 @@ body {
     margin-bottom: 2rem;
 }
 
-.res-image {
+.reservation-card-image-container {
     height: 180px;
     background-color: #E5E5E5;
     display: flex;
@@ -143,23 +143,23 @@ body {
     font-size: 1.2rem;
 }
 
-.res-info {
+.reservation-card-details-section {
     padding: 1rem;
 }
 
-.res-header {
+.reservation-card-header-row {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
     margin-bottom: 0.25rem;
 }
 
-.res-header h3 {
+.reservation-card-header-row h3 {
     font-size: 1rem;
     font-weight: normal;
 }
 
-.res-status.cancelled {
+.reservation-status-badge.cancelled {
     background: var(--danger-red);
     color: #fff;
     font-size: 0.7rem;
@@ -168,20 +168,20 @@ body {
     font-weight: normal;
 }
 
-.res-sub {
+.reservation-cuisine-type-text {
     font-size: 0.8rem;
     color: #9CA3AF;
     margin-bottom: 0.5rem;
 }
 
-.res-address {
+.reservation-location-address-text {
     font-size: 0.85rem;
     color: var(--text-grey);
     line-height: 1.4;
     margin-bottom: 1rem;
 }
 
-.res-footer {
+.reservation-card-footer-actions {
     display: flex;
     flex-direction: column;
     gap: 0.4rem;
@@ -189,7 +189,7 @@ body {
     color: var(--text-grey);
 }
 
-.pagination {
+.pagination-controls-container {
     display: flex;
     gap: 0.5rem;
     align-items: center;
@@ -203,7 +203,7 @@ body {
     cursor: pointer;
 }
 
-.page-btn.active {
+.page-btn.is-currently-active {
     background: var(--primary-color);
     color: #fff;
     border-color: var(--primary-color);
@@ -213,7 +213,7 @@ body {
 
 
 
-.settings-card {
+.settings-form-container-card {
     background: #fff;
     border: 1px solid var(--border-color);
     border-radius: 12px;
@@ -223,40 +223,40 @@ body {
 
 
 
-.form-row {
+.form-input-row-container {
     display: flex;
     gap: 1.5rem;
     margin-bottom: 1.5rem;
 }
 
-.form-group {
+.form-input-group {
     flex: 1;
     display: flex;
     flex-direction: column;
 }
 
-.form-group label {
+.form-input-group label {
     font-size: 0.85rem;
     font-weight: normal;
     margin-bottom: 0.5rem;
 }
 
-.form-group input {
+.form-input-group input {
     padding: 0.75rem;
     border: 1px solid var(--border-color);
     border-radius: 8px;
     color: var(--text-dark);
 }
 
-.input-wrapper {
+.input-field-wrapper-element {
     position: relative;
 }
 
-.input-wrapper input {
+.input-field-wrapper-element input {
     width: 100%;
 }
 
-.toggle-pw {
+.password-visibility-toggle-icon {
     position: absolute;
     right: 1rem;
     top: 50%;
@@ -267,14 +267,14 @@ body {
 
 
 
-.form-actions {
+.form-submission-action-buttons {
     display: flex;
     justify-content: flex-end;
     gap: 1rem;
     margin-top: 1.5rem;
 }
 
-.btn-delete {
+.button-delete-account-action {
     background: var(--danger-bg);
     color: var(--danger-red);
     border: none;
@@ -284,7 +284,7 @@ body {
     cursor: pointer;
 }
 
-.btn-save {
+.button-save-changes-action {
     background: var(--primary-color);
     color: #fff;
     border: none;
@@ -294,7 +294,7 @@ body {
     cursor: pointer;
 }
 
-.btn-cancel {
+.button-cancel-action {
     background: #fff;
     color: var(--danger-red);
     border: 1px solid var(--danger-red);
@@ -307,12 +307,12 @@ body {
     transition: background-color 0.2s;
 }
 
-.btn-cancel:hover {
+.button-cancel-action:hover {
     background: var(--danger-bg);
 }
 
 
-.modal {
+.modal-overlay-container {
     position: fixed;
     top: 0;
     left: 0;
@@ -325,11 +325,11 @@ body {
     z-index: 1000;
 }
 
-.modal.hidden {
+.modal-overlay-container.is-visually-hidden {
     display: none;
 }
 
-.modal-content {
+.modal-dialog-box {
     background: #fff;
     padding: 2rem;
     border-radius: 12px;
@@ -340,14 +340,14 @@ body {
 
 
 
-.modal-actions {
+.modal-dialog-action-buttons {
     display: flex;
     gap: 1rem;
     margin-top: 1.5rem;
     justify-content: center;
 }
 
-.btn-secondary {
+.button-secondary-option {
     background-color: #fff;
     color: var(--text-dark);
     border: 1px solid var(--border-color);
@@ -357,11 +357,11 @@ body {
     font-weight: normal;
 }
 
-.btn-secondary:hover {
+.button-secondary-option:hover {
     background: #F3F4F6;
 }
 
-.btn-danger {
+.btn-red {
     background-color: var(--danger-red);
     color: #fff;
     border: none;
@@ -371,7 +371,7 @@ body {
     font-weight: normal;
 }
 
-.btn-primary {
+.button-primary-option {
     background-color: var(--primary-color);
     color: #fff;
     border: none;

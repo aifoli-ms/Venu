@@ -23,12 +23,15 @@
     </header>
 
     <main class="container">
-        <section class="banner"
-            style="background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80'); padding: 3rem 2rem; color: white; border-radius: 12px; margin-top: 20px;">
-            <span class="badge status">Manage Mode</span>
-            <h1 id="res-name" style="margin-top: 10px; font-size: 2.5rem;">Loading...</h1>
-            <p id="res-location" style="opacity: 0.9;">...</p>
-        </section>
+        <div class="restaurant-page-header">
+            <div class="header-content">
+                <h1 id="res-name">Loading...</h1>
+                <div class="header-meta">
+                    <span class="status-check" style="background:#FFF7ED; color:#C2410C;">Manage Mode</span>
+                    <span style="color: #6B7280;" id="res-location">...</span>
+                </div>
+            </div>
+        </div>
 
         <div class="manage-grid">
             <div class="main-col">
@@ -113,7 +116,7 @@
             <p>Are you sure you want to close this reservation? This action cannot be undone.</p>
             <div class="modal-actions">
                 <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
-                <button class="btn btn-danger" id="confirm-close-btn">Yes, Close It</button>
+                <button class="btn delete-button" id="confirm-close-btn">Yes, Close It</button>
             </div>
         </div>
     </div>
@@ -224,6 +227,15 @@
                     <button type="submit" class="btn btn-primary" style="align-self: flex-end;">Add Item</button>
                 </form>
             </div>
+        </div>
+    </div>
+
+    <div id="message-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-box" style="text-align: center;">
+            <div class="modal-icon" id="msg-icon" style="font-size: 3rem; margin-bottom: 1rem;"></div>
+            <h3 id="msg-title" style="margin-bottom: 0.5rem;">Title</h3>
+            <p id="msg-text" style="color: #666; margin-bottom: 1.5rem;">Message goes here...</p>
+            <button class="btn btn-primary" onclick="closeMessageModal()">OK</button>
         </div>
     </div>
 
