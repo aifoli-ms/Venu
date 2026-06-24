@@ -1,12 +1,10 @@
 {
-  "functions": {
-    "index.php": {
-      "runtime": "vercel-php@0.7.2"
-    }
-  },
+  "buildCommand": "",
+  "outputDirectory": "",
+  "framework": null,
   "routes": [
     { "src": "/src/(.*)", "dest": "/src/$1" },
     { "src": "/(.*\\.(?:css|js|html|png|jpg|jpeg|gif|svg|ico))$", "dest": "/$1" },
-    { "src": "/(.*)", "dest": "/index.php" }
+    { "src": "/api/(.*)", "dest": "/api/[...path]" }
   ]
 }
