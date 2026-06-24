@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VENU - Discover & Reserve the Best Restaurants in Ghana</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="../footer.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+</head>
+
+<body>
+  <header class="navbar">
+    <h1 class="logo">VENU</h1>
+    <nav>
+      <a href="#restaurants">Restaurants</a>
+      <a href="#how-it-works">How It Works</a>
+      <a href="../login/login.html" class="nav-btn">Sign In</a>
+      <a href="../login/signup.html" class="nav-btn nav-btn-primary">Get Started</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <div class="hero-content">
+      <h2>Your table is waiting.</h2>
+      <p>Discover the best restaurants in Ghana. Browse menus, read reviews, and book a table. Or let Alfred, our AI concierge, find the perfect spot for you.</p>
+      <div class="hero-actions">
+        <a href="../login/signup.html" class="btn btn-primary btn-lg">Start Exploring</a>
+        <a href="#restaurants" class="btn btn-outline btn-lg">View Restaurants</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat">
+          <span class="stat-number" id="stat-restaurants">0</span>
+          <span class="stat-label">Restaurants</span>
+        </div>
+        <div class="stat">
+          <span class="stat-number" id="stat-reviews">0</span>
+          <span class="stat-label">Reviews</span>
+        </div>
+        <div class="stat">
+          <span class="stat-number" id="stat-cuisines">0</span>
+          <span class="stat-label">Cuisines</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="featured" id="restaurants">
+    <div class="section-container">
+      <div class="section-header">
+        <h2>Featured Restaurants</h2>
+        <p>Handpicked dining experiences across Ghana</p>
+      </div>
+      <div class="restaurant-grid" id="restaurant-grid">
+      </div>
+    </div>
+  </section>
+
+  <section class="alfred-section">
+    <div class="section-container alfred-container">
+      <div class="alfred-text">
+        <div class="alfred-badge"><i class="fa-solid fa-robot"></i> AI-Powered</div>
+        <h2>Meet Alfred</h2>
+        <p>Your personal dining concierge. Tell Alfred what you're in the mood for, whether it's a cuisine, a vibe, or a budget, and he'll find the perfect restaurant and book it for you. No scrolling, no searching, just a conversation.</p>
+        <div class="alfred-examples">
+          <div class="example">"Find me a seafood spot for 4 this Friday"</div>
+          <div class="example">"Something affordable near East Legon"</div>
+          <div class="example">"I want the best jollof in Accra"</div>
+        </div>
+      </div>
+      <div class="alfred-preview">
+        <div class="chat-preview">
+          <div class="chat-header"><i class="fa-solid fa-robot"></i> Alfred</div>
+          <div class="chat-messages">
+            <div class="chat-msg bot">Hello! I'm Alfred. What are you in the mood for tonight?</div>
+            <div class="chat-msg user">Somewhere nice for a date, maybe Japanese?</div>
+            <div class="chat-msg bot">I'd recommend Santoku in Airport Residential, rated 4.6 stars with excellent sushi and a great ambiance. Want me to book a table for two?</div>
+            <div class="chat-msg user">Yes, Saturday at 7pm</div>
+            <div class="chat-msg bot">Done! Table for 2 at Santoku, Saturday at 19:00. Enjoy your evening!</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="how-it-works" id="how-it-works">
+    <div class="section-container">
+      <div class="section-header">
+        <h2>How It Works</h2>
+        <p>From craving to reservation in three steps</p>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-icon"><i class="fas fa-search"></i></div>
+          <h3>Discover</h3>
+          <p>Browse restaurants by cuisine, location, price, and rating. Check menus and read real reviews from diners.</p>
+        </div>
+        <div class="step">
+          <div class="step-icon"><i class="fas fa-calendar-check"></i></div>
+          <h3>Reserve</h3>
+          <p>Pick a date, time, and party size. Your reservation is confirmed instantly. No calls, no waiting.</p>
+        </div>
+        <div class="step">
+          <div class="step-icon"><i class="fas fa-utensils"></i></div>
+          <h3>Enjoy</h3>
+          <p>Show up and enjoy your meal. Leave a review to help the next diner find their perfect spot.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta">
+    <div class="section-container cta-content">
+      <h2>Ready to find your next favourite restaurant?</h2>
+      <p>Join Venu and start discovering the best dining experiences in Ghana.</p>
+      <a href="../login/signup.html" class="btn btn-primary btn-lg">Create Free Account</a>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-section brand">
+        <h3>VENU</h3>
+        <p>Discover and book the best restaurants in Ghana.</p>
+      </div>
+      <div class="footer-section links">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="#">Home</a></li>
+          <li><a href="../login/login.html">Sign In</a></li>
+          <li><a href="../login/signup.html">Sign Up</a></li>
+        </ul>
+      </div>
+      <div class="footer-section contact">
+        <h4>Contact</h4>
+        <p>Email: support@venu.com</p>
+        <p>Phone: +233 555 0123</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2025 VENU. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="../config.js"></script>
+  <script src="script.js"></script>
+</body>
+
+</html>

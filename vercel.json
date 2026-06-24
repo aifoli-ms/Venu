@@ -3,7 +3,7 @@
   "outputDirectory": "",
   "framework": null,
   "routes": [
-    { "src": "^/$", "status": 302, "headers": { "Location": "/src/login/login.html" } },
+    { "src": "^/$", "status": 302, "headers": { "Location": "/src/homepage/index.html" } },
     { "src": "/src/(.*)", "dest": "/src/$1" },
     { "src": "/(.*\\.(?:css|js|html|png|jpg|jpeg|gif|svg|ico))$", "dest": "/$1" },
     { "src": "/api/(.*)", "dest": "/api/[...path]" }
