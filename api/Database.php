@@ -1,10 +1,4 @@
 <?php
-// This file is used to handle the database connection
-// It handles all the logic for the database connection
-// It takes the information from the config.php file and sends it to the API
-// It handles database queries including select, insert, update, and delete
-
-
 
 class Database
 {
@@ -14,7 +8,11 @@ class Database
     {
         $config = require __DIR__ . '/config.php';
 
-        $dsn = "mysql:host={$config['host']};dbname={$config['dbname']};charset={$config['charset']}";
+        $dsn = "pgsql:host={$config['host']};port={$config['port']};dbname={$config['dbname']}";
+        if (isset($config['sslmode'])) {
+            $dsn .= ";sslmode={$config['sslmode']}";
+        }
+
         $options = [
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
@@ -23,6 +21,7 @@ class Database
 
         try {
             $this->pdo = new PDO($dsn, $config['username'], $config['password'], $options);
+            $this->pdo->exec("SET client_encoding = 'UTF8'");
         } catch (PDOException $e) {
 
             jsonResponse(['message' => 'Database connection failed: ' . $e->getMessage()], 500);
@@ -52,13 +51,13 @@ class Database
 
     public function select($table, $where = [], $fields = '*')
     {
-        $sql = "SELECT $fields FROM `$table`";
+        $sql = "SELECT $fields FROM \"$table\"";
         $params = [];
 
         if (!empty($where)) {
             $clauses = [];
             foreach ($where as $field => $value) {
-                $clauses[] = "`$field` = ?";
+                $clauses[] = "\"$field\" = ?";
                 $params[] = $value;
             }
             $sql .= " WHERE " . implode(" AND ", $clauses);
@@ -84,22 +83,14 @@ class Database
     public function insert($table, $data)
     {
         $keys = array_keys($data);
-        $fields = implode('`, `', $keys);
+        $fields = '"' . implode('", "', $keys) . '"';
         $placeholders = implode(', ', array_fill(0, count($keys), '?'));
 
-        $sql = "INSERT INTO `$table` (`$fields`) VALUES ($placeholders)";
-        $this->query($sql, array_values($data));
+        $sql = "INSERT INTO \"$table\" ($fields) VALUES ($placeholders) RETURNING *";
+        $stmt = $this->query($sql, array_values($data));
+        $rows = $stmt->fetchAll();
 
-
-        $lastId = $this->pdo->lastInsertId();
-
-
-        if ($lastId) {
-            $stmt = $this->query("SELECT * FROM `$table` WHERE id = ?", [$lastId]);
-            return ['data' => $stmt->fetchAll(), 'status' => 201];
-        }
-
-        return ['data' => [], 'status' => 201];
+        return ['data' => $rows, 'status' => 201];
     }
 
     public function update($table, $data, $where)
@@ -108,7 +99,7 @@ class Database
         $params = [];
 
         foreach ($data as $key => $value) {
-            $fields[] = "`$key` = ?";
+            $fields[] = "\"$key\" = ?";
             $params[] = $value;
         }
 
@@ -117,17 +108,13 @@ class Database
 
         $whereClauses = [];
         foreach ($where as $key => $value) {
-            $whereClauses[] = "`$key` = ?";
+            $whereClauses[] = "\"$key\" = ?";
             $params[] = $value;
         }
         $whereSql = implode(' AND ', $whereClauses);
 
-        $sql = "UPDATE `$table` SET $setClause WHERE $whereSql";
-        $this->query($sql, $params);
-
-
-
-        $stmt = $this->query("SELECT * FROM `$table` WHERE $whereSql", array_values($where));
+        $sql = "UPDATE \"$table\" SET $setClause WHERE $whereSql RETURNING *";
+        $stmt = $this->query($sql, $params);
         return ['data' => $stmt->fetchAll(), 'status' => 200];
     }
 
@@ -138,12 +125,12 @@ class Database
         $params = [];
 
         foreach ($where as $key => $value) {
-            $whereClauses[] = "`$key` = ?";
+            $whereClauses[] = "\"$key\" = ?";
             $params[] = $value;
         }
         $whereSql = implode(' AND ', $whereClauses);
 
-        $sql = "DELETE FROM `$table` WHERE $whereSql";
+        $sql = "DELETE FROM \"$table\" WHERE $whereSql";
         $this->query($sql, $params);
 
         return ['data' => [], 'status' => 204];

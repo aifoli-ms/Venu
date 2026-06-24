@@ -5,18 +5,6 @@ $db_password = "________";
 $db_name = "__________";
 
 
-mysqli_report(MYSQLI_REPORT_OFF);
-
-
-$conn = new mysqli($servername, $db_username, $db_password, $db_name);
-
-if ($conn->connect_error) {
-    die("ERROR: " . $conn->connect_error);
-}
-
-
-
-
 if (!function_exists('sanitizeInput')) {
     function sanitizeInput($data)
     {
@@ -44,10 +32,25 @@ if (!function_exists('sanitizeInput')) {
     }
 }
 
+$databaseUrl = getenv('DATABASE_URL');
+
+if ($databaseUrl) {
+    $parsed = parse_url($databaseUrl);
+    return [
+        'host' => $parsed['host'],
+        'port' => $parsed['port'] ?? 5432,
+        'username' => $parsed['user'],
+        'password' => $parsed['pass'],
+        'dbname' => ltrim($parsed['path'], '/'),
+        'sslmode' => 'require'
+    ];
+}
+
 return [
     'host' => $servername,
+    'port' => 5432,
     'username' => $db_username,
     'password' => $db_password,
     'dbname' => $db_name,
-    'charset' => 'utf8mb4'
+    'sslmode' => 'prefer'
 ];

@@ -31,7 +31,7 @@ function handleRestaurantsRequest($method, $uri)
             $sql = "
                 SELECT r.*, 1 as is_favorite, 
                        COUNT(rv.id) as total_reviews, 
-                       ROUND(IFNULL(AVG(rv.rating), 0), 1) as average_rating
+                       ROUND(COALESCE(AVG(rv.rating), 0), 1) as average_rating
                 FROM Vrestaurants r
                 JOIN Vfavorites f ON r.id = f.restaurant_id
                 LEFT JOIN Vreviews rv ON r.id = rv.restaurant_id
@@ -52,7 +52,7 @@ function handleRestaurantsRequest($method, $uri)
             $sql = "
                 SELECT r.*, 
                        COUNT(rv.id) as total_reviews, 
-                       ROUND(IFNULL(AVG(rv.rating), 0), 1) as average_rating
+                       ROUND(COALESCE(AVG(rv.rating), 0), 1) as average_rating
                 FROM Vrestaurants r
                 LEFT JOIN Vreviews rv ON r.id = rv.restaurant_id
                 GROUP BY r.id
